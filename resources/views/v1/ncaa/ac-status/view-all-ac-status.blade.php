@@ -1,0 +1,123 @@
+@extends('v1.ncaa.design-layout')
+
+@section('title')View all Aircraft Status @stop
+
+@section('main')
+    <div class="page-header">
+            <button type="button" class="btn btn-gradient-primary btn-rounded btn-icon">
+                <i class="mdi mdi-cloud-download" title="Download Aircraft Status into EXCEL SHEET" id="downloadAircraftStatus"></i>
+            </button>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">A/C Status</a></li>
+            <li class="breadcrumb-item active" aria-current="page">view all aircraft status</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body" style="padding-left:3px; padding-right:3px;">
+                    <h4 class="card-title" style="padding-left:10px; display:inline-block">A/C Status Listings</h4>
+                    
+                    <form name="frmgetAircraftByAoc" id="frmgetAircraftByAoc">
+                        {!! csrf_field() !!}
+                        <span style="float:right; font-size:12px; font-weight:bold; margin-top:-30px;">filter by:
+                            <select name="aoc_holder_id" id="aocholderid" >
+                                <option value="0">Registered Operator</option>
+                                @foreach($allaocs as $aoc)
+                                    <option value="{{$aoc->id}}">{{$aoc->aoc_holder}}</option>
+                                @endforeach
+                            </select>
+                        </span>
+                    </form>
+                    @if(Auth::user()->role==3 || 1)
+                        @if(count($checkforaircraftstatuslastupdate))
+                            @foreach($checkforaircraftstatuslastupdate as $lastupdatedby)
+                            <span style="float:right; font-size:11px; font-weight:bold; margin-right:30px; color:blue; padding-bottom:10px;">
+                                Last updated by: {!! $lastupdatedby->name !!}
+                            </span>
+                            @endforeach                            
+                        @endif
+                    @endif
+
+                    <div class="table-responsive" id="contentDropper">            
+                        <table class="table table-bordered" id="exportTableData">
+                            <thead>
+                                <tr class="table-warning">
+                                    <th width="5%">#</th>
+                                    <th width="15%"><b>Registered Operator</b></th>
+                                    <th width="5%"><b>Registration Marks</b></th>
+                                    <th width="7%"><b>Aircraft Type</b></th>
+                                    <th width="5%" class="center"><b>Aircraft Serial Number</b></th>
+                                    <th width="5%" class="center"><b>Year of Mnaufacture</b></th>
+                                    <th width="8%" class="center"><b>Current Registration Date</b></th>
+                                    <th width="20%"><b>Registered Owner</b></th>
+                                    <th width="12%" c;lass="center"><b>C of A Status</b></th>
+                                    <th><b>Remarks</b></th>
+                                    <th><b>Weight (Kg)</b></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if(count($allAircraftStatus))
+                                <?php $counter = 0; ?>
+                                    @foreach($allAircraftStatus as $aircraft)
+                                        <?php $counter++; 
+                                         $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
+                                         
+                                        $now = time();
+                                        $due_date = strtotime($aircraft->c_of_a_status);;
+                                        $datediff = $due_date - $now;
+                                        $numberofdays = round($datediff / (60 * 60 * 24));
+
+                                        if($numberofdays > 90 ){
+                                            $bgcolor = "green";
+                                            $color = "#fff";
+                                        }
+                                        else if(($numberofdays >= 0) && ($numberofdays <=90)){
+                                           $bgcolor = "#ffbf00";
+                                            $color = "#000";
+                                        }
+                                        else{
+                                            $bgcolor = "red";
+                                            $color = "#000";
+                                        }
+                                        ?>
+                                    <tr class="{{$css_style}}">
+                                        <td>{{$counter}}</td>
+                                        <td>{!! strtoupper($aircraft->aoc_holder) !!}</td>
+                                        <td>{!! $aircraft->registration_marks !!}</td>
+                                        <td>{!! $aircraft->aircraft_type !!}</td>
+                                        <td>{!! $aircraft->aircraft_serial_number !!}</td>
+                                        <td align="center">{!! $aircraft->year_of_manufacture !!}</td>
+                                        <td align="center">{!! $aircraft->registration_date !!}</td>
+                                        <td>{!! $aircraft->registered_owner !!}</td>
+                                        <td style="text-align:center; background:{{$bgcolor}}; color:{{$color}};">
+                                            <a href="{{URL::asset('/confidentials/c-of-a/'.$aircraft->c_of_a.'')}}" target="_blank"style="color:{{$color}}">
+                                                    {!! $aircraft->c_of_a_status !!}
+                                                </a>
+                                        </td>
+                                        <td></td>
+                                        <td>{!! $aircraft->weight !!}</td>
+                                    </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td style="font-size:11px; font-weight:bold; color:red; text-align:center" colspan="15" class="table-danger">No records available</td>
+                                    </tr>
+                                @endif
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@stop
+
+@section('scripts')
+<script type="text/javascript" src="{{URL::asset('js/jquery.form.js')}}"></script>
+<script type="text/javascript" src="{{URL::asset('js/jquery.table2excel.min.js')}}"></script>
+<script type="text/javascript" src="{{URL::asset('js/aircraft-status/aircraft.js')}}"></script>
+@stop
