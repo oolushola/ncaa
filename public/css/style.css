@@ -17327,11 +17327,12 @@ input:focus {
 /* Sidebar */
 .sidebar {
   min-height: calc(100vh - 70px);
-  background: #ffffff;
+  background: #23294D;
   font-family: "ubuntu-regular", sans-serif;
   padding: 0;
   width: 260px;
   z-index: 11;
+  color:#fff;
   transition: width 0.25s ease, background 0.25s ease;
   -webkit-transition: width 0.25s ease, background 0.25s ease;
   -moz-transition: width 0.25s ease, background 0.25s ease;
@@ -17366,7 +17367,7 @@ input:focus {
   align-items: center;
   white-space: nowrap;
   padding: 1.125rem 0 1.125rem 0;
-  color: #3e4b5b;
+  color: #ffffff;
   -webkit-transition-duration: 0.45s;
   -moz-transition-duration: 0.45s;
   -o-transition-duration: 0.45s;
@@ -17724,7 +17725,7 @@ input:focus {
 
 .navbar.default-layout-navbar {
   font-family: "ubuntu-light", sans-serif;
-  background: #ffffff;
+  background: #23294D;
   transition: background 0.25s ease;
   -webkit-transition: background 0.25s ease;
   -moz-transition: background 0.25s ease;
@@ -17736,7 +17737,7 @@ input:focus {
   -webkit-transition: width 0.25s ease, background 0.25s ease;
   -moz-transition: width 0.25s ease, background 0.25s ease;
   -ms-transition: width 0.25s ease, background 0.25s ease;
-  background: #ffffff;
+  background: #23294D;
   width: 260px;
   height: 70px;
 }
@@ -18539,6 +18540,14 @@ html {
 }
 
 .content-wrapper {
+  background: #23294D;
+  padding: 2.75rem 2.25rem;
+  width: 100%;
+  -webkit-flex-grow: 1;
+  flex-grow: 1;
+}
+
+.content-wrapper-2 {
   background: #f2edf3;
   padding: 2.75rem 2.25rem;
   width: 100%;

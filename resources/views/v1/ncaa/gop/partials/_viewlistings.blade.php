@@ -1,7 +1,9 @@
 <div class="col-md-7 grid-margin stretch-card">
     <div class="card">
-        <div class="card-body">
+        <div class="card-body" style="padding:4px;">
             <h4 class="card-title">Preview Pane</h4>
+            <span id="deleteLoader" style="display:block"></span>
+            {!! $aircraftMakerLists->links() !!}
             <table class="table table-bordered" width="100%">
                 <thead class="table-info">
                     <tr class="table-warning">
@@ -22,15 +24,18 @@
                             $count % 2 == 0 ? $css = 'table-primary' : $css = 'table-secondary';
                         ?>
                             <tr class="{{$css}}">
-                                <td style="font-size:11px;">{{$count}}</td>
-                                <td style="font-size:10px; line-height:15px; font-weight:bold">{{strtoupper($aircraftMaker->aircraft_maker)}}</td>
-                                <td style="font-size:10px; line-height:15px; color:blue" align="center">
+                                <td>{{$count}}</td>
+                                <td>{{strtoupper($aircraftMaker->aircraft_maker)}}</td>
+                                <td style="color:blue" class="center">
                                     <a href="{{URL('aircraft-make/'.base64_encode($aircraftMaker->id).'/edit')}}">
                                         <i class="mdi mdi-pen" style="font-size:25px;"></i>
                                     </a>
                                 </td>
-                                <td style="font-size:10px; line-height:15px; color:red" align="center">
-                                    <i class="mdi mdi-delete-forever" style="font-size:25px;"></i>
+                                <td style="color:red" class="center">
+                                    <form method="POST" name="deleteAircraftMaker" id="deleteAircraftMaker">
+                                        {!! csrf_field() !!} {!! method_field('DELETE') !!}
+                                        <i class="mdi mdi-delete-forever deleteAircraftMake" style="font-size:25px; cursor:pointer" title="Delete {{$aircraftMaker->aircraft_maker}}" value="{{$aircraftMaker->id}}"></i>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

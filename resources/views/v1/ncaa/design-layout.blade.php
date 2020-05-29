@@ -13,6 +13,22 @@
   <style>
     .error{ font-size:12px; font-weight:bold; color:red; margin-top:10px; margin-bottom:10px;}
     p{font-size:11px; margin:0px;}
+    #exportTableData_filter{
+      font-size:12px;
+      display:inline-block;
+      margin-left:10px;
+    }
+    #exportTableData_filter input {
+      border:1px solid #ccc;
+    }
+    #exportTableData_length{
+      font-size:12px;
+      display:inline-block;
+      margin-left:10px;
+    }
+    .paging_simple_numbers{
+      display:none;
+    }
   </style>
     <link rel="shortcut icon" href="/images/ncaa-logo.png" />
 
@@ -31,71 +47,18 @@
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-stretch">
         <div class="search-field d-none d-md-block">
-            <div class="input-group">
+            <!-- <div class="input-group">
               <div class="input-group-prepend bg-transparent">
                   <i class="input-group-text border-0 mdi mdi-magnify"></i>                
               </div>
-              <input type="text" class="form-control bg-transparent border-0" placeholder="Search NCAA">
-            </div>
+              <input type="text" class="form-control bg-transparent border-0" placeholder="Search NCAA"> 
+            </div> -->
         </div>
         <ul class="navbar-nav navbar-nav-right">
           <li class="nav-item d-none d-lg-block full-screen-link">
             <a class="nav-link">
               <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
             </a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
-              <i class="mdi mdi-bell-outline"></i>
-              <span class="count-symbol bg-danger"></span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-              <h6 class="p-3 mb-0">Notifications</h6>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item preview-item">
-                <div class="preview-thumbnail">
-                  <div class="preview-icon bg-success">
-                    <i class="mdi mdi-airplane-off"></i>
-                  </div>
-                </div>
-                <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                  <h6 class="preview-subject font-weight-normal mb-1">Boeing 7374-fg</h6>
-                  <p class="text-gray ellipsis mb-0">
-                    Air Peace licence will expire in 90 days
-                  </p>
-                </div>
-              </a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item preview-item">
-                <div class="preview-thumbnail">
-                  <div class="preview-icon bg-warning">
-                    <i class="mdi mdi-airplane-off"></i>
-                  </div>
-                </div>
-                <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                  <h6 class="preview-subject font-weight-normal mb-1">Boeing 45KB-CV</h6>
-                  <p class="text-gray ellipsis mb-0">
-                    AZMAN AIR Validity Expires in 14 days.
-                  </p>
-                </div>
-              </a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item preview-item">
-                <div class="preview-thumbnail">
-                  <div class="preview-icon bg-info">
-                    <i class="mdi mdi-link-variant"></i>
-                  </div>
-                </div>
-                <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                  <h6 class="preview-subject font-weight-normal mb-1">Boeing 9JKCV</h6>
-                  <p class="text-gray ellipsis mb-0">
-                    DANA Airlines validity has expire
-                  </p>
-                </div>
-              </a>
-              <div class="dropdown-divider"></div>
-              <h6 class="p-3 mb-0 text-center">See all notifications</h6>
-            </div>
           </li>
           <li class="nav-item nav-logout d-lg-block">
             <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="font-size:12px; color:#ff0000">
@@ -163,8 +126,15 @@
             </a>
             <div class="collapse" id="gop">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{{URL('aircraft-make')}}">Add Aircrafts Maker</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('aircraft-make')}}">Aircrafts Maker</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('aircraft-type')}}">Aircraft Type</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('foreign-registration-marks')}}">Foreign Registration Marks</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('foreign-amo-holder')}}">Foreign AMO</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('general-aviation')}}">General Aviation</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL('operations')}}">Operation Type</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('state-of-registry')}}">State of Registry</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('training-organization')}}">Training Organization</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('travel-agency')}}">Travel Agency</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL('user-role')}}">User Role</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL('users')}}">Users</a></li>
               </ul>
@@ -225,7 +195,7 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#focc" aria-expanded="false" aria-controls="focc">
-              <span class="menu-title">FOCC</span>
+              <span class="menu-title">FOCC & MCC</span>
               <i class="menu-arrow"></i>
               <i class="mdi mdi-crosshairs-gps menu-icon"></i>
             </a>
@@ -233,28 +203,61 @@
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="{{URL('focc-lists')}}">View</a></li>
                   @if(Auth::user()->role == 1  || Auth::user()->role == 2)
-                    <li class="nav-item"> <a class="nav-link" href="{{URL('focc')}}">Add</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{URL('focc-and-mcc')}}">Add</a></li>
                   @endif
               </ul>
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span class="menu-title">MCC</span>
-              <i class="mdi mdi-contacts menu-icon"></i>
+            <a class="nav-link" data-toggle="collapse" href="#typeacceptance" aria-expanded="false" aria-controls="typeacceptance">
+              <span class="menu-title">T.A.C</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-crosshairs-gps menu-icon"></i>
             </a>
+            <div class="collapse" id="typeacceptance">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{{URL('all-type-acceptance-certificate')}}">View</a></li>
+                  @if(Auth::user()->role == 1  || Auth::user()->role == 2)
+                    <li class="nav-item"> <a class="nav-link" href="{{URL('type-acceptance-certificate')}}">Add</a></li>
+                  @endif
+              </ul>
+            </div>
           </li>
+          
+          
+
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#economicLicence" aria-expanded="false" aria-controls="gop">
+              <span class="menu-title">Economic Licence</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+            </a>
+            <div class="collapse" id="economicLicence">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{{URL('economic-licence/aop')}}">AOP</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('economic-licence/atl')}}">ATL</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('economic-licence/pncf')}}">PNCF</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('economic-licence/atol')}}">ATOL</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('economic-licence/paas')}}">PAAS</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('economic-licence/ato')}}">ATO</a></li>
+              </ul>
+            </div>
+          </li>
+
+          
+
+          
           
         </ul>
       </nav>
 
       <div class="main-panel" >
-        <div class="content-wrapper">
+        <div class="content-wrapper-2">
           @yield('main')
         </div>
         <footer class="footer">
           <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2019 <a href="#" target="_blank">Team ICT</a>. All rights reserved.</span>
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © {{date('Y')}} <a href="#" target="_blank">Team ICT</a>. All rights reserved.</span>
             <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Made with <i class="mdi mdi-heart text-danger"></i> by the NCAA ICT Team </span>
           </div>
         </footer>

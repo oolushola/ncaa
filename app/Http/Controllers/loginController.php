@@ -12,6 +12,13 @@ use Auth;
 
 class loginController extends Controller
 {
+    public function index(){
+        if(Auth::check() && Auth::user()->role){
+            return redirect()->route('dashboard');
+        }
+        return view('auth.login');
+    }
+
     public function dashboard(){
         if(Auth::check() && Auth::user()->role){
             $aircraftslistings = aircrafts::SELECT('id', 'c_of_a_status')->ORDERBY('c_of_a_status')->GET();

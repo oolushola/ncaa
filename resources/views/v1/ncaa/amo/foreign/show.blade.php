@@ -4,9 +4,10 @@
 
 @section('main')
     <div class="page-header">
-        <button type="button" class="btn btn-gradient-primary btn-rounded btn-icon"  title="Download foreign AMO into excel sheet" id="downloadForeignAmo">
-            <i class="mdi mdi-cloud-download"></i>
-        </button>
+        <button type="button" class="btn btn-gradient-primary btn-icon-text" id="downloadForeignAmo"  title="Download foreign AMO into excel sheet">
+                <i class="mdi mdi-cloud-download"></i>
+                Download Excel
+            </button>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{URL('amo-view-selection')}}">Back</a></li>
@@ -19,18 +20,6 @@
             <div class="card">
                 <div class="card-body" style="padding-left:3px; padding-right:3px;">
                     <h4 class="card-title" style="padding-left:10px; display:inline-block">Foreign AMO Listings</h4>
-                    <form method="POST" name="frmForeignAmobyStatus" id="frmForeignAmobyStatus">
-                        <span style="float:right; font-size:12px; font-weight:bold; margin-top:-30px;">filter by status:
-                            {!! csrf_field() !!}
-                            <select id="chooseStatus" name="status">
-                                <option value="0">Choose Status</option>
-                                <option value="active">Active</option>
-                                <option value="expire">Expired</option>
-                                <option value="expiring soon">Expiring Soon</option>
-                            </select>
-                        </span>
-                    </form>
-
                     @if(Auth::user()->role==3 || 1)
                         @if(count($checkforamoforeignlastupdate))
                             @foreach($checkforamoforeignlastupdate as $lastupdatedby)
@@ -41,6 +30,34 @@
                         @endif
                     @endif
 
+                    <form method="POST" name="frmForeignAmobyStatus" id="frmForeignAmobyStatus">
+                    {!! csrf_field() !!}
+                    <input type="hidden" name="criteria" value="" id="selectorCriteria">
+                    <input type="hidden" name="direction" value="" id="direction">
+                    <span style="font-size:11px; padding-left:10px; color:green">sort by:
+                        <select id="amoHolder" id='amoHolder'>
+                            <option value="0">Amo Holder</option>
+                            <option value="ASC">Ascending</option>
+                            <option value="DESC">Descending</option>
+                        </select>
+                    </span>
+                    <span style="font-size:11px; padding-left:10px; color:green">
+                        <select id="country_id" name="">
+                            <option value="">Choose country</option>
+                            <option value="ASC">Ascending</option>
+                            <option value="DESC">Descending</option>
+                        </select>
+                    </span>
+                    <span style="font-size:11px; padding-left:10px; color:green">
+                        <select id="chooseStatus" name="status">
+                            <option value="0">Status</option>
+                            <option value="active">Active</option>
+                            <option value="expire">Expired</option>
+                            <option value="expiring soon">Expiring Soon</option>
+                        </select>
+                    </span>
+                    </form>
+                    <br>
                     <div class="table-responsive" id="contentDropper">              
                         <table class="table table-bordered" id="exportTableData">
                             <thead>
@@ -87,29 +104,46 @@
                                             $color = "#000";
                                         }
                                     
+                                        $expiry = date('d/m/Y', $due_date);
                                         
                                     ?>
                                     <tr class="{{$css_style}}">
                                         <td>{{$count}}</td>
-                                        <td>{!! $foreignAmo->amo_holder !!}</td>
+                                        <td>{!! strtoupper($foreignAmo->foreign_amo_holder) !!}</td>
                                         <td>{!! $foreignAmo->country !!}</td>
                                         <td>{!! $moe !!}</td>
                                         <td>{!! $foreignAmo->approvals !!}</td>
-                                        <td style="line-height:18px;">{!! $foreignAmo->ratings_capabilities !!}
+                                        <td style="line-height:18px;">
+                                                <ul style="padding:0; margin:0; font-size:11px; list-style:none;">
+                                                @foreach($aircraftMakerRatingsLists as $aircraftMaker)
+                                                    @if($aircraftMaker->foreign_amo_id == $foreignAmo->id)
+                                                        <li style="color:green; text-decoration:underline">
+                                                            {{$aircraftMaker->aircraft_maker}}:
+                                                            <ul style="padding:0; margin:0; font-size:11px;">
+                                                                @foreach($aircraftTypeList as $aircraftType)
+                                                                @if($aircraftMaker->foreign_amo_id == $foreignAmo->id && $aircraftType->aircraft_maker_id == $aircraftMaker->id)
+                                                                <li style='display:inline-block; color:#333'>{!! $aircraftType->aircraft_type  !!},</li>
+                                                                @endif
+                                                                @endforeach
+                                                            </ul>
+                                                        </li>
+                                                    @endif
+                                                @endforeach
+                                                </ul>
                                         </td>
                                         <td  class="center">
                                             <a href="{{URL::asset('/confidentials/amo/foreign/'.$foreignAmo->amo.'')}}" target="_blank">
                                                     {!! $foreignAmo->amo_number !!}
                                                 </a>
                                         </td>
-                                        <td>{!! $foreignAmo->expiry !!}</td>
+                                        <td>{!! $expiry !!}</td>
                                         <td>{{$numberofdays}}</td>
                                         <td style="background:{{$bgcolor}}; color:{{$color}}" class="center">{!! $status !!}</td>
                                     </tr>
                                     @endforeach
                                 @else
                                     <tr>
-                                    <td class="table-danger" colspan="11" style="font-size:11px;">No foreign AMO has been added yet.</td>
+                                    <td class="table-danger" colspan="11">No foreign AMO has been added yet.</td>
                                 </tr>
                                 @endif
                             </tbody>

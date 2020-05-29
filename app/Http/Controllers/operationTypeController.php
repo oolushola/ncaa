@@ -8,6 +8,7 @@ use App\Http\Requests\operationsRequest;
 use Illuminate\Http\HttpResponse;
 use Illuminate\Http\Request;
 use Auth;
+use App\assignOperationSpecAoc;
 
 class operationTypeController extends Controller
 {
@@ -51,6 +52,19 @@ class operationTypeController extends Controller
                 $recid->UPDATE($request->all());
                 return 'updated';
             }
+        }
+        return redirect()->route('login');
+    }
+
+    public function destroy($id){
+        if(Auth::check() && Auth::user()->role){
+            $checkedassignaoc = assignOperationSpecAoc::WHERE('operation_type_id', $id)->exists();
+            if($checkedassignaoc){
+                return 'cant_delete';
+            }
+            $recid = operations::findOrfail($id);
+            $recid->DELETE();
+            return 'deleted';
         }
         return redirect()->route('login');
     }

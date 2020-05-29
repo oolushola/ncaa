@@ -4,9 +4,13 @@
 
 @section('main')
     <div class="page-header">
-        <button type="button" class="btn btn-gradient-primary btn-rounded btn-icon" id="downloadAOC">
-            <i class="mdi mdi-cloud-download" title="Download AOC to EXCEL SHEET"></i>
-        </button>
+        @if($checkforaocupdates)
+            
+            <button type="button" class="btn btn-gradient-primary btn-icon-text" id="downloadAOC">
+                <i class="mdi mdi-cloud-download" title="Download AOC to EXCEL SHEET"></i>
+                Download Excel
+            </button>
+        @endif
         
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -30,8 +34,38 @@
                             @endforeach                            
                         @endif
                     @endif
+
+                    <form name="frmSortAoc" id="frmSortAoc">
+                        {!! csrf_field() !!}
+                        <span style="font-size:11px; padding-left:10px; color:green">sort by: </span>
+                        <span style="font-size:12px; font-weight:bold; display:inline-block">
+                            <select name="remarks" id="remarks" >
+                                <option value="0">Remarks</option>
+                                <option value="1">Active</option>
+                                <option value="2">Suspended</option>
+                                <option value="3">Expired</option>
+                                <option value="4">Revoked</option>
+                            </select>
+                        </span>
+                        <span style="font-size:12px; font-weight:bold; display:inline-block"> 
+                            <select name="issuedDate" id="issuedDate">
+                                <option value="0">Issued Date</option>
+                                <option value="asc">Ascending Order</option>
+                                <option value="desc">Descending Order</option>
+                            </select>
+                        </span>
+                        <span style="font-size:12px; font-weight:bold; display:inline-block"> 
+                            <select name="operation" id="operation">
+                                <option value="0">Operation</option>
+                                @foreach($operations as $operation)
+                                    <option value="{!! $operation->id !!}">{!! $operation->operation_type !!}</option>
+                                @endforeach
+                            </select>
+                        </span>
+                    </form>
+                    <br>
                     
-                    <div class="table-responsive">
+                    <div class="table-responsive" id="contentDropper">
                         <table class="table table-bordered" id="exportTableData">
                             <thead>
                                 <tr class="table-warning">
@@ -68,10 +102,31 @@
                                             if($aoc->remarks == 4){$remarks = 'Revoked';}
 
                                             $converdatetotimeofvalidity = strtotime($aoc->validity); 
-                                            $validity = date('jS \of M, Y.', $converdatetotimeofvalidity);
+                                            $validity = date('d/m/Y', $converdatetotimeofvalidity);
 
                                             $converdatetotimeofissued = strtotime($aoc->issued_date); 
-                                            $issued_date = date('jS \of M, Y.', $converdatetotimeofissued);
+                                            $issued_date = date('d/m/Y', $converdatetotimeofissued);
+
+                                            $now = time();
+                                            $due_date = strtotime($aoc->validity);;
+                                            $datediff = $due_date - $now;
+                                            $numberofdays = round($datediff / (60 * 60 * 24));
+
+                                            if($numberofdays > 90 ){
+                                                $bgcolor = "green";
+                                                $color = "#fff";
+                                                $remarks = "Active";
+                                            }
+                                            else if(($numberofdays >= 0) && ($numberofdays <=90)){
+                                            $bgcolor = "#ffbf00";
+                                                $color = "#000";
+                                                $remarks = "Expiring soon";
+                                            }
+                                            else{
+                                                $bgcolor = "red";
+                                                $color = "#000";
+                                                $remarks = "Expired";
+                                            }
                                             
                                         ?>
                                         <tr style="font-family:tahoma;" class="{{$css_style}}">
@@ -79,7 +134,7 @@
                                             <td>{!! strtoupper($aoc->aoc_holder) !!}</td>
                                             <td>
                                                 @foreach($aocAircrafts as $acmaker)
-                                                    @if($acmaker->aoc_holder_id === $aoc->id)
+                                                    @if($acmaker->aoc_holder_id == $aoc->id)
                                                         <a href="{{URL('/aircraft-list/'.str_slug($aoc->aoc_holder).'/'.$aoc->id.'/'.str_slug($acmaker->aircraft_maker).'/'.$acmaker->aircraft_maker_id)}}" target="_blank">
                                                             {{ strtoupper($acmaker->aircraft_maker)}},
                                                         </a>
@@ -93,7 +148,7 @@
                                                 </a>
                                             </td>
                                             <td class="center">{!! $issued_date !!}</td>
-                                            <td class="center">{!! $validity !!}</td>
+                                        <td class="center" style="background:{{$bgcolor}}; color:{{$color}}; font-weight:bold">{!! $validity !!}</td>
                                             <td class="center">
                                                 <a href="{{URL::asset('/confidentials/'.$aoc->ops_specs)}}" target="_blank">
                                                     <i class="mdi mdi-file-pdf" style="color:black; font-size:20px;" title="click to view {{$aoc->aoc_holder}} OPS Specs"></i>
@@ -108,7 +163,7 @@
                                             <td>
                                                 
                                                 @foreach($oprspecslists as $oprspecs)
-                                                    @if($aoc->id === $oprspecs->aoc_holder_id)
+                                                    @if($aoc->id == $oprspecs->aoc_holder_id)
                                                         {!! strtoupper($oprspecs->operation_type) !!},
                                                     @endif
                                                 @endforeach

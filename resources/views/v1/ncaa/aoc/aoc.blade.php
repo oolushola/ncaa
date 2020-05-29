@@ -15,51 +15,38 @@
         </nav>
     </div>
     <div class="row">
-        <div class="col-md-5 grid-margin stretch-card">
+        <div class="col-md-5 grid-margin">
             <div class="card">
                 <div class="card-body">
                     <form name="frmNewAoc" method="POST" id="frmNewAoc" enctype="multipart/form-data" action="{{URL('new-aoc')}}">
                         {!! csrf_field() !!}
                         <div class="form-group">
-                            <input type="text" class="form-control" id="aoc_holder" name="aoc_holder" placeholder="AOC Holder">
+                        <label class="labelholder">AOC Holder *</label>
+                            <input type="text" class="form-control" id="aoc_holder" name="aoc_holder">
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="aoc_certificate_no" name="aoc_certificate_no" placeholder="AOC Certificate No">
+                            <label class="labelholder">AOC Certificate No *</label>
+                            <input type="text" class="form-control" id="aoc_certificate_no" name="aoc_certificate_no">
                         </div>
                         <div class="form-group">
-                            <input type="file" name="aoc_certificate" id="aoc_certificate" class="file-upload-default">
-                            <div class="input-group col-xs-12">
-                                <input type="text" id="aoc_certificate_box" class="form-control file-upload-info" disabled placeholder="AOC Certificate">
-                                <span class="input-group-append">
-                                    <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
-                                </span>
-                            </div>
+                            <label class="labelholder">AOC Certificate *</label>
+                            <input type="file" name="aoc_certificate" id="aoc_certificate"  style="font-size:12px; display:block">
                         </div>
                         <div class="form-group">
                             <label style="font-size:11px; color: green; font-weight: bold">Issued Date*</label>
-                            <input type="date" name="issued_date" class="form-control" id="issued_date" placeholder="Issued Date">
+                            <input type="date" name="issued_date" class="form-control" id="issued_date">
                         </div>
                         <div class="form-group">
                             <label style="font-size:11px; color: green; font-weight: bold">Validity *</label>
-                            <input type="date" name="validity" class="form-control" id="validity" placeholder="Validity">
+                            <input type="date" name="validity" class="form-control" id="validity">
                         </div>
                         <div class="form-group">
-                            <input type="file" name="ops_specs" id="ops_specs" class="file-upload-default">
-                            <div class="input-group col-xs-12">
-                                <input type="text" class="form-control file-upload-info" disabled placeholder="OPS Specs">
-                                <span class="input-group-append">
-                                    <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
-                                </span>
-                            </div>
+                            <label class="labelholder">OPS Specs *</label>
+                            <input type="file" name="ops_specs" id="ops_specs"  style="font-size:12px; display:block">
                         </div>
                         <div class="form-group">
-                            <input type="file" name="part_g" id="part_g" class="file-upload-default">
-                            <div class="input-group col-xs-12">
-                            <input type="text" class="form-control file-upload-info" disabled placeholder="PART G">
-                            <span class="input-group-append">
-                                <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
-                            </span>
-                            </div>
+                            <label class="labelholder">PART G *</label>
+                            <input type="file" name="part_g" id="part_g"  style="font-size:12px; display:block">
                         </div>
                         <div class="form-group">
                             <input type="hidden" name="remarks" id="remarks", value="0">
@@ -94,8 +81,8 @@
 
                         <input type="hidden" name="created_by" value="{{Auth::user()->name}}">
                             
-                        <button type="submit" id="addNewAoc" class="btn btn-gradient-primary mr-2">ADD</button>
-                        <button class="btn btn-light">Cancel</button>
+                        <button type="submit" id="addNewAoc" class="btn btn-gradient-primary mr-2">SAVE</button>
+                        <button type="reset" class="btn btn-light">Cancel</button>
                         <div id="loader"></div>
                     </form>
                 </div>

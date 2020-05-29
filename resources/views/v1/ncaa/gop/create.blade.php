@@ -21,11 +21,12 @@
                     <form method="POST" name="frmAircraftMake" id="frmAircraftMake">
                     {!! csrf_field() !!}
                         <div class="form-group">
-                            <input type="text" name="aircraft_maker" id="aircraft_maker" class="form-control" placeholder="Aircraft Maker*">
+                            <label class="labelholder">Aircraft Maker *</label>
+                            <input type="text" name="aircraft_maker" id="aircraft_maker" class="form-control">
                         </div>                
                                 
                         <button type="submit" class="btn btn-gradient-primary mr-2" id="addNewAircraftMaker">ADD</button>
-                        <button class="btn btn-light">Cancel</button>
+                        <button type="reset" class="btn btn-light">Cancel</button>
 
                         <div id="loader"></div>
                     </form>

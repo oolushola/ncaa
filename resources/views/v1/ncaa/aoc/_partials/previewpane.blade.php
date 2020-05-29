@@ -1,8 +1,9 @@
 <div class="col-md-7 grid-margin">
     <div class="card">
-        <div class="card-body">
+        <div class="card-body" style="padding:4px;">
             <h4 class="card-title" style="display:inline-block">Preview Pane</h4>
             <div style="display:inline-block; float:right">{{$aoclistings->links()}}</div>
+            <span id="deleteLoader" style="display:block"></span>
                 <div class="table-responsive">
                     <table class="table table-bordered" width="100%">
                         
@@ -70,14 +71,17 @@
                                         </td>
                                         @if(Auth::user()->role == 1 || 2)
                                             <td class="center">
-                                                <i class="mdi mdi-delete-forever" style="font-size:25px; color:red"></i>
+                                                <form method="POST" name="deleteAoc" id="deleteAoc">
+                                                    {!! csrf_field() !!} {!! method_field('DELETE') !!}
+                                                    <i class="mdi mdi-delete-forever deleteAoc" style="font-size:25px; cursor:pointer; color:red" title="Delete {{$aoc->aoc_holder}}" value="{{$aoc->id}}"></i>
+                                                </form>
                                             </td>
                                         @endif
                                     </tr>
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="6" class="table-secondary">No records available for AOC yet.</td>
+                                    <td colspan="8" class="table-secondary">No records available for AOC yet.</td>
                                 </tr>
                             @endif
                         </tbody>

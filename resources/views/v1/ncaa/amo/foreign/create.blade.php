@@ -21,9 +21,16 @@
                 <form name="frmForeignAmo" id="frmForeignAmo" method="POST" action="{{URL('/amo-foreign')}}">
                 {!! csrf_field() !!}
                     <div class="form-group">
-                        <input type="text" class="form-control" name="amo_holder" id="amo_holder" placeholder="AMO Holder">
+                        <label class="labelholder">AMO Holder *</label>
+                        <select name="amo_holder" id="amo-holder" class="form-control">
+                            <option value="">Choose Amo Holder</option>
+                            @foreach($foreignamoholderlist as $foreignamoholder)
+                                <option value="{{$foreignamoholder->id}}">{{$foreignamoholder->foreign_amo_holder}}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
+                        <label class="labelholder">Country *</label>
                         <select class="form-control" name="regional_country_id" id="regional_country_id">
                             <option value="">Choose Country</option>
                             @foreach($countrylists as $countries)
@@ -32,27 +39,31 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="moe_reference" id="moe_reference" placeholder="MOE Reference">
+                        <label class="labelholder">MOE Reference</label>
+                        <input type="text" class="form-control" name="moe_reference" id="moe_reference">
                     </div>
                     <div class="form-group">
-                        <textarea class="form-control" name="approvals" id="approvals" placeholder="Approvals"></textarea>
+                        <label class="labelholder">Approvals</label>
+                        <textarea class="form-control" name="approvals" id="approvals"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="c-of-a status" class="labelholder">Ratings/Capabilities (optional) </label>
+                        <textarea type="text" class="form-control textarea" name="ratings_capabilities" id="ratings_capabilities"></textarea>
                     </div>
                     <div class="form-group">
-                    <label for="c-of-a status" style="font-size:12px; font-weight:bold; color:green">Ratings/Capabilities</label>
-                        <textarea type="text" class="form-control textarea" placeholder="" name="ratings_capabilities" id="ratings_capabilities"></textarea>
+                        <label class="labelholder">AMO Number *</label>
+                        <input type="text" name="amo_number" id="amo_number" class="form-control">  
                     </div>
                     <div class="form-group">
-                        <input type="text" name="amo_number" id="amo_number" class="form-control" placeholder="AMO Number">                    
-                    </div>
-                    <div class="form-group">
-                        <label for="c-of-a status" style="font-size:12px; font-weight:bold; color:green">Upload AMO </label>
+                        <label for="c-of-a status" class="labelholder">Upload AMO *</label>
                         <input type="file" name="amo" id="file" style="font-size:12px; display:block">
                         <input type="hidden" name="filecheck" id="filecheck" value="0">
                         <input type="hidden" name="ftype" id="ftype" value="pdf">
                     </div>
                     
                     <div class="form-group">
-                        <label style="font-size:12px; font-weight:bold; color:green">Expiry</label>
+                        <label style="font-size:12px; font-weight:bold; color:green">Expiry *</label>
                         <input type="date" class="form-control" id="expiry" name="expiry">
                     </div>
 
@@ -61,7 +72,7 @@
                     <input type="hidden" name="created_by" value="{{Auth::user()->name}}">
                     
                             
-                    <button type="submit" class="btn btn-gradient-primary mr-2" id="addForeignAmo">ADD</button>
+                    <button type="submit" class="btn btn-gradient-primary mr-2" id="addForeignAmo">SAVE</button>
                     <button class="btn btn-light">Cancel</button>
                 </form>
             </div>

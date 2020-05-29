@@ -21,6 +21,7 @@
                 <form name="frmAircraft" id="frmAircraft" method="POST" action="{{URL('/add-new-aircraft')}}">
                 {!! csrf_field() !!}
                     <div class="form-group">
+                        <label class="labelholder">AOC Holder *</label>
                         <select class="form-control" name="aoc_holder_id" id="aoc_holder_id">
                             <option value="0">Choose a Registered Operator</option>
                             @foreach($aoclists as $aoc)
@@ -28,21 +29,33 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group" id="aircraftconntent">
-                        <select class="form-control" name="aircraft_maker_id" id="aircraft_maker_id">
-                            <option value="0">Aircraft Maker</option>
-                        </select>
+                    <div class="form-group">
+                        <label class="labelholder">Aircraft Make Operated by AOC Holder *</label>
+                        <div id="aircraftconntent">
+                            <select class="form-control" name="aircraft_maker_id" id="aircraft_maker_id">
+                                <option value="0">Aircraft Make</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
+                        <label class="labelholder">Registration Marks *</label>
                         <input type="text" class="form-control" placeholder="Registration Marks" name="registration_marks" id="registration_mark">
                     </div>
+                    
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Aircraft Type" name="aircraft_type" id="aircraft_type">
+                        <label class="labelholder">Aircraft Type *</label>
+                            <div id="aircraftTypeContent">
+                                <select name="aircraft_type" class="form-control" id="aircraft_type">
+                                    <option value="">Choose Aircraft Type</option>
+                                </select>
+                            </div>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Aircraft Serial Number" name="aircraft_serial_number" id="aircraft_serial_number">
+                        <label class="labelholder">Aircraft Serial Number *</label>
+                        <input type="text" class="form-control" name="aircraft_serial_number" id="aircraft_serial_number">
                     </div>
                     <div class="form-group">
+                        <label class="labelholder">Year of Manufacture *</label>
                         <select name="year_of_manufacture" class="form-control" id="year_of_manufacture">
                             <option value=''>Choose year of manufacture</option>
                             <?php
@@ -54,11 +67,12 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label style="font-size:12px; font-weight:bold; color:green">Current Registration date</label>
+                        <label style="font-size:12px; font-weight:bold; color:green">Current Registration date *</label>
                         <input type="date" class="form-control" id="registration_date" name="registration_date">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Registered Owner" name="registered_owner" id="registered_owner">
+                        <label class="labelholder">Registered Owner *</label>
+                        <input type="text" class="form-control" name="registered_owner" id="registered_owner">
                     </div>
                     <div class="form-group">
                         <label for="year of manufacture" style="font-size:12px; font-weight:bold; color:green">C of A Status</label>
@@ -71,7 +85,8 @@
                         <input type="hidden" name="ftype" id="ftype" value="pdf">
                     </div>
                     <div class="form-group">
-                        <input type="number" class="form-control" placeholder="Weight(Kg)" name="weight" id="weight">
+                        <label class="labelholder">Weight(Kg) *</label>
+                        <input type="number" class="form-control" name="weight" id="weight">
                     </div>
 
                     <div id="loader"></div>
@@ -79,8 +94,8 @@
                     <input type="hidden" name="created_by" value="{{Auth::user()->name}}">
                     
                             
-                    <button type="submit" class="btn btn-gradient-primary mr-2" id="addAircraft">ADD</button>
-                    <button class="btn btn-light">Cancel</button>
+                    <button type="submit" class="btn btn-gradient-primary mr-2" id="addAircraft">SAVE</button>
+                    <button type="reset" class="btn btn-light">Cancel</button>
                 </form>
             </div>
             </div>

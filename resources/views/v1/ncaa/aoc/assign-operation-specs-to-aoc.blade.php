@@ -43,12 +43,12 @@
                 <table class="table table-bordered" width="100%">
                     <thead>
                         <tr class="table-info">
-                            <td colspan="4" style="font-size:12px; font-weight:bold">All available listings of Operation Specification</td>
+                            <td colspan="4" style="font-weight:bold">All available listings of Operation Specification</td>
                         </tr>
                         <tr class="table-warning">
-                            <td style="font-size:12px; font-weight:bold">#</td>
+                            <td style="font-weight:bold">#</td>
                             <td><input type="checkbox" id="selectAllLeftchkbx"></td>
-                            <td style="font-size:12px; font-weight:bold" colspan="4" id="selectAllLeftTxt">Select all available operation specification listings</td>
+                            <td style="font-weight:bold" colspan="4" id="selectAllLeftTxt">Select all available operation specification listings</td>
                         </tr>
                         
                     </thead>
@@ -94,18 +94,18 @@
                 <table class="table table-bordered" width="100%">
                     <thead>
                         <tr class="table-info">
-                            <td colspan="4" style="font-size:12px; font-weight:bold">All assigned Operation Specification</td>
+                            <td colspan="4" style="font-weight:bold">All assigned Operation Specification</td>
                         </tr>
                         <tr class="table-warning">
-                            <td style="font-size:12px; font-weight:bold">#</td>
+                            <td style="font-weight:bold">#</td>
                             <td><input type="checkbox"></td>
-                            <td style="font-size:12px; font-weight:bold" colspan="4">All assigned operation specification</td>
+                            <td style="font-weight:bold" colspan="4">All assigned operation specification</td>
                         </tr>
                         
                     </thead>
                     <tbody>
                         <tr class="table-success">
-                            <td style="font-size:12px; line-height:15px;" colspan="4">You've not assigned any operation specification to this AOC Holder</td>
+                            <td style="line-height:15px;" colspan="4">You've not assigned any operation specification to this AOC Holder</td>
                         </tr>
                     </tbody>
                 </table> 

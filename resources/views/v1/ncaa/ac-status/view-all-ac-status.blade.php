@@ -4,9 +4,11 @@
 
 @section('main')
     <div class="page-header">
-            <button type="button" class="btn btn-gradient-primary btn-rounded btn-icon">
-                <i class="mdi mdi-cloud-download" title="Download Aircraft Status into EXCEL SHEET" id="downloadAircraftStatus"></i>
+            <button type="button" class="btn btn-gradient-primary btn-icon-text" id="downloadAircraftStatus" title="Download Aircraft Status into EXCEL SHEET">
+                <i class="mdi mdi-cloud-download"></i>
+                Download Excel
             </button>
+
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">A/C Status</a></li>
@@ -19,27 +21,48 @@
             <div class="card">
                 <div class="card-body" style="padding-left:3px; padding-right:3px;">
                     <h4 class="card-title" style="padding-left:10px; display:inline-block">A/C Status Listings</h4>
+                    @if(Auth::user()->role==3 || 1)
+                        @if(count($checkforaircraftstatuslastupdate))
+                            @foreach($checkforaircraftstatuslastupdate as $lastupdatedby)
+                            <span style="font-size:11px; font-weight:bold; margin-left:10px; color:blue; float:right; margin-right:20px;">
+                                Last updated by: {!! $lastupdatedby->name !!}
+                            </span>
+                            @endforeach                            
+                        @endif
+                    @endif
                     
                     <form name="frmgetAircraftByAoc" id="frmgetAircraftByAoc">
                         {!! csrf_field() !!}
-                        <span style="float:right; font-size:12px; font-weight:bold; margin-top:-30px;">filter by:
-                            <select name="aoc_holder_id" id="aocholderid" >
+                        <span style="font-size:12px; font-weight:bold; display:inline-block;">
+                            <select name="aoc_holder_id" id="aocholderid" style="width:150px;">
                                 <option value="0">Registered Operator</option>
                                 @foreach($allaocs as $aoc)
                                     <option value="{{$aoc->id}}">{{$aoc->aoc_holder}}</option>
                                 @endforeach
                             </select>
                         </span>
+                        <span style="font-size:12px; font-weight:bold; display:inline-block" id="aircraftMakerDropper"> 
+                            <select>
+                                <option value="0">Aircraft Type</option>
+                            </select>
+                        </span>
+                        <span style="font-size:12px; font-weight:bold; display:inline-block" > 
+                            <select name="registration_marks" id="registration_marks">
+                                <option value="0">Registration Marks</option>
+                                <option value="asc">Ascending</option>
+                                <option value="desc">Descending</option>
+                            </select>
+                        </span>
+                        <span style="font-size:12px; font-weight:bold; display:inline-block" > 
+                            <select name="remarks" id="remarks">
+                                <option value="0">Choose remarks</option>
+                                <option value="active">Active</option>
+                                <option value="expiringSoon">Expiring Soon</option>
+                                <option value="expired">Expired</option>
+                            </select>
+                        </span>
                     </form>
-                    @if(Auth::user()->role==3 || 1)
-                        @if(count($checkforaircraftstatuslastupdate))
-                            @foreach($checkforaircraftstatuslastupdate as $lastupdatedby)
-                            <span style="float:right; font-size:11px; font-weight:bold; margin-right:30px; color:blue; padding-bottom:10px;">
-                                Last updated by: {!! $lastupdatedby->name !!}
-                            </span>
-                            @endforeach                            
-                        @endif
-                    @endif
+                    <br>
 
                     <div class="table-responsive" id="contentDropper">            
                         <table class="table table-bordered" id="exportTableData">
@@ -73,15 +96,23 @@
                                         if($numberofdays > 90 ){
                                             $bgcolor = "green";
                                             $color = "#fff";
+                                            $remarks = "Active";
                                         }
                                         else if(($numberofdays >= 0) && ($numberofdays <=90)){
                                            $bgcolor = "#ffbf00";
                                             $color = "#000";
+                                            $remarks = "Expiring soon";
                                         }
                                         else{
                                             $bgcolor = "red";
                                             $color = "#000";
+                                            $remarks = "Expired";
                                         }
+                                        $converdatetotimeofregdate = strtotime($aircraft->registration_date); 
+                                        $current_registration_date = date('d/m/Y', $converdatetotimeofregdate);
+                                        
+                                        $converdatetotimeofcofastatus = strtotime($aircraft->c_of_a_status); 
+                                        $cofastatus = date('d/m/Y', $converdatetotimeofcofastatus);
                                         ?>
                                     <tr class="{{$css_style}}">
                                         <td>{{$counter}}</td>
@@ -89,15 +120,15 @@
                                         <td>{!! $aircraft->registration_marks !!}</td>
                                         <td>{!! $aircraft->aircraft_type !!}</td>
                                         <td>{!! $aircraft->aircraft_serial_number !!}</td>
-                                        <td align="center">{!! $aircraft->year_of_manufacture !!}</td>
-                                        <td align="center">{!! $aircraft->registration_date !!}</td>
+                                        <td class="center">{!! $aircraft->year_of_manufacture !!}</td>
+                                        <td class="center">{!! $current_registration_date !!}</td>
                                         <td>{!! $aircraft->registered_owner !!}</td>
                                         <td style="text-align:center; background:{{$bgcolor}}; color:{{$color}};">
                                             <a href="{{URL::asset('/confidentials/c-of-a/'.$aircraft->c_of_a.'')}}" target="_blank"style="color:{{$color}}">
-                                                    {!! $aircraft->c_of_a_status !!}
+                                                    {!! $cofastatus !!}
                                                 </a>
                                         </td>
-                                        <td></td>
+                                        <td>{{$remarks}}</td>
                                         <td>{!! $aircraft->weight !!}</td>
                                     </tr>
                                     @endforeach

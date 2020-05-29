@@ -9,7 +9,7 @@
         </h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Global Operation</a></li>
+            <li class="breadcrumb-item"><a href="{{URL('operations')}}">Global Operation</a></li>
             <li class="breadcrumb-item active" aria-current="page">AOC operation type</li>
             </ol>
         </nav>
@@ -21,12 +21,13 @@
                     <form method="POST" name="frmOperations" id="frmOperations">
                     {!! csrf_field() !!} {!! method_field('PATCH') !!}
                         <div class="form-group">
-                            <input type="text" name="operation_type" id="operation_type" class="form-control" placeholder="Enter Operation Type" value="{{$recid->operation_type}}">
+                            <label class="labelholder">Operation Type *</label>
+                            <input type="text" name="operation_type" id="operation_type" class="form-control" value="{{$recid->operation_type}}">
                         </div> 
                         <input type="hidden" name="id" value="{{$recid->id}}" id="id">     
                                 
                         <button type="submit" class="btn btn-gradient-primary mr-2" id="updateOperations">Update</button>
-                        <button class="btn btn-light">Cancel</button>
+                        <input type="reset" class="btn btn-light" value="Cancel">
 
                         <div id="loader"></div>
                     </form>

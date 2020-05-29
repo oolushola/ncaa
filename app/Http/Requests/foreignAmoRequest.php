@@ -26,7 +26,6 @@ class foreignAmoRequest extends FormRequest
         return [
             'amo_holder' => 'required',
             'regional_country_id' => 'required',
-            'ratings_capabilities' => 'required',
             'amo_number' => 'required',
             'expiry' => 'required',
         ];

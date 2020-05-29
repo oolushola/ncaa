@@ -24,9 +24,8 @@ class localAmoRequest extends FormRequest
     public function rules()
     {
         return [
-            'aoc_holder_id' => 'required',
+            'holder_criteria' => 'required',
             'amo_approval_number' => 'required',
-            'ratings_capabilities' => 'required',
             'maintenance_locations' => 'required',
             'expiry' => 'required',
             'amo_pm_aprvl_pg_lep' => 'required',

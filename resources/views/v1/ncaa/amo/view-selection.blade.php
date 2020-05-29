@@ -43,7 +43,6 @@
                                 <tr class="table-warning">
                                     <th style="font-size:11px; font-weight:bold">#</th>
                                     <th style="font-size:11px; font-weight:bold">AMO Holder</th>
-                                    <th style="font-size:11px; font-weight:bold; text-align:center">Extention</th>
                                     <th style="font-size:11px; font-weight:bold">AMO Number</th>
                                     <th style="font-size:11px; font-weight:bold; text-align:center">Expiry</th>
                                     <th style="font-size:11px; font-weight:bold; text-align:center">Indicator</th>
@@ -59,19 +58,18 @@
                                         $due_date = strtotime($localAmo->expiry);;
                                         $datediff = $due_date - $now;
                                         $numberofdays = round($datediff / (60 * 60 * 24));
-
+                                        $expiry = date('d/m/Y', $due_date);
                                         if(($numberofdays >= 0) && ($numberofdays <=90)){
                                             $count++; 
                                             $bgcolor = "#ffbf00";
                                             $color = "#000";
 
-                                    echo '<tr class='.$css_style.' "style="font-family:tahoma; font-size:11px;">
-                                        <td style="font-size:11px;">'.$count.'</td>
-                                        <td style="font-size:11px; line-height:15px;">'.strtoupper($localAmo->aoc_holder).'</td>
-                                        <td style="font-size:11px; line-height:15px;">'.$localAmo->extention.'</td>
-                                        <td style="font-size:11px; line-height:15px;">'.$localAmo->amo_approval_number.'</td>
-                                        <td style="font-size:11px; line-height:18px; text-align:center">'.$localAmo->expiry.'</td>
-                                        <td style="font-size:11px; line-height:15px; text-align:center; background:'.$bgcolor.'">expires in '.$numberofdays.' days</td>
+                                    echo '<tr class="'.$css_style.'">
+                                        <td>'.$count.'</td>
+                                        <td>'.strtoupper($localAmo->aoc_holder).'</td>
+                                        <td>'.$localAmo->amo_approval_number.'</td>
+                                        <td class="center">'.$expiry.'</td>
+                                        <td style="background:'.$bgcolor.'" class="center">expires in '.$numberofdays.' days</td>
                                     </tr>';
                                         }
                                     ?>
@@ -79,7 +77,7 @@
                                     @endforeach
                                 @else
                                 <tr class="table-danger">
-                                    <td colspan="6" style="font-size:12px; line-height:15px; font-weight:bold; color:brown">You do not have any local AMO that is soon due for expiry</td>
+                                    <td colspan="6">You do not have any local AMO that is soon due for expiry</td>
                                 </tr>
                                 @endif
                                 
@@ -97,7 +95,7 @@
                             <thead>
                                 <tr class="table-warning">
                                     <th style="font-size:11px; font-weight:bold">#</th>
-                                    <th style="font-size:11px; font-weight:bold">AMO Holder</th>
+                                    <!-- <th style="font-size:11px; font-weight:bold">AMO Holder</th> -->
                                     <th style="font-size:11px; font-weight:bold">Country</th>
                                     <th style="font-size:11px; font-weight:bold; text-align:center">AMO Number</th>
                                     <th style="font-size:11px; font-weight:bold; text-align:center">Expiry</th>
@@ -114,6 +112,7 @@
                                         $due_date = strtotime($foreignAmo->expiry);;
                                         $datediff = $due_date - $now;
                                         $numberofdays = round($datediff / (60 * 60 * 24));
+                                        $expiry = date('d/m/Y', $due_date);
 
                                         if(($numberofdays >= 0) && ($numberofdays <=90)){
                                             $count++;
@@ -121,23 +120,24 @@
                                             $bgcolor = "#ffbf00";
                                             $color = "#000";
 
-                                            echo '<tr class='.$css_style.' style="font-family:tahoma;">
-                                            <td style="font-size:11px;">'.$count.'</td>
-                                            <td style="font-size:11px; line-height:15px;">'.$foreignAmo->amo_holder.' </td>
-                                            <td style="font-size:11px; line-height:15px;">'.$foreignAmo->country.' </td>
+                                            echo '<tr class="'.$css_style.'">
+                                            <td>'.$count.'</td>
+                                            
+                                            <td>'.$foreignAmo->country.' </td>
                                             </td>
-                                            <td style="font-size:11px; line-height:15px; text-align:center">'.$foreignAmo->amo_number.' </td>
-                                            <td style="font-size:11px; line-height:15px;">'.$foreignAmo->expiry.'</td>
-                                            <td style="font-size:11px; line-height:15px; text-align:center; background:'.$bgcolor.'; color:'.$color.'">expire\'s in '.$numberofdays.' days</td>
+                                            <td class="center">'.$foreignAmo->amo_number.' </td>
+                                            <td>'.$expiry.'</td>
+                                            <td class="center" style="background:'.$bgcolor.'; color:'.$color.'">expire\'s in '.$numberofdays.' days</td>
                                         </tr>';
                                         }
+                                        
                                     ?>
                                         @endforeach
-                                    @else
-                                        <tr class="table-danger">
-                                            <td colspan="6" style="font-size:12px; line-height:15px; font-weight:bold; color:brown">You do not have any Foreign AMO added yet.</td>
-                                        </tr>
-                                    @endif
+                                @else
+                                    <tr class="table-danger">
+                                        <td colspan="6">You do not have any Foreign AMO added yet.</td>
+                                    </tr>
+                                @endif
                                 
                             </tbody>
                         </table>

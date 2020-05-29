@@ -1,7 +1,8 @@
 <div class="col-md-7 grid-margin stretch-card">
     <div class="card">
-        <div class="card-body">
+        <div class="card-body" style="padding:4px;">
             <h4 class="card-title">Preview Pane</h4>
+            <span id="deleteLoader" style="display:block"></span>
             <table class="table table-bordered" width="100%">
                 <thead class="table-info">
                     <tr class="table-warning">
@@ -22,21 +23,24 @@
                             $count % 2 == 0 ? $css = 'table-primary' : $css = 'table-secondary';
                         ?>
                             <tr class="{{$css}}">
-                                <td style="font-size:11px;">{{$count}}</td>
-                                <td style="font-size:10px; line-height:15px; font-weight:bold">{{strtoupper($operation->operation_type)}}</td>
-                                <td style="font-size:10px; line-height:15px; color:blue" align="center">
+                                <td>{{$count}}</td>
+                                <td>{{strtoupper($operation->operation_type)}}</td>
+                                <td>
                                     <a href="{{URL('operations/'.base64_encode($operation->id).'/edit')}}">
                                         <i class="mdi mdi-pen" style="font-size:25px;"></i>
                                     </a>
                                 </td>
-                                <td style="font-size:10px; line-height:15px; color:red" align="center">
-                                    <i class="mdi mdi-delete-forever" style="font-size:25px;"></i>
+                                <td style="color:red" class="center">
+                                    <form method="POST" name="deleteOperationType" id="deleteOperationType">
+                                        {!! csrf_field() !!} {!! method_field('DELETE') !!}
+                                        <i class="mdi mdi-delete-forever deleteOperationType" style="font-size:25px; cursor:pointer" value="{{$operation->id}}" title="Delete {{$operation->operation_type}}"></i>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach
                     @else
                     <tr class="table-danger">
-                        <td colspan="4" style="font-size:11px; font-weight:bold">No operation has been added yet</td>
+                        <td colspan="6" style="font-size:11px; font-weight:bold">No operation has been added yet</td>
                     </tr>
                     @endif
                 </tbody>

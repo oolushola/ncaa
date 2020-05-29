@@ -21,12 +21,13 @@
                     <form method="POST" name="frmUpdateAircraftMake" id="frmUpdateAircraftMake">
                     {!! csrf_field() !!} {!! method_field('PATCH') !!}
                         <div class="form-group">
-                            <input type="text" name="aircraft_maker" id="aircraft_maker" value="{{$recid->aircraft_maker}}" class="form-control" placeholder="Aircraft Maker*">
+                            <label class="labelholder">Aircraft Maker *</label>
+                            <input type="text" name="aircraft_maker" id="aircraft_maker" value="{{$recid->aircraft_maker}}" class="form-control">
                         </div>    
                         <input type="hidden" name="id" id="id" value="{{$recid->id}}">            
                                 
                         <button type="submit" class="btn btn-gradient-primary mr-2" id="updateAircraftMaker">UPDATE</button>
-                        <button class="btn btn-light">Cancel</button>
+                        <button type="reset" class="btn btn-light">Cancel</button>
 
 
                         <div id="loader"></div>

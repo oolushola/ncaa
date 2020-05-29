@@ -1,6 +1,6 @@
 <div class="col-md-7 grid-margin stretch-card">
     <div class="card">
-        <div class="card-body">
+        <div class="card-body" style="padding:4px;">
             <h4 class="card-title">Preview Pane</h4>
             <table class="table table-bordered" width="100%">
                 <thead class="table-info">

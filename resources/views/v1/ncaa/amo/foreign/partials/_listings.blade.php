@@ -1,19 +1,20 @@
 <div class="col-md-7 grid-margin">
     <div class="card">
-        <div class="card-body">
+        <div class="card-body" style="padding:4px;">
             <h4 class="card-title">Preview Pane</h4>
+            <span id="deleteLoader" style="display:block"></span>
             <div class="table-responsive">
                 <table class="table table-bordered" width="100%">
                     <thead>
                         <tr class="table-warning">
-                            <th style="font-size:11px; font-weight:bold">#</th>
-                            <th style="font-size:11px; font-weight:bold">AMO Holder</th>
-                            <th style="font-size:11px; font-weight:bold">MOE Reference</th>
-                            <th style="font-size:11px; font-weight:bold; text-align:center">Expiry</th>
-                            <th style="font-size:11px; font-weight:bold" class="center">Edit</th>
+                            <th><b>#</b></th>
+                            <th><b>AMO Holder</b></th>
+                            <th><b>MOE Reference</b></th>
+                            <th><b>Ratings / Capabilities</b></th>
+                            <th class="center"><b>Edit</b></th>
                             @if(Auth::user()->role==1)
-                                <th style="font-size:11px; font-weight:bold">Created By?</th>
-                                <th style="font-size:11px; font-weight:bold" class="center">Delete</th>
+                                <th><b>Created By?</b></th>
+                                <th class="center"><b>Delete</b></th>
                             @endif
                         </tr>
                     </thead>
@@ -23,14 +24,16 @@
                             @foreach($amoforeignlists as $amoforeign)
                                 <?php $counter++; 
                                     $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
-                                    $converdatetotime = strtotime($amoforeign->expiry); 
-                                    $choosendate = date('Y-m-d', $converdatetotime);
                                 ?>
                                 <tr class={{$css_style}}>
                                     <td>{{$counter}}</td>
-                                    <td>{{strtoupper($amoforeign->amo_holder)}}</td>
+                                    <td>{{strtoupper($amoforeign->foreign_amo_holder)}}</td>
                                     <td>{{strtoupper($amoforeign->moe_reference)}}</td>
-                                    <td>{{$choosendate}}</td>
+                                    <td class="center">
+                                        <a href="{{URL('assignaircrafttype-to-maker/'.$amoforeign->id)}}">
+                                            <i class="mdi mdi-star-circle" style="font-size:25px; color:blue;"></i>
+                                        </a>
+                                    </td>
                                     <td class="center">
                                         <a href="{{URL('amo-foreign/'.base64_encode($amoforeign->id).'/edit')}}">
                                             <i class="mdi mdi-pen" style="font-size:25px; color:blue;"></i>
@@ -39,14 +42,17 @@
                                     @if(Auth::user()->role==1)
                                         <td>{{$amoforeign->created_by}}</td>
                                         <td class="center">
-                                            <i class="mdi mdi-delete-forever" style="font-size:25px; color:red"></i>
+                                            <form method="POST" name="deleteForeignAmo" id="deleteForeignAmo">
+                                                @csrf {!! method_field('DELETE') !!}
+                                                <i class="mdi mdi-delete-forever deleteForeignAmo" style="font-size:25px; color:red;cursor:pointer" value="{{$amoforeign->id}}" title="Delete {{$amoforeign->amo_holder}}"></i>
+                                            </form>
                                         </td>
                                     @endif
                                 </tr>
                             @endforeach
                             @else 
                                 <tr class="table-danger">
-                                    <td colspan="6" style="font-weight:bold; color:brown">You do not have any Foreign AMO added yet.</td>
+                                    <td colspan="7">You do not have any Foreign AMO added yet.</td>
                                 </tr>
                         @endif
                     </tbody>

@@ -22,12 +22,14 @@
                     
                         {!! csrf_field() !!} {!! method_field('PATCH') !!}
                         <div class="form-group">
-                            <input type="text" class="form-control" id="username" name="name" placeholder="Full Name" value="{{ucwords(Auth::user()->name)}}">
+                            <label class="labelholder">Full Name</label>
+                            <input type="text" class="form-control" id="username" name="name" placeholder="Full Name" value="{{ucwords(Auth::user()->name)}}" disabled>
                         </div>
                         <div class="form-group">
+                            <label class="labelholder">Photo</label>
                             <input type="file" name="file" id="file" class="file-upload-default">
                             <div class="input-group col-xs-12">
-                                <input type="text" id="fileBox" class="form-control file-upload-info" disabled placeholder="Photo" value="">
+                                <input type="text" id="fileBox" class="form-control file-upload-info" disabled value="">
                                 <span class="input-group-append">
                                     <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
                                 </span>
@@ -35,18 +37,19 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="labelholder">Phone Number *</label>
                             <input type="text" name="phone" class="form-control" placeholder="Phone Number" value="{{Auth::user()->phone}}">
                         </div>
 
                         <div class="form-group">
-                            <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="{{Auth::user()->email}}">
+                            <input type="text" disabled name="email" id="email" class="form-control" placeholder="Email" value="{{Auth::user()->email}}">
                         </div>
 
                         <input type="hidden"  id="filecheck" value="0" /> 
                         <input type="hidden"  id="ftype" value="jpg, jpeg, png, svg" />
                             
                         <button type="submit" id="updateUserProfile" class="btn btn-gradient-primary mr-2">Update</button>
-                        <button class="btn btn-light">Cancel</button>
+                        <input type="button" class="btn btn-light" value="Cancel">
                         <div id="loader"></div>
                     </form>
                 </div>
