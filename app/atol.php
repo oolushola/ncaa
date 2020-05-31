@@ -15,6 +15,7 @@ class atol extends Model
         'date_of_first_issue',
         'renewal',
         'date_of_expiry',
-        'created_by'
+        'created_by',
+        'comments'
     ];
 }

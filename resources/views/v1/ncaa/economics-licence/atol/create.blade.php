@@ -95,6 +95,7 @@
                     <div class="form-group">
                         <label class="labelholder">Upload Certificate *</label>
                         <input type="file" name="file" id="file" style="font-size:12px; display:block" >
+                        <input type="hidden" value="0" id="photoChecker">
                     </div>
                    
                     
@@ -104,11 +105,16 @@
                     </div>
                     <div class="form-group">
                         <label class="labelholder">Date of Last Renewal *</label>
-                        <input type="date" name="renewal" id="renewal" class="form-control" value="@if(isset($recid)){{$recid->renewal}}@endif">
+                        <input type="date" name="renewal" id="dateOfLastRenewal" class="form-control" value="@if(isset($recid)){{$recid->renewal}}@endif">
                     </div>
                     <div class="form-group">
                         <label class="labelholder">Date of Expiry *</label>
-                        <input type="date" name="date_of_expiry" id="date_of_expiry" class="form-control" value="@if(isset($recid)){{$recid->date_of_expiry}}@endif">
+                        <input type="date" name="date_of_expiry" id="dateOfExpiry" class="form-control" value="@if(isset($recid)){{$recid->date_of_expiry}}@endif">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="labelholder">Comments </label>
+                        <textarea name="comments" id="comments" class="form-control">@if(isset($recid)){{$recid->comments}}@else{{old('comments')}}@endif</textarea>
                     </div>
 
                     @if(!isset($recid))
@@ -118,7 +124,12 @@
                     <div id="loader"></div>
                     
                     @if(Auth::user()->role == 1 || Auth::user()->role == 2)
-                    <button type="submit" class="btn btn-gradient-primary mr-2" id="AddAtol">SAVE</button>
+                    @if(!isset($recid)) 
+                    <button type="submit" class="btn btn-gradient-primary mr-2" id="addAtol">SAVE</button>
+                    @endif
+                    @if(isset($recid)) 
+                    <button type="submit" class="btn btn-gradient-primary mr-2" id="updateAtol">UPDATE</button>
+                    @endif
                     <button class="btn btn-light">Cancel</button>
                     @endif
                 </form>
@@ -212,6 +223,7 @@
 @stop
 
 @section('scripts')
+<script type="text/javascript" src="{{URL::asset('js/jquery.form.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/economic-licence/atol.js')}}"></script>
 
 @stop

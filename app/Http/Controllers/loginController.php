@@ -8,6 +8,7 @@ use App\aoc;
 use App\foreignamo;
 use App\localamo;
 use App\focc;
+use App\Tac;
 use Auth;
 
 class loginController extends Controller
@@ -26,7 +27,8 @@ class loginController extends Controller
             $foreignamolist = foreignamo::ORDERBY('amo_holder', 'ASC')->GET();
             $localamolist = localamo::ORDERBY('aoc_holder_id')->GET();
             $focclist = focc::ORDERBY('aoc_holder_id', 'ASC')->GET();
-            return view('v1.ncaa.dashboard', compact('aircraftslistings', 'aoclist', 'foreignamolist', 'localamolist', 'focclist'));
+            $tacList = Tac::GET()->COUNT();
+            return view('v1.ncaa.dashboard', compact('aircraftslistings', 'aoclist', 'foreignamolist', 'localamolist', 'focclist', 'tacList'));
         }
         else{
             return redirect()->route('login');

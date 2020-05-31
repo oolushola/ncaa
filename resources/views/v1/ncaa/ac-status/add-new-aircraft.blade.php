@@ -88,6 +88,17 @@
                         <label class="labelholder">Weight(Kg) *</label>
                         <input type="number" class="form-control" name="weight" id="weight">
                     </div>
+                    
+                    <div class="form-group">
+                        <label class="labelholder">Major Checks*</label>
+                        <input type="text" class="form-control" name="major_checks" id="majorChecks">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="labelholder">Aircraft Serviceability Status*</label>
+                        <input type="text" class="form-control" name="aircraft_serviceability_status" id="aircraftServiceavilityStatus">
+                    </div>
+
 
                     <div id="loader"></div>
 

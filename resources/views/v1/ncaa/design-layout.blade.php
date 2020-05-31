@@ -11,6 +11,14 @@
   <link rel="stylesheet" href="{{URL::asset('css/style.css')}}" />
   <link rel="stylesheet" href="{{URL::asset('css/custom.css')}}" />
   <style>
+    @media print {
+      tr.table-secondary {
+        background-color: #000 !important
+        -webki-print-color-adjust:exact
+      }
+    }
+
+
     .error{ font-size:12px; font-weight:bold; color:red; margin-top:10px; margin-bottom:10px;}
     p{font-size:11px; margin:0px;}
     #exportTableData_filter{
@@ -29,6 +37,7 @@
     .paging_simple_numbers{
       display:none;
     }
+
   </style>
     <link rel="shortcut icon" href="/images/ncaa-logo.png" />
 
@@ -273,6 +282,7 @@
   <script src="{{URL::asset('js/chart.js')}}"></script>
   <script src="{{URL::asset('js/dashboard.js')}}"></script>
   <script src="{{URL::asset('js/file-upload.js')}}"></script>
+  <script src="{{URL::asset('js/print.js')}}"></script>
 
   @yield('scripts')
 </body>

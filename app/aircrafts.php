@@ -20,5 +20,7 @@ class aircrafts extends Model
         'c_of_a',
         'weight',
         'created_by',
+        'major_checks',
+        'aircraft_serviceability_status'
     ];
 }

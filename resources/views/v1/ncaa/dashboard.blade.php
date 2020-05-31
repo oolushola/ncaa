@@ -88,13 +88,13 @@
             <i class="mdi mdi-chart-line mdi-24px float-right" style="color:#fff"></i>
           </h4>
           <h2>
-            @if(count($aoclist))
-              {{count($aoclist)}}
+            @if(count($tacList))
+              {{ $tacList }}
             @else
                 No Record Yet.
             @endif
           </h2>
-          <h6 class="card-text mb-5">@if(count($aoclist)) Record founds @endif</h6>
+          <h6 class="card-text mb-5">@if($tacList) Record founds @endif</h6>
           @if(Auth::user()->role==1)
             <a href="{{URL('activity-log/aoc')}}" style="text-decoration:none; color:#333; font-weight:bold; font-size:13px; position:relative; z-index:1"> 
             Activity Log

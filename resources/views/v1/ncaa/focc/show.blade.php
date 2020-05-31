@@ -15,6 +15,10 @@
                 <li class="breadcrumb-item"><a href="{{URL('focc')}}">FOCC & MCC </a></li>
                 <li class="breadcrumb-item active" aria-current="page">All FOCC & MCC</li>
             </ol>
+            <button type="button" class="btn btn-gradient-danger btn-icon-text" id="sendToPrint">
+                <i class="mdi mdi-printer" title="Print"></i>
+                PRINT
+            </button>
         </nav>
     </div>
     <div class="row">
@@ -61,6 +65,7 @@
                     </form>
                     <br>
                     <div class="table-responsive" id="contentDropper">
+                    <h4 class="card-title" style="padding-left:10px; display:inline-block">All FOCC & MCC Listings</h4>
                         <table class="table table-bordered" id="exportTableData">
                             <thead>
                                 <tr class="table-warning">
@@ -158,4 +163,9 @@
 @section('scripts')
 <script type="text/javascript" src="{{URL::asset('js/jquery.table2excel.min.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/focc/focc.js')}}"></script>
+<script>
+    $('#sendToPrint').click(function() {
+        $.print('#contentDropper')
+    })
+</script>
 @stop

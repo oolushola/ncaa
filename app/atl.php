@@ -16,6 +16,7 @@ class atl extends Model
         'date_of_renewal',
         'date_of_expiry',
         'comment',
-        'created_by'
+        'created_by',
+        'comments'
     ];
 }

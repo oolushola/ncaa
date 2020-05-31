@@ -14,13 +14,16 @@
             <li class="breadcrumb-item"><a href="#">A/C Status</a></li>
             <li class="breadcrumb-item active" aria-current="page">view all aircraft status</li>
             </ol>
+            <button type="button" class="btn btn-gradient-danger btn-icon-text" id="sendToPrint">
+                <i class="mdi mdi-printer" title="Print"></i>
+                PRINT
+            </button>
         </nav>
     </div>
     <div class="row">
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body" style="padding-left:3px; padding-right:3px;">
-                    <h4 class="card-title" style="padding-left:10px; display:inline-block">A/C Status Listings</h4>
                     @if(Auth::user()->role==3 || 1)
                         @if(count($checkforaircraftstatuslastupdate))
                             @foreach($checkforaircraftstatuslastupdate as $lastupdatedby)
@@ -42,8 +45,10 @@
                             </select>
                         </span>
                         <span style="font-size:12px; font-weight:bold; display:inline-block" id="aircraftMakerDropper"> 
-                            <select>
+                            <select id="aircraftType" name="aircraftType">
                                 <option value="0">Aircraft Type</option>
+                                <option value="asc">Ascending</option>
+                                <option value="desc">Descending</option>
                             </select>
                         </span>
                         <span style="font-size:12px; font-weight:bold; display:inline-block" > 
@@ -64,7 +69,8 @@
                     </form>
                     <br>
 
-                    <div class="table-responsive" id="contentDropper">            
+                    <div class="table-responsive" id="contentDropper">  
+                        <h4 class="card-title" style="padding-left:10px; display:inline-block">A/C Status Listings</h4>          
                         <table class="table table-bordered" id="exportTableData">
                             <thead>
                                 <tr class="table-warning">
@@ -79,6 +85,8 @@
                                     <th width="12%" c;lass="center"><b>C of A Status</b></th>
                                     <th><b>Remarks</b></th>
                                     <th><b>Weight (Kg)</b></th>
+                                    <th><b>Major Checks</b></th>
+                                    <th><b>Serviceability Status</b></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -130,6 +138,8 @@
                                         </td>
                                         <td>{{$remarks}}</td>
                                         <td>{!! $aircraft->weight !!}</td>
+                                        <td>{!! $aircraft->major_checks !!}</td>
+                                        <td>{!! $aircraft->aircraft_serviceability_status !!}</td>
                                     </tr>
                                     @endforeach
                                 @else
@@ -151,4 +161,9 @@
 <script type="text/javascript" src="{{URL::asset('js/jquery.form.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/jquery.table2excel.min.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/aircraft-status/aircraft.js')}}"></script>
+<script>
+    $('#sendToPrint').click(function() {
+        $.print('#contentDropper')
+    })
+</script>
 @stop

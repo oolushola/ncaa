@@ -5,7 +5,7 @@
 @section('main')
     <div class="page-header">
         <h3 class="page-title">
-            Airline Operating Permit 
+             Air Transport License.
         </h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -162,6 +162,11 @@
                     <input type="hidden" name="created_by" value="{{Auth::user()->name}}">
                     <input type="hidden" name="filecheck" id="filecheck" value="0" /> 
                     <input type="hidden" name="ftype" id="ftype" value="pdf" />
+
+                    <div class="form-group">
+                        <label class="labelholder">Comments *</label>
+                        <textarea name="comments" id="comments" class="form-control">@if(isset($recid)){{$recid->comments}}@else{{old('comments')}}@endif</textarea>
+                    </div>
 
                     <div id="loader"></div>
                     

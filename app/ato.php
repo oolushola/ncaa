@@ -14,6 +14,7 @@ class ato extends Model
         'date_of_first_issue',
         'date_of_renewal',
         'date_of_expiry',
-        'created_by'
+        'created_by',
+        'comments'
     ];
 }

@@ -13,13 +13,16 @@
             <li class="breadcrumb-item"><a href="{{URL('amo-view-selection')}}">Back</a></li>
             <li class="breadcrumb-item active" aria-current="page">All Foreign AMO's</li>
             </ol>
+            <button type="button" class="btn btn-gradient-danger btn-icon-text" id="sendToPrint">
+                <i class="mdi mdi-printer" title="Print"></i>
+                PRINT
+            </button>
         </nav>
     </div>
     <div class="row">
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body" style="padding-left:3px; padding-right:3px;">
-                    <h4 class="card-title" style="padding-left:10px; display:inline-block">Foreign AMO Listings</h4>
                     @if(Auth::user()->role==3 || 1)
                         @if(count($checkforamoforeignlastupdate))
                             @foreach($checkforamoforeignlastupdate as $lastupdatedby)
@@ -59,6 +62,7 @@
                     </form>
                     <br>
                     <div class="table-responsive" id="contentDropper">              
+                    <h4 class="card-title" style="padding-left:10px; display:inline-block">Foreign AMO Listings</h4>
                         <table class="table table-bordered" id="exportTableData">
                             <thead>
                                 <tr class="table-warning">
@@ -159,4 +163,9 @@
 <script type="text/javascript" src="{{URL::asset('js/jquery.form.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/jquery.table2excel.min.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/amo/amo-foreign.js')}}"></script>
+<script>
+    $('#sendToPrint').click(function() {
+        $.print('#contentDropper')
+    })
+</script>
 @stop

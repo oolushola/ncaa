@@ -608,6 +608,87 @@ class aircraftcontroller extends Controller
 
     }
 
+    public function sortByAircraftTpe(Request $request) {
+        $aircraftType = strtoupper($request->aircraftType);
+        $result = '<table class="table table-bordered" id="exportTableData">
+        <thead>
+            <tr class="table-warning">
+                <th width="5%"><b>#</b></th>
+                <th><b>Registered Operator</b></th>
+                <th width="5%"><b>Registration Marks</b></th>
+                <th  width="10%"><b>Aircraft Type</b></th>
+                <th width="5%" align="center"><b>Aircraft Serial Number</b></th>
+                <th width="5%" align="center"><b>Year of Mnaufacture</b></th>
+                <th width="8%" align="center"><b>Current Registration Date</b></th>
+                <th width="20%"><b>Registered Owner</b></th>
+                <th width="12%" align="center"><b>C of A Status</b></th>
+                <th><b>Remarks</b></th>
+                <th><b>Weight (Kg)</b></th>
+            </tr>
+        </thead>
+        <tbody>';
+        $allAircraftStatus = DB::SELECT(DB::RAW('SELECT b.aoc_holder, c.aircraft_maker, a.* FROM tbl_ncaa_aircrafts a JOIN tbl_ncaa_acos b JOIN tbl_ncaa_aircraft_makers c ON a.aoc_holder_id=b.id AND a.aircraft_maker_id = c.id ORDER BY c.aircraft_maker '.$aircraftType.''));
+        if(count($allAircraftStatus)){
+            $counter = 0;
+                foreach($allAircraftStatus as $aircraft){
+                    $counter++; 
+                    $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
+                        
+                    $now = time();
+                    $due_date = strtotime($aircraft->c_of_a_status);;
+                    $datediff = $due_date - $now;
+                    $numberofdays = round($datediff / (60 * 60 * 24));
+
+                    $convertRegDate = strtotime($aircraft->registration_date);
+                    $regDate = date('d/m/Y', $convertRegDate);
+                    $cofa = date('d/m/Y', $due_date);
+
+                    if($numberofdays > 90 ){
+                        $bgcolor = "green";
+                        $color = "#fff";
+                        $remarks = 'Active';
+                    }
+                    else if(($numberofdays >= 0) && ($numberofdays <=90)){
+                        $bgcolor = "#ffbf00";
+                        $color = "#000";
+                        $remarks = 'Expiring Soon';
+                    }
+                    else{
+                        $bgcolor = "red";
+                        $color = "#000";
+                        $remarks = 'Expired';
+                    }
+                $result.='<tr class='.$css_style.'>
+                    <td>'.$counter.'</td>
+                    <td>'.strtoupper($aircraft->aoc_holder).'</td>
+                    <td>'.$aircraft->registration_marks.'</td>
+                    <td>'.$aircraft->aircraft_type.'</td>
+                    <td>'.$aircraft->aircraft_serial_number.'</td>
+                    <td align="center">'.$aircraft->year_of_manufacture.'</td>
+                    <td align="center">'.$regDate.'</td>
+                    <td>'.$aircraft->registered_owner.'</td>
+                    <td style="text-align:center; background:'.$bgcolor.'; color:'.$color.';">
+                        <a href="/confidentials/c-of-a/'.$aircraft->c_of_a.'" target="_blank"style="color:'.$color.'">
+                                '.$cofa.'
+                            </a>
+                    </td>
+                    <td>'.$remarks.'</td>
+                    <td>'.$aircraft->weight.'</td>
+                </tr>';
+                }
+            }
+            else{
+                $result.='<tr>
+                    <td style="font-size:11px; font-weight:bold; color:red; text-align:center" colspan="15" class="table-danger">No records available</td>
+                </tr>';
+            }
+            
+            $result.='</tbody>
+        </table>';
+
+        return $result;
+    }
+
 
 
 

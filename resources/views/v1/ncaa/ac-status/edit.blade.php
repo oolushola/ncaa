@@ -112,6 +112,16 @@
                         <input type="number" class="form-control" placeholder="Weight(Kg)" name="weight" id="weight" value="{{$recid->weight}}">
                     </div>
 
+                    <div class="form-group">
+                        <label class="labelholder">Major Checks*</label>
+                        <input type="text" class="form-control" name="major_checks" id="majorChecks" value="{{$recid->major_checks}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="labelholder">Aircraft Serviceability Status*</label>
+                        <input type="text" class="form-control" name="aircraft_serviceability_status" id="aircraftServiceavilityStatus" value="{{$recid->aircraft_serviceability_status}}">
+                    </div>
+
                     <div id="loader"></div>
                     <input type="hidden" name="name" value="{{Auth::user()->name}}">
                     <input type="hidden" name="module" value="ac-status">

@@ -17,14 +17,16 @@
                 <li class="breadcrumb-item"><a href="#">AOC</a></li>
                 <li class="breadcrumb-item active" aria-current="page">view all aoc</li>
             </ol>
+            <button type="button" class="btn btn-gradient-danger btn-icon-text" id="sendToPrint">
+                <i class="mdi mdi-printer" title="Print"></i>
+                PRINT
+            </button>
         </nav>
     </div>
     <div class="row">
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body" style="padding-left:3px; padding-right:3px;">
-                    <h4 class="card-title" style="padding-left:10px; display:inline-block">All AOC Listings</h4>
-                    
                     @if(Auth::user()->role==3 || 1)
                         @if(count($checkforaocupdates))
                             @foreach($checkforaocupdates as $lastupdatedby)
@@ -66,6 +68,7 @@
                     <br>
                     
                     <div class="table-responsive" id="contentDropper">
+                        <h4 class="card-title" style="padding-left:10px; display:inline-block">All AOC Listings</h4>
                         <table class="table table-bordered" id="exportTableData">
                             <thead>
                                 <tr class="table-warning">
@@ -190,4 +193,9 @@
 <script type="text/javascript" src="{{URL::asset('js/jquery.form.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/jquery.table2excel.min.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/aoc/aoc.js')}}"></script>
+<script>
+    $('#sendToPrint').click(function() {
+        $.print('#contentDropper')
+    })
+</script>
 @stop

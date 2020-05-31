@@ -67,6 +67,11 @@
                         <input type="date" name="date_of_expiry" id="dateOfExpiry" class="form-control" value="@if(isset($recid)){{$recid->date_of_expiry}}@else{{old('date_of_expiry')}}@endif">
                     </div>
 
+                    <div class="form-group">
+                        <label class="labelholder">Comments *</label>
+                        <textarea name="comments" id="comments" class="form-control">@if(isset($recid)){{$recid->comments}}@else{{old('comments')}}@endif</textarea>
+                    </div>
+
                     <input type="hidden" name="created_by" value="{{Auth::user()->name}}">
                     <input type="hidden" name="filecheck" id="filecheck" value="0" /> 
                     <input type="hidden" name="ftype" id="ftype" value="pdf" />

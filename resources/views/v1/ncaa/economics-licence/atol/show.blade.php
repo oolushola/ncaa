@@ -11,23 +11,24 @@
 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{URL('economic-licence/ato')}}">Air Travel Organization Licence</a></li>
-            <li class="breadcrumb-item active" aria-current="page">view all ATOL's</li>
+                <li class="breadcrumb-item"><a href="{{URL('economic-licence/ato')}}">Air Travel Organization Licence</a></li>
+                <li class="breadcrumb-item active" aria-current="page">view all ATOL's</li>
             </ol>
+            <button type="button" class="btn btn-gradient-danger btn-icon-text" id="sendToPrint">
+                <i class="mdi mdi-printer" title="Print"></i>
+                PRINT
+            </button>
         </nav>
     </div>
     <div class="row">
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
-                <div class="card-body" style="padding-left:3px; padding-right:3px;">
-                    <h4 class="card-title" style="padding-left:10px; display:inline-block">Air Travel Organization Licence Listings</h4>
-                    
-                    
-                    <!-- <form name="" id="">
+                <div class="card-body" style="padding-left:3px; padding-right:3px;">                    
+                    <form name="frmAtol" id="frmAtol">
                         {!! csrf_field() !!}
                         
                         <span style="font-size:12px; font-weight:bold; display:inline-block" > 
-                            <select name="operator" id="operator">
+                            <select name="trainingOrganization" id="trainingOrganization">
                                 <option value="0">Training Organization</option>
                                 <option value="asc">Ascending</option>
                                 <option value="desc">Descending</option>
@@ -41,10 +42,11 @@
                                 <option value="expired">Expired</option>
                             </select>
                         </span>
-                    </form> -->
+                    </form>
                     <br>
 
                     <div class="table-responsive" id="contentDropper">            
+                    <h4 class="card-title" style="padding-left:10px; display:inline-block">Air Travel Organization Licence Listings</h4>
                         <table class="table table-bordered" id="exportTableData">
                             <thead>
                                 <tr class="table-warning">
@@ -55,6 +57,7 @@
                                     <th class="center"><b>Date of Last Renewal</b></th>
                                     <th class="center"><b>Date of Expiry</b></th>
                                     <th class="center"><b>Status</b></th>
+                                    <th>Comments</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -107,6 +110,7 @@
                                         <td style="text-align:center; background:{{$bgcolor}}; color:{{$color}};">
                                             {!! $remarks !!}
                                         </td>
+                                        <td>{{ $atol->comments }}</td>
                                     </tr>
                                     @endforeach
                                 @else
@@ -128,15 +132,11 @@
 <script type="text/javascript" src="{{URL::asset('js/jquery.form.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/jquery.table2excel.min.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/economic-licence/atol.js')}}"></script>
-
-<script type="text/javascript" src="{{URL::asset('js/data-table.min.js')}}"></script>
-
 <script type="text/javascript">
-$(document).ready(function() {
-    $('#exportTableData').DataTable( {
-        "order": [[ 3, "asc" ]],
-        
-    } );
-});
+    $('#sendToPrint').click(function() {
+        $.print('#contentDropper')
+    })
 </script>
+
+
 @stop

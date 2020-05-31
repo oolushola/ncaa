@@ -11,16 +11,19 @@
 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{URL('economic-licence/atl')}}">ATL</a></li>
-            <li class="breadcrumb-item active" aria-current="page">view all air transport licence</li>
+                <li class="breadcrumb-item"><a href="{{URL('economic-licence/atl')}}">ATL</a></li>
+                <li class="breadcrumb-item active" aria-current="page">view all air transport licence</li>
             </ol>
+            <button type="button" class="btn btn-gradient-danger btn-icon-text" id="sendToPrint">
+                <i class="mdi mdi-printer" title="Print"></i>
+                PRINT
+            </button>
         </nav>
     </div>
     <div class="row">
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body" style="padding-left:3px; padding-right:3px;">
-                    <h4 class="card-title" style="padding-left:10px; display:inline-block">Air Transport Licence Listings</h4>
                     
                     
                     <form name="" id="">
@@ -45,6 +48,7 @@
                     <br>
 
                     <div class="table-responsive" id="contentDropper">            
+                    <h4 class="card-title" style="padding-left:10px; display:inline-block">Air Transport Licence Listings</h4>
                         <table class="table table-bordered" id="exportTableData">
                             <thead>
                                 <tr class="table-warning">
@@ -55,6 +59,7 @@
                                     <th class="center"><b>Date of Last Renewal</b></th>
                                     <th class="center"><b>Date of Expiry</b></th>
                                     <th class="center"><b>Status</b></th>
+                                    <th class="font-weight-bold">Comments</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -71,7 +76,7 @@
 
                                         if($numberofdays > 90 ){
                                             $bgcolor = "green";
-                                            $color = "#fff";
+                                            $color = "#ccc";
                                             $remarks = "Active";
                                         }
                                         else if(($numberofdays >= 0) && ($numberofdays <=90)){
@@ -107,6 +112,7 @@
                                         <td style="text-align:center; background:{{$bgcolor}}; color:{{$color}};">
                                             {!! $remarks !!}
                                         </td>
+                                        <td>{{ $atl->comments }}</td>
                                     </tr>
                                     @endforeach
                                 @else
@@ -128,4 +134,9 @@
 <script type="text/javascript" src="{{URL::asset('js/jquery.form.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/jquery.table2excel.min.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/economic-licence/atl.js')}}"></script>
+<script type="text/javascript">
+    $('#sendToPrint').click(function() {
+        $.print('#contentDropper')
+    })
+</script>
 @stop
