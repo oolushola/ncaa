@@ -220,8 +220,8 @@ $(function($){
         });
     });
 
-    //Delete an AOP
-    $(".deleteFocc").click(function(){
+    //Delete an ATL
+    $(".deleteAtl").click(function(){
         $id = $(this).attr("value");
         $name = $(this).attr("title");
         $ask = confirm("Are you sure you want to "+$name.toLowerCase()+"?");
@@ -232,9 +232,9 @@ $(function($){
             )
             .addClass('error')
             .css({float:'right'});
-            $.post("/focc-and-mcc/"+$id, $("#deleteFocc").serialize(), function(data){
+            $.post("/economic-licence/atl/"+$id, $("#frmDeleteAtl").serialize(), function(data){
                if(data=='deleted'){
-                   $url = '/focc-and-mcc';
+                   $url = '/economic-licence/atl';
                    window.location = $url;
                }
             })

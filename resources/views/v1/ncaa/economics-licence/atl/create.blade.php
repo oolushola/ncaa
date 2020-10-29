@@ -241,7 +241,7 @@
                                             
                                             <td>{{$atl->created_by}}</td>
                                             <td style="color:red" class="center">
-                                                <form method="POST" name="deleteAtl" id="deleteAtl">
+                                                <form method="POST" name="frmDeleteAtl" id="frmDeleteAtl">
                                                     {!! csrf_field() !!} {!! method_field('DELETE') !!}
                                                     <i class="mdi mdi-delete-forever deleteAtl" style="font-size:25px; cursor:pointer" value="{{$atl->id}}" title="Delete {{$atl->licence_no}}"></i>
                                                 </form>
