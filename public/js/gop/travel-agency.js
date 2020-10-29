@@ -43,7 +43,7 @@ $(function(){
      * 
      * @return string
      */
-    $(".deleteTrainingOrganization").click(function(){
+    $(".deleteTravelAgency").click(function(){
         $id = $(this).attr("value");
         $name = $(this).attr("title");
         $ask = confirm("Are you sure you want to delete "+$name.toLowerCase()+"?");
@@ -53,13 +53,18 @@ $(function(){
                 '<img src=\'/images/ajax.gif\'>please wait...'
             )
             .addClass('error');
-            $.post("/training-organization/"+$id, $("#frmDeleteTrainingOrganization").serialize(), function(data){
+            $.post("/travel-agency/"+$id, $("#frmDeleteTravelAgency").serialize(), function(data){
                if(data=='cant_delete'){
-                   $("#deleteLoader").html("<i class='mdi mdi-alert'></i> Sorry, training organization is in use by a ATO Record. Won't Delete.").css({color:'green'});
+                   $("#deleteLoader").html("<i class='mdi mdi-alert'></i> Record is in use in ATOL. Won't Delete.").css({color:'green'});
                    return;
                }
-               $url = '/training-organization';
-               window.location = $url;
+               else{
+                   if(data === 'deleted') {
+                    $url = '/travel-agency';
+                    window.location = $url;
+                   }
+               }
+               
             })
         }
         return;
