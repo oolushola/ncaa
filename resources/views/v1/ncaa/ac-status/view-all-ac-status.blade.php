@@ -95,32 +95,46 @@
                                     @foreach($allAircraftStatus as $aircraft)
                                         <?php $counter++; 
                                          $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
-                                         
-                                        $now = time();
-                                        $due_date = strtotime($aircraft->c_of_a_status);;
-                                        $datediff = $due_date - $now;
-                                        $numberofdays = round($datediff / (60 * 60 * 24));
+                                        
+                                        if($aircraft->c_of_a_status) {
+                                            $now = time();
+                                            $due_date = strtotime($aircraft->c_of_a_status);;
+                                            $datediff = $due_date - $now;
+                                            $numberofdays = round($datediff / (60 * 60 * 24));
 
-                                        if($numberofdays > 90 ){
-                                            $bgcolor = "green";
-                                            $color = "#fff";
-                                            $remarks = "Active";
+                                            if($numberofdays > 90 ){
+                                                $bgcolor = "green";
+                                                $color = "#fff";
+                                                $remarks = "Active";
+                                            }
+                                            else if(($numberofdays >= 0) && ($numberofdays <=90)){
+                                            $bgcolor = "#ffbf00";
+                                                $color = "#000";
+                                                $remarks = "Expiring soon";
+                                            }
+                                            else{
+                                                $bgcolor = "red";
+                                                $color = "#000";
+                                                $remarks = "Expired";
+                                            }
                                         }
-                                        else if(($numberofdays >= 0) && ($numberofdays <=90)){
-                                           $bgcolor = "#ffbf00";
-                                            $color = "#000";
-                                            $remarks = "Expiring soon";
-                                        }
-                                        else{
-                                            $bgcolor = "red";
-                                            $color = "#000";
-                                            $remarks = "Expired";
+                                        else {
+                                                $bgcolor = "";
+                                                $color = "#000";
+                                                $remarks = "";
+                                                $numberofdays = $aircraft->c_of_a_status;
+                                                
                                         }
                                         $converdatetotimeofregdate = strtotime($aircraft->registration_date); 
                                         $current_registration_date = date('d/m/Y', $converdatetotimeofregdate);
                                         
-                                        $converdatetotimeofcofastatus = strtotime($aircraft->c_of_a_status); 
-                                        $cofastatus = date('d/m/Y', $converdatetotimeofcofastatus);
+                                        if($aircraft->c_of_a_status) {
+                                            $converdatetotimeofcofastatus = strtotime($aircraft->c_of_a_status); 
+                                            $cofastatus = date('d/m/Y', $converdatetotimeofcofastatus);
+                                        }
+                                        else{
+                                            $cofastatus = '<span class="font-weight-bold">NA</span>';
+                                        }
                                         ?>
                                     <tr class="{{$css_style}}">
                                         <td>{{$counter}}</td>
