@@ -55,11 +55,15 @@ $(function(){
             .addClass('error');
             $.post("/training-organization/"+$id, $("#frmDeleteTrainingOrganization").serialize(), function(data){
                if(data=='cant_delete'){
-                   $("#deleteLoader").html("<i class='mdi mdi-alert'></i> Sorry, training organization is in use by a ATO Record. Won't Delete.").css({color:'green'});
+                   $("#deleteLoader").html("<i class='mdi mdi-alert'></i> Oops! Record in use in ATO. Won't Delete.").css({color:'green'});
                    return;
                }
-               $url = '/training-organization';
-               window.location = $url;
+               else {
+                   if(data === 'deleted') {
+                    $url = '/training-organization';
+                    window.location = $url;
+                   }
+                }
             })
         }
         return;

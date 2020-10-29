@@ -107,5 +107,5 @@
 @stop
 
 @section('scripts')
-<script type="text/javascript" src="{{URL::asset('js/gop/training-organization.js')}}"></Script>
+<script type="text/javascript" src="{{URL::asset('js/gop/training-organization.js?v=').time()}}"></Script>
 @stop
