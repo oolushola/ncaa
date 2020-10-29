@@ -1,0 +1,25 @@
+.table th, .table td{
+    font-size:11px;
+    line-height:15px;
+    font-family:tahoma;
+}
+.center{
+    text-align:center;
+}
+.form-group .labelholder{
+    font-size:11px; color: green; font-weight: bold; margin-bottom:0px;
+}
+
+.nav-link{
+    padding:10px !important;
+}
+.sidebar .nav .nav-item .nav-link .menu-title{
+    font-size: 13px;
+}
+.sidebar .nav.sub-menu .nav-item .nav-link {
+    font-size:12px;
+    left:10px;
+}
+
+
+

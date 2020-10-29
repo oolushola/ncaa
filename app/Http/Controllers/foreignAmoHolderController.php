@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\foreignAmoHolder;
+use App\foreignamo;
 use App\Http\Requests;
 use App\Http\Requests\foreignAmoHolderRequest;
 use Illuminate\Http\HttpResponse;
@@ -61,18 +62,17 @@ class foreignAmoHolderController extends Controller
   public function destroy($id)
   {
       if(Auth::check() && Auth::user()->role){
-          $checkaoc = aocAircrafts::WHERE('aircraft_maker_id', $id)->exists();
-          $checkaircrafttype = aircrafttype::WHERE('aircraft_maker_id', $id)->exists();
-          $checkaircrafts = aircrafttype::WHERE('aircraft_maker_id', $id)->exists();
-
-          if($checkaoc || $checkaircrafttype || $checkaircrafts)
+          $checkForeignAmoHolder = foreignamo::WHERE('amo_holder', $id)->exists();
+          if($checkForeignAmoHolder)
           {
              return 'cant_delete';
           }
-          $recid = aircraftMaker::findOrFail($id);
+          $recid = foreignAmoHolder::findOrFail($id);
           $recid->DELETE();
           return 'deleted';
       }
-      return redirect()->route('login');
+      else {
+        return redirect()->route('login');
+      }
   }
 }
