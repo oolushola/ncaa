@@ -394,4 +394,10 @@ class atlController extends Controller
 
          return $answer;
     }
+
+    public function destroy(Request $request, $id) {
+        $recid = atl::findOrFail($id);
+        $recid->DELETE();
+        return 'deleted';
+    }
 }

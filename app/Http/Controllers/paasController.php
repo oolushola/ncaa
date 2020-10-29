@@ -389,4 +389,9 @@ class paasController extends Controller
 
         return $answer;
     }
+    public function destroy(Request $request, $id) {
+        $recid = paas::findOrFail($id);
+        $recid->DELETE();
+        return 'deleted';
+    }
 }

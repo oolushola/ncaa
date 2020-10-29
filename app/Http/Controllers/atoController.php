@@ -417,4 +417,10 @@ class atoController extends Controller
         return $answer;
 
     }
+
+    public function destroy(Request $request, $id) {
+        $recid = ato::findOrFail($id);
+        $recid->DELETE();
+        return 'deleted';
+    }
 }

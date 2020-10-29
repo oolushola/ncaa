@@ -232,7 +232,7 @@
                                             
                                             <td>{{$aop->created_by}}</td>
                                             <td style="color:red" class="center">
-                                                <form method="POST" name="deleteAop" id="deleteAop">
+                                                <form method="POST" name="frmDeleteAop" id="frmDeleteAop">
                                                     {!! csrf_field() !!} {!! method_field('DELETE') !!}
                                                     <i class="mdi mdi-delete-forever deleteAop" style="font-size:25px; cursor:pointer" value="{{$aop->id}}" title="Delete {{$aop->licence_no}}"></i>
                                                 </form>

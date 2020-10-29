@@ -404,5 +404,11 @@ class aopController extends Controller
         return $answer;
     }
 
+    public function destroy(Request $request, $id) {
+        $recid = aop::findOrFail($id);
+        $recid->DELETE();
+        return 'deleted';
+    }
+
 
 }

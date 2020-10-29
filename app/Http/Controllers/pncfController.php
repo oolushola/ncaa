@@ -399,4 +399,10 @@ class pncfController extends Controller
 
         return $answer;
     }
+
+    public function destroy(Request $request, $id) {
+        $recid = pncf::findOrFail($id);
+        $recid->DELETE();
+        return 'deleted';
+    }
 }

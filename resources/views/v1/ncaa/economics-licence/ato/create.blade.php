@@ -142,9 +142,9 @@
                                                 </a>
                                             </td>
                                             <td style="color:red" class="center">
-                                                <form method="POST" name="deleteato" id="deleteato">
+                                                <form method="POST" name="frmDeleteAto" id="frmDeleteAto">
                                                     {!! csrf_field() !!} {!! method_field('DELETE') !!}
-                                                    <i class="mdi mdi-delete-forever deleteato" style="font-size:25px; cursor:pointer" value="{{$ato->id}}" title="Delete {{$ato->approval_no}}"></i>
+                                                    <i class="mdi mdi-delete-forever deleteAto" style="font-size:25px; cursor:pointer" value="{{$ato->id}}" title="Delete {{$ato->approval_no}}"></i>
                                                 </form>
                                             </td>
                                             @endif
