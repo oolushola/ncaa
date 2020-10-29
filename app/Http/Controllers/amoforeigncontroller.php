@@ -105,17 +105,21 @@ class amoforeigncontroller extends Controller
             $allforAmos = DB::SELECT(DB::RAW('SELECT a.*, b.foreign_amo_holder, c.country FROM tbl_ncaa_foreign_amos a JOIN tbl_foreign_amo_holders b JOIN tbl_regional_country c ON  a.amo_holder = b.id AND a.regional_country_id = c.regional_country_id ORDER BY foreign_amo_holder ASC'));
             $checkforamoforeignlastupdate = updateHistory::WHERE('module', 'amo-foreign')->ORDERBY('updated_at', 'DESC')->LIMIT(1)->GET();
 
-            $aircraftMakerRatingsQuery = 'SELECT  DISTINCT a.aircraft_maker_id, a.foreign_amo_id, b.* FROM tbl_ncaa_foreign_amo_ratings a JOIN tbl_ncaa_aircraft_makers b ON a.aircraft_maker_id = b.id';
-            $aircraftMakerRatingsLists = DB::SELECT(DB::RAW($aircraftMakerRatingsQuery));
+            // $aircraftMakerRatingsQuery = 'SELECT  DISTINCT a.aircraft_maker_id, a.foreign_amo_id, b.* FROM tbl_ncaa_foreign_amo_ratings a JOIN tbl_ncaa_aircraft_makers b ON a.aircraft_maker_id = b.id';
+            // $aircraftMakerRatingsLists = DB::SELECT(DB::RAW($aircraftMakerRatingsQuery));
 
-            $aircraftTypeQuery = 'SELECT * FROM tbl_ncaa_foreign_amo_ratings a JOIN tbl_ncaa_aircraft_types b ON a.aircraft_type_id = b.id';
-            $aircraftTypeList = DB::SELECT(DB::RAW($aircraftTypeQuery));
+            // $aircraftTypeQuery = 'SELECT * FROM tbl_ncaa_foreign_amo_ratings a JOIN tbl_ncaa_aircraft_types b ON a.aircraft_type_id = b.id';
+            // $aircraftTypeList = DB::SELECT(DB::RAW($aircraftTypeQuery));
+            $ratingsAndCap = DB::SELECT(
+                DB::RAW(
+                    'SELECT a.*, b.aircraft_maker, c.aircraft_type FROM tbl_ncaa_foreign_amo_ratings a JOIN tbl_ncaa_aircraft_makers b JOIN tbl_ncaa_aircraft_types c ON a.aircraft_maker_id = b.id AND a.aircraft_type_id = c.id'
+                )
+            );
 
             return view('v1.ncaa.amo.foreign.show', compact(
                 'allforAmos', 
                 'checkforamoforeignlastupdate', 
-                'aircraftMakerRatingsLists',
-                'aircraftTypeList'
+                'ratingsAndCap'
             ));
         }
         else{

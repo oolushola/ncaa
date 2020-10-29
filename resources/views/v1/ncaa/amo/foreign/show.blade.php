@@ -118,22 +118,14 @@
                                         <td>{!! $moe !!}</td>
                                         <td>{!! $foreignAmo->approvals !!}</td>
                                         <td style="line-height:18px;">
-                                                <ul style="padding:0; margin:0; font-size:11px; list-style:none;">
-                                                @foreach($aircraftMakerRatingsLists as $aircraftMaker)
-                                                    @if($aircraftMaker->foreign_amo_id == $foreignAmo->id)
-                                                        <li style="color:green; text-decoration:underline">
-                                                            {{$aircraftMaker->aircraft_maker}}:
-                                                            <ul style="padding:0; margin:0; font-size:11px;">
-                                                                @foreach($aircraftTypeList as $aircraftType)
-                                                                @if($aircraftMaker->foreign_amo_id == $foreignAmo->id && $aircraftType->aircraft_maker_id == $aircraftMaker->id)
-                                                                <li style='display:inline-block; color:#333'>{!! $aircraftType->aircraft_type  !!},</li>
-                                                                @endif
-                                                                @endforeach
-                                                            </ul>
-                                                        </li>
-                                                    @endif
-                                                @endforeach
-                                                </ul>
+                                            @foreach($ratingsAndCap as $ratings)
+                                                @if($ratings->foreign_amo_id == $foreignAmo->id)
+                                                    <span class="font-weight-bold">
+                                                        {{ $ratings->aircraft_type }},
+                                                    </span>
+                                                @endif
+                                            @endforeach
+                                                
                                         </td>
                                         <td  class="center">
                                             <a href="{{URL::asset('/confidentials/amo/foreign/'.$foreignAmo->amo.'')}}" target="_blank">
