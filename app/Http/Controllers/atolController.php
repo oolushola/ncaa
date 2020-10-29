@@ -384,4 +384,10 @@ class atolController extends Controller
         </table>';
         return $result;
     }
+
+    public function destroy(Request $request, $id) {
+        $recid = atol::findOrFail($id);
+        $recid->DELETE();
+        return 'deleted';
+    }
 }
