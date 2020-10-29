@@ -526,6 +526,7 @@ class aircraftcontroller extends Controller
     }
 
     public function viewacstatusbyinascdesc(Request $request){
+        
         $registration_marks = strtoupper($request->get('registration_marks'));
 
         $result = '<table class="table table-bordered" id="exportTableData">
