@@ -235,9 +235,9 @@
                                             </td>
                                             
                                             <td style="color:red" class="center">
-                                                <form method="POST" name="deletepaas" id="deletepaas">
+                                                <form method="POST" name="frmDeletePaas" id="frmDeletePaas">
                                                     {!! csrf_field() !!} {!! method_field('DELETE') !!}
-                                                    <i class="mdi mdi-delete-forever deletepaas" style="font-size:25px; cursor:pointer" value="{{$paas->id}}" title="Delete {{$paas->licence_no}}"></i>
+                                                    <i class="mdi mdi-delete-forever deletePaas" style="font-size:25px; cursor:pointer" value="{{$paas->id}}" title="Delete {{$paas->licence_no}}"></i>
                                                 </form>
                                             </td>
                                             @endif
