@@ -17,7 +17,7 @@
                 <li class="breadcrumb-item"><a href="#">AOC</a></li>
                 <li class="breadcrumb-item active" aria-current="page">view all aoc</li>
             </ol>
-            <button type="button" class="btn btn-gradient-danger btn-icon-text" id="sendToPrint">
+            <button type="button" class="btn btn-primary btn-icon-text" id="sendToPrint">
                 <i class="mdi mdi-printer" title="Print"></i>
                 PRINT
             </button>
@@ -47,6 +47,12 @@
                                 <option value="2">Suspended</option>
                                 <option value="3">Expired</option>
                                 <option value="4">Revoked</option>
+                            </select>
+                            <select name="validity" id="validity" >
+                                <option value="0">Validity</option>
+                                <option value="Active">Active</option>
+                                <option value="Expiring soon">Expiring Soon</option>
+                                <option value="Expired">Expired</option>
                             </select>
                         </span>
                         <span style="font-size:12px; font-weight:bold; display:inline-block"> 

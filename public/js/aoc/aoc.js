@@ -329,6 +329,13 @@ $("#unlockPartG").click(function(){
         });
     })
 
+    $('#validity').change(function() {
+        var status = $(this).val().toLowerCase();
+        $(`tbody tr`).filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(status) > -1)
+        });
+    })
+
 
 
 
