@@ -8,6 +8,7 @@ use Illuminate\Http\HttpResponse;
 use Illuminate\Http\Request;
 use Auth;
 use App\updateHistory;
+use Illuminate\Support\Facades\Hash;
 
 
 class userController extends Controller
@@ -21,7 +22,7 @@ class userController extends Controller
     {
         if(Auth::check() && Auth::user()->role){
             $userslist = User::SELECT('id', 'name')->WHERENULL('role')->GET();
-            $allUsersForPreview = User::SELECT('id', 'name', 'role')->PAGINATE(10);
+            $allUsersForPreview = User::SELECT('id', 'name', 'role', 'status')->PAGINATE(10);
             return view('v1.ncaa.gop.user.role', compact('userslist', 'allUsersForPreview'));
         }
         else{
@@ -32,26 +33,13 @@ class userController extends Controller
     public function editUserRole($id){
         if(Auth::check() && Auth::user()->role){
             $userslist = User::SELECT('id', 'name')->GET();
-            $allUsersForPreview = User::SELECT('id', 'name', 'role')->PAGINATE(10);
+            $allUsersForPreview = User::SELECT('id', 'name', 'role', 'status')->PAGINATE(10);
             $recid = User::findOrFail(base64_decode($id));
             return view('v1.ncaa.gop.user.role', compact('userslist', 'allUsersForPreview', 'recid'));
         }
         else{
             return redirect()->route('login');
         }
-    }
-
-    public function updateUserRole(Request $request, $id){
-        if(Auth::check() && Auth::user()->role){
-            $user = User::findOrFail($id);
-            $role = $request->role; 
-            $updateRole = DB::UPDATE(DB::RAW('UPDATE users SET role = '.$role.' WHERE id = '.$id.' '));
-            return 'updated';
-        }
-        else{
-            return redirect()->route('login');
-        }
-        
     }
 
     public function usersList()
@@ -108,6 +96,58 @@ class userController extends Controller
             return view('v1.ncaa.activity-log-thread', compact('threadlists', 'module', 'actual', 'moduleActivityLogs'));
         }
         return redirect()->route('login');        
+    }
+
+    public function addNewUser(Request $request) {
+        $checkemailValidity = User::WHERE('email', $request->email)->exists();
+        if($checkemailValidity) {
+            return 'exists';
+        }
+        else {
+            $user = User::firstOrNew([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => $request->role,
+                'status' => "1",
+                'phone' => $request->phone,
+            ]);
+            $user->save();
+            return 'saved';
+        }
+    }
+
+    public function updateUser(Request $request, $id){
+        if(Auth::check() && Auth::user()->role){
+            $checkemailValidity = User::WHERE('email', $request->email)->WHERE('id', '!=', $id)->exists();
+            if($checkemailValidity) {
+                return 'exists';
+            }
+            else {
+                $user = User::findOrFail($id);
+                $user->email = $request->email;
+                $user->name = $request->name;
+                $user->phone = $request->phone;
+                $user->role = $request->role;
+                $user->save();
+                return 'updated';
+            }
+            
+            
+        }
+        else{
+            return redirect()->route('login');
+        } 
+    }
+
+    public function accessDenial(Request $request) {
+        $user = User::findOrFail($request->id);
+        if($user->status == "0"){ $status = "1"; }
+        if($user->status == "1"){ $status = "0"; }
+        $user->status = $status;
+        $user->save();
+
+        return 'accessUpdated';
     }
 
 }

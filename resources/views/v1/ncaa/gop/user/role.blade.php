@@ -5,12 +5,12 @@
 @section('main')
     <div class="page-header">
         <h3 class="page-title">
-            Assign User Role  <span id="errContainer"></span>
+            New user  <span id="errContainer"></span>
         </h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Global Operation</a></li>
-            <li class="breadcrumb-item active" aria-current="page">User Role</li>
+            <li class="breadcrumb-item"><a href="{{URL('users')}}">View All Users</a></li>
+            <li class="breadcrumb-item active" aria-current="page">New User </li>
             </ol>
         </nav>
     </div>
@@ -18,28 +18,36 @@
         <div class="col-md-5 grid-margin">
             <div class="card">
                 <div class="card-body">
-                    <form method="POST" name="frmUserRole" id="frmUserRole">
-                    {!! csrf_field() !!} {!! method_field('PATCH') !!}
+                    
+                    <form method="POST" name="frmUser" id="frmUser">
+                    {!! csrf_field() !!} 
+                    @if(isset($recid))
+                    {!! METHOD_FIELD('PATCH') !!}
+                    @endif
+
                         <div class="form-group">
-                           <select name="user_id" id="userid" class="form-control">
-                                <option value="0">Choose User</option>
-                                @foreach($userslist as $user)
-                                    @if(isset($recid))
-                                        @if($recid->id == $user->id)
-                                            <option value="{{$user->id}}" selected>{{$user->name}}</option>
-                                        @else
-                                            <option value="{{$user->id}}">{{$user->name}}</option>
-                                        @endif
-                                    @else
-                                        <option value="{{$user->id}}">{{$user->name}}</option>
-                                    @endif
-                                @endforeach
-                           </select>
-                        </div> 
+                           <label style="font-size:12px; font-weight:bold; color:green; display:block">Full Name</label>
+                           <input type="text" name="name" id="fullName" class="form-control" value="@if(isset($recid)){{$recid->name }}@endif">
+                        </div>
+                        <div class="form-group">
+                           <label style="font-size:12px; font-weight:bold; color:green; display:block">Email</label>
+                           <input type="email" name="email" id="email" class="form-control"  value="@if(isset($recid)){{$recid->email }}@endif">
+                        </div>
+                        <div class="form-group">
+                           <label style="font-size:12px; font-weight:bold; color:green; display:block">Phone No</label>
+                           <input type="text" name="phone" id="phoneNo" class="form-control"  value="@if(isset($recid)){{$recid->phone }}@endif">
+                        </div>
+                        @if(!isset($recid))
+                        <div class="form-group">
+                           <label style="font-size:12px; font-weight:bold; color:green; display:block">Password</label>
+                           <input type="password" name="password" id="password" class="form-control">
+                        </div>
+                        @endif
 
                         <div class="form-group">
                             @if(isset($recid))
-                                <input type="text" name="role" id="role", value="{{$recid->role}}">
+                                <input type="hidden" name="role" id="role", value="{{$recid->role}}">
+                                <input type="hidden" id="user_id", value="{{$recid->id}}">
                             @else
                                 <input type="hidden" name="role" id="role", value="">
                             @endif
@@ -147,11 +155,11 @@
                                 
                         </div>
                         @if(isset($recid))
-                            <button type="submit" class="btn btn-gradient-primary mr-2" id="addRole">UPDATE ROLE</button>
+                            <button type="submit" class="btn btn-gradient-primary mr-2" id="updateRole">UPDATE ROLE</button>
                         @else
                             <button type="submit" class="btn btn-gradient-primary mr-2" id="addRole">ADD ROLE</button>
                         @endif
-                        <button class="btn btn-light">Cancel</button>
+                        <button type="reset" class="btn btn-light">Cancel</button>
 
                         <div id="loader"></div>
                     </form>

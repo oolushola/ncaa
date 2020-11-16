@@ -6,7 +6,7 @@
     <div class="page-header">        
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <!-- <li class="breadcrumb-item"><a href="#">Users</a></li> -->
+                <li class="breadcrumb-item"><a href="{{URL('user-role')}}">Add New User</a></li>
                 <li class="breadcrumb-item active" aria-current="page">View All Users</li>
             </ol>
         </nav>
@@ -16,6 +16,7 @@
             <div class="card">
                 <div class="card-body" style="padding-left:3px; padding-right:3px;">
                     <h4 class="card-title" style="padding-left:10px; display:inline-block">All Users Listings</h4>
+                    
                     <div class="table-responsive">
                     {{ $allusers->links() }}
                         <table class="table table-bordered">
@@ -27,6 +28,7 @@
                                     <th><b>email</b></th>
                                     <th><b>Role</b></th>
                                     <th class="center"><b>Date Registered</b></th>
+                                    <th><b>Last Login</b></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -57,6 +59,7 @@
                                             <td>{{ucwords($user->email)}}</td>
                                             <td>{{$role}}</td>
                                             <td class="center">{{$date_registered}}</td>
+                                            <td></td>
                                         </tr>
                                     @endforeach
                                 @else
