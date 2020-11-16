@@ -104,8 +104,10 @@ Route::get('/view-clear', function() {
 	Route::patch('update-profile/{id}', 'userController@updateProfile');
 	Route::get('user-role', 'userController@userRole');
 	Route::get('user-role/{id}/edit', 'userController@editUserRole');
-	Route::patch('user-role/{id}', 'userController@updateUserRole');
+	Route::patch('user/{id}', 'userController@updateUser');
+	Route::post('user', 'userController@addNewUser');
 	Route::get('users', 'userController@usersList');
+	Route::get('deny-user-access', 'userController@accessDenial');
 
 	Auth::routes();
 	Route::get('/superadmin', 'superAdminController@index')->name('superadmin')->middleware('superadmin');
