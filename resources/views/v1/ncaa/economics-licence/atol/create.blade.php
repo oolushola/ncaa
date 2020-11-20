@@ -15,7 +15,7 @@
         </nav>
     </div>
     <div class="row">
-        <div class="col-md-5 grid-margin ">
+        <div class="col-md-6 grid-margin ">
             <div class="card">
             <div class="card-body">
             @if(isset($recid)) 
@@ -45,6 +45,12 @@
                             <label class="form-check-label" style="font-size:11px; font-weight:bold;">
                                 <input type="radio" class="form-check-input operatorChecker" name="typeofopereation" value="3" @if(isset($recid) && $recid->operator_type_checker == 3) checked @endif>
                                 Travel Agency
+                            </label>
+                        </div>
+                        <div class="form-check" style="display:inline-block;">
+                            <label class="form-check-label" style="font-size:11px; font-weight:bold;">
+                                <input type="radio" class="form-check-input operatorChecker" name="typeofopereation" value="4" @if(isset($recid) && $recid->operator_type_checker == 4) checked @endif>
+                                Others
                             </label>
                         </div>
                     </div>
@@ -84,6 +90,10 @@
                                 @endif
                             @endforeach
                         </select>
+                    </div>
+                    <div class="form-group" style="@if(isset($recid) && $recid->operator_type_checker == 4) display:block @else display:none @endif" id="otherHolder">
+                        <label class="labelholder">Others *</label>
+                        <input type="text" class="form-control" id="aocOthers" value="@if(isset($recid)) {{ $recid->operator_type }} @endif">
                     </div>
 
 
@@ -136,7 +146,7 @@
             </div>
             </div>
         </div>
-        <div class="col-md-7 grid-margin">
+        <div class="col-md-6 grid-margin">
             <div class="card">
                 <div class="card-body" style="padding:4px;">
                     <h4 class="card-title">Preview Pane <span id="deleteLoader"></span></h4>

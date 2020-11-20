@@ -6,6 +6,8 @@ $(function($){
             $("#existingAocHolder").css({display:'block'});
             $("#generalAviationHolder").css({display:'none'});
             $("#travelAgencyHolder").css({display:'none'});
+            $('#otherHolder').css({ display: 'none'})
+
             $("#aocHolderInUse").attr("name", "operator_type");
             $("#aocHolderGa").removeAttr("name");
 
@@ -13,14 +15,27 @@ $(function($){
             $("#generalAviationHolder").css({display:'block'});
             $("#existingAocHolder").css({display:'none'});
             $("#travelAgencyHolder").css({display:'none'});
+            $('#otherHolder').css({ display: 'none'})
+
+            $("#aocHolderGa").attr("name", "operator_type");
+            $("#aocHolderInUse").removeAttr("name");
+        }
+        else if($value == 3) {
+            $("#travelAgencyHolder").css({display:'block'});
+            $("#existingAocHolder").css({display:'none'});
+            $("#generalAviationHolder").css({display:'none'});
+            $('#otherHolder').css({ display: 'none'})
+
             $("#aocHolderGa").attr("name", "operator_type");
             $("#aocHolderInUse").removeAttr("name");
         }
         else {
-            $("#travelAgencyHolder").css({display:'block'});
+            $("#travelAgencyHolder").css({display:'none'});
             $("#existingAocHolder").css({display:'none'});
             $("#generalAviationHolder").css({display:'none'});
-            $("#aocHolderGa").attr("name", "operator_type");
+            $('#otherHolder').css({ display: 'block'})
+
+            $("#aocOthers").attr("name", "operator_type");
             $("#aocHolderInUse").removeAttr("name");
         }
         $("#operatorTypeChecker").val($value);
