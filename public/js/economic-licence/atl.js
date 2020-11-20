@@ -5,13 +5,26 @@ $(function($){
         if($value == 1 ){
             $("#existingAocHolder").css({display:'block'});
             $("#generalAviationHolder").css({display:'none'});
+            $('#otherHolder').css({ display: 'none' })
+
             $("#aocHolderInUse").attr("name", "operator");
             $("#aocHolderGa").removeAttr("name");
-        } else {
+            $('#aocHolderOther').removeAttr('name', 'operator')
+        } else if($value == 2){
             $("#generalAviationHolder").css({display:'block'});
             $("#existingAocHolder").css({display:'none'});
+            $('#otherHolder').css({ display: 'none' })
             $("#aocHolderGa").attr("name", "operator");
             $("#aocHolderInUse").removeAttr("name");
+            $('#aocHolderOther').removeAttr('name', 'operator')
+        }
+        else{
+            $("#generalAviationHolder").css({display:'none'});
+            $("#existingAocHolder").css({display:'none'});
+            $('#otherHolder').css({ display: 'block' })
+            $("#aocHolderGa").removeAttr("name", "operator");
+            $("#aocHolderInUse").removeAttr("name");
+            $('#aocHolderOther').attr('name', 'operator')
         }
         $("#operatorTypeChecker").val($value);
     })
@@ -56,14 +69,18 @@ $(function($){
                     return false;
                 }
             }
+            else if($operatorTypeChecker == 2){
+                $aocHolderGa = $("#aocHolderGa").val();
+                if($aocHolderGa == 0){
+                    $("#loader").html("Operator is required").addClass('error');
+                    return false;
+                }
+            }
             else{
-                if($operatorTypeChecker == 2){
-                    $aocHolderGa = $("#aocHolderGa").val();
-                    if($aocHolderGa == 0){
-                        alert($aocHolderGa)
-                        $("#loader").html("Operator is required").addClass('error');
-                        return false;
-                    }
+                $aocHolderOther = $("#aocHolderOther").val();
+                if($aocHolderOther == ""){
+                    $("#loader").html("Others is required").addClass('error');
+                    return false;
                 }
             }
         }

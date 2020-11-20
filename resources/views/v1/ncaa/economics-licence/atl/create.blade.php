@@ -15,7 +15,7 @@
         </nav>
     </div>
     <div class="row">
-        <div class="col-md-5 grid-margin ">
+        <div class="col-md-6 grid-margin ">
             <div class="card">
             <div class="card-body">
                 @if(isset($recid)) 
@@ -29,48 +29,25 @@
                     <div class="form-group">
                         <input type="hidden" name="operator_type" id="operatorTypeChecker" value="@if(isset($recid)){{$recid->operator_type}}@else{{''}}@endif">
                         <span class="labelholder" style="display:inline-block; margin-right:10px;" >Operator Type *</span>
-                        @if(isset($recid))
-                            @if($recid->operator_type == 1)
-                            <div class="form-check" style="display:inline-block;">
-                                <label class="form-check-label" style="font-size:11px; font-weight:bold;">
-                                    <input type="radio" class="form-check-input operatorChecker" name="typeofopereation" value="1" checked>
-                                    Existing AOC &nbsp; &nbsp; 
-                                </label>
-                            </div>
-                            <div class="form-check" style="display:inline-block;">
-                                <label class="form-check-label" style="font-size:11px; font-weight:bold;">
-                                    <input type="radio" class="form-check-input operatorChecker" name="typeofopereation" value="2">
-                                    General Aviation
-                                </label>
-                            </div>
-                            @else
-                                <div class="form-check" style="display:inline-block;">
-                                    <label class="form-check-label" style="font-size:11px; font-weight:bold;">
-                                        <input type="radio" class="form-check-input operatorChecker" name="typeofopereation" value="1">
-                                        Existing AOC &nbsp; &nbsp; 
-                                    </label>
-                                </div>
-                                <div class="form-check" style="display:inline-block;">
-                                    <label class="form-check-label" style="font-size:11px; font-weight:bold;">
-                                        <input type="radio" class="form-check-input operatorChecker" name="typeofopereation" value="2" checked>
-                                        General Aviation
-                                    </label>
-                                </div>
-                            @endif
-                        @else
+                       
                         <div class="form-check" style="display:inline-block;">
                             <label class="form-check-label" style="font-size:11px; font-weight:bold;">
-                                <input type="radio" class="form-check-input operatorChecker" name="typeofopereation" value="1">
+                                <input type="radio" class="form-check-input operatorChecker" name="typeofopereation" value="1" @if(isset($recid) && $recid->operator_type == 1) checked @endif>
                                 Existing AOC &nbsp; &nbsp; 
                             </label>
                         </div>
                         <div class="form-check" style="display:inline-block;">
                             <label class="form-check-label" style="font-size:11px; font-weight:bold;">
-                                <input type="radio" class="form-check-input operatorChecker" name="typeofopereation" value="2">
+                                <input type="radio" class="form-check-input operatorChecker" name="typeofopereation" value="2" @if(isset($recid) && $recid->operator_type == 2) checked @endif>
                                 General Aviation
                             </label>
                         </div>
-                        @endif
+                        <div class="form-check" style="display:inline-block;">
+                            <label class="form-check-label" style="font-size:11px; font-weight:bold;">
+                                <input type="radio" class="form-check-input operatorChecker" name="typeofopereation" value="3" @if(isset($recid) && $recid->operator_type == 3) checked @endif>
+                                Others
+                            </label>
+                        </div>
                     </div>
 
                     @if(isset($recid))
@@ -109,6 +86,13 @@
                                 </select>
                             </div>
                         @endif
+
+                        @if($recid->operator_type == 3)
+                            <div class="form-group operator" id="otherHolder">
+                                <label class="labelholder">Others *</label>
+                                <input type="text" class="form-control" id="aocHolderOther" value="{{ $recid->operator }}">
+                            </div>
+                        @endif
                     @else
                     <div class="form-group" style="display:none" id="existingAocHolder">
                         <label class="labelholder">Existing AOC Operator *</label>
@@ -127,6 +111,10 @@
                                 <option value="{{$generalAviation->general_aviation_name}}">{{$generalAviation->general_aviation_name}}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="form-group operator" style="display:none" id="otherHolder">
+                        <label class="labelholder">Others *</label>
+                        <input type="text" class="form-control" id="aocHolderOther">
                     </div>
                     @endif
 
@@ -183,7 +171,7 @@
             </div>
         </div>
         
-        <div class="col-md-7 grid-margin">
+        <div class="col-md-6 grid-margin">
             <div class="card">
                 <div class="card-body" style="padding:4px;">
                     <h4 class="card-title">Preview Pane <span id="deleteLoader"></span></h4>
