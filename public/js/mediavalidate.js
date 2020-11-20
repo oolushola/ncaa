@@ -90,7 +90,7 @@ function validateFile(ftype){
         return true;
         }
     }
-    alert("Sorry, the file type you are uploading is not allowed.");
+    // alert("Sorry, the file type you are uploading is not allowed.");
     document.getElementById("filecheck").value = "0";	
     return false;
 }
