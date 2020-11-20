@@ -59,7 +59,7 @@
                                             <td>{{ucwords($user->email)}}</td>
                                             <td>{{$role}}</td>
                                             <td class="center">{{$date_registered}}</td>
-                                            <td></td>
+                                            <td>@if($user->last_login){{ date('d-m-Y H:i:s A', strtotime($user->last_login)) }}@endif</td>
                                         </tr>
                                     @endforeach
                                 @else
