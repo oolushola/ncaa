@@ -45,7 +45,7 @@ class userController extends Controller
     public function usersList()
     {
         if(Auth::check() && Auth::user()->role){
-            $allusers = User::SELECT('name', 'phone', 'email', 'role', 'created_at')->PAGINATE(30);
+            $allusers = User::SELECT('name', 'phone', 'email', 'role', 'created_at', 'last_login')->PAGINATE(30);
             return view('v1.ncaa.gop.user.users', compact('allusers'));
         }
         return redirect()->route('login');        
