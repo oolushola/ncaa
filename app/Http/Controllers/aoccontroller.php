@@ -321,7 +321,13 @@ class aoccontroller extends Controller
         }
         $aocrec = aoc::findOrFail($id);
         $aocrec->DELETE();
+        updateHistory::CREATE([
+            'name' => Auth::user()->name, 'module' => 'aoc', 'record_id' => $id, 'actual' => 'DELETED:'.$aocrec->aoc_holder
+        ]);
         return 'deleted';
+        
+
+
        
     }
     return redirect()->route('login');

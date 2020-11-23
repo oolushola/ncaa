@@ -388,6 +388,9 @@ class atolController extends Controller
     public function destroy(Request $request, $id) {
         $recid = atol::findOrFail($id);
         $recid->DELETE();
+        updateHistory::CREATE([
+            'name' => Auth::user()->name, 'module' => 'atol', 'record_id' => $id, 'actual' => 'DELETED:'.$recid->operator.' '.$recid->licence_no
+        ]);
         return 'deleted';
     }
 }

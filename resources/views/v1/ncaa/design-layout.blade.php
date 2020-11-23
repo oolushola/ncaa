@@ -17,8 +17,6 @@
         -webki-print-color-adjust:exact
       }
     }
-
-
     .error{ font-size:12px; font-weight:bold; color:red; margin-top:10px; margin-bottom:10px;}
     p{font-size:11px; margin:0px;}
     #exportTableData_filter{
@@ -37,6 +35,13 @@
     .paging_simple_numbers{
       display:none;
     }
+    .dashboard__economic {
+      background:rgba(255, 255, 255, 0.2); color:#fff; padding:10px; border-radius:5px; cursor:pointer;
+    }
+    .dashboard__economic:hover {
+      background: #fbfbfb;
+      color:#666;
+    } 
 
   </style>
     <link rel="shortcut icon" href="/images/ncaa-logo.png" />

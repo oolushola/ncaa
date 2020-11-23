@@ -140,6 +140,9 @@ class foccAndMccController extends Controller
         if(Auth::check() && Auth::user()->role){
             $recid = focc_and_mcc::findOrFail($id);
             $recid->DELETE();
+            updateHistory::CREATE([
+                'name' => Auth::user()->name, 'module' => 'focc', 'record_id' => $id, 'actual' => 'DELETED:'.$recid->focc_no
+            ]);
             return 'deleted';
         }
         return redirect()->route('login');

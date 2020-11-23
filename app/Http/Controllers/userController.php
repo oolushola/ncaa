@@ -80,7 +80,7 @@ class userController extends Controller
 
     public function activitylogbymodules($module){
         if(Auth::check() && Auth::user()->role){
-            $moduleActivityLogs = updateHistory::SELECT('record_id', 'module', 'actual')->DISTINCT()->WHERE('module', $module)->ORDERBY('updated_at', 'DESC')->GET();
+            $moduleActivityLogs = updateHistory::SELECT('record_id', 'module', 'actual')->WHERE('module', $module)->DISTINCT()->GET();
             return view('v1.ncaa.activity-log-module', compact('moduleActivityLogs', 'module'));
         }
         return redirect()->route('login');
@@ -89,9 +89,9 @@ class userController extends Controller
     public function activitylogbyactual($module, $actual, $id){
         if(Auth::check() && Auth::user()->role){
             
-            $threadlists = DB::SELECT(DB::RAW('SELECT a.*, b.photo FROM tbl_ncaa_update_histories a JOIN users b ON a.name = b.name  WHERE record_id = '.$id.' AND module = "'.$module.'" ORDER BY updated_at DESC'));
+            $threadlists = DB::SELECT(DB::RAW('SELECT a.*, b.photo FROM tbl_ncaa_update_histories a JOIN users b ON a.name = b.name  WHERE record_id = "'.$id.'" AND module = "'.$module.'" ORDER BY updated_at DESC'));
             
-            $moduleActivityLogs = updateHistory::SELECT('record_id', 'module', 'actual')->DISTINCT()->WHERE('module', $module)->WHERE('record_id', '<>', $id)->ORDERBY('updated_at', 'DESC')->GET();
+            $moduleActivityLogs = updateHistory::SELECT('record_id', 'module', 'actual')->DISTINCT()->WHERE('module', $module)->WHERE('record_id', '<>', $id)->GET();
 
             return view('v1.ncaa.activity-log-thread', compact('threadlists', 'module', 'actual', 'moduleActivityLogs'));
         }

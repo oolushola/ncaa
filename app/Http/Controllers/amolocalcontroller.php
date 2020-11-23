@@ -586,6 +586,9 @@ class amolocalcontroller extends Controller
         {
             $recid = localamo::findOrFail($id);
             $recid->DELETE();
+            updateHistory::CREATE([
+                'name' => Auth::user()->name, 'module' => 'amo-local', 'record_id' => $id, 'actual' => 'DELETED:'.$recid->amo_approval_number
+            ]);
             return 'deleted';
         }
         return redirect()->route('login');

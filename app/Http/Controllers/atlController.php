@@ -398,6 +398,9 @@ class atlController extends Controller
     public function destroy(Request $request, $id) {
         $recid = atl::findOrFail($id);
         $recid->DELETE();
+        updateHistory::CREATE([
+            'name' => Auth::user()->name, 'module' => 'atl', 'record_id' => $id, 'actual' => 'DELETED:'.$recid->operator.' '.$recid->licence_no
+        ]);
         return 'deleted';
     }
 }

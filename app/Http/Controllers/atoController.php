@@ -421,6 +421,9 @@ class atoController extends Controller
     public function destroy(Request $request, $id) {
         $recid = ato::findOrFail($id);
         $recid->DELETE();
+        updateHistory::CREATE([
+            'name' => Auth::user()->name, 'module' => 'ato', 'record_id' => $id, 'actual' => 'DELETED:'.$recid->approval_no
+        ]);
         return 'deleted';
     }
 }

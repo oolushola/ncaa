@@ -14,7 +14,7 @@
                 <li class="breadcrumb-item"><a href="{{URL('economic-licence/paas')}}">PAAS</a></li>
                 <li class="breadcrumb-item active" aria-current="page">view all PAAS</li>
             </ol>
-            <button type="button" class="btn btn-gradient-danger btn-icon-text" id="sendToPrint">
+            <button type="button" class="btn btn-gradient-primary btn-icon-text" id="sendToPrint">
                 <i class="mdi mdi-printer" title="Print"></i>
                 PRINT
             </button>

@@ -171,5 +171,21 @@ Route::get('/view-clear', function() {
 	Route::resource('type-acceptance-certificate', 'tacController');
 	Route::get('all-type-acceptance-certificate', 'tacController@showAllTac');
 	Route::get('get-aircraft-models', 'tacController@aircraftModelsListing');
+
+	Route::get('aoc-chart-result', 'dashboardController@aocResult');
+	Route::get('focc-and-mcc-chart-result', 'dashboardController@foccAndMccResult');
+	Route::get('ac-status-chart-result', 'dashboardController@acstatusResult');
+	Route::get('foreign-amo-chart-result', 'dashboardController@foreignAmoResult');
+	Route::get('local-amo-chart-result', 'dashboardController@localAmoResult');
+
+	Route::get('aop-chart-result', 'dashboardController@aopResult');
+	Route::get('atl-chart-result', 'dashboardController@atlResult');
+	Route::get('pncf-chart-result', 'dashboardController@pncfResult');
+	Route::get('atol-chart-result', 'dashboardController@atolResult');
+	Route::get('paas-chart-result', 'dashboardController@paasResult');
+	Route::get('ato-chart-result', 'dashboardController@atoResult');
+
+	
+//
 // });
 // Route::get('/home', 'HomeController@index')->name('home');

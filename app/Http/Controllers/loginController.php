@@ -10,6 +10,12 @@ use App\localamo;
 use App\focc;
 use App\Tac;
 use Auth;
+use App\aop;
+use App\atl;
+use App\pncf;
+use App\paas;
+use App\atol;
+use App\ato;
 
 class loginController extends Controller
 {
@@ -28,7 +34,18 @@ class loginController extends Controller
             $localamolist = localamo::ORDERBY('aoc_holder_id')->GET();
             $focclist = focc::ORDERBY('aoc_holder_id', 'ASC')->GET();
             $tacList = Tac::GET()->COUNT();
-            return view('v1.ncaa.dashboard', compact('aircraftslistings', 'aoclist', 'foreignamolist', 'localamolist', 'focclist', 'tacList'));
+            $aopCount = aop::GET()->COUNT();
+            $atlCount = atl::GET()->COUNT();
+            $pncfCount = pncf::GET()->COUNT();
+            $paasCount = paas::GET()->COUNT();
+            $atolCount = atol::GET()->COUNT();
+            $atoCount = ato::GET()->COUNT();
+
+            return view('v1.ncaa.dashboard', compact(
+                'aircraftslistings', 'aoclist', 'foreignamolist', 'localamolist', 'focclist', 'tacList',
+                'aopCount', 'atlCount', 'pncfCount', 'paasCount', 'atolCount', 'atoCount'
+                )
+            );
         }
         else{
             return redirect()->route('login');

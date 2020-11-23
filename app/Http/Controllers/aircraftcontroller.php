@@ -702,6 +702,9 @@ class aircraftcontroller extends Controller
             }
             $recid = aircrafts::findOrFail($id);
             $recid->DELETE();
+            updateHistory::CREATE([
+                'name' => Auth::user()->name, 'module' => 'ac-status', 'record_id' => $id, 'actual' => 'DELETED:'.$recid->registration_marks
+            ]);
             return 'deleted';
         }
         return redirect()->route('login');

@@ -407,6 +407,9 @@ class aopController extends Controller
     public function destroy(Request $request, $id) {
         $recid = aop::findOrFail($id);
         $recid->DELETE();
+        updateHistory::CREATE([
+            'name' => Auth::user()->name, 'module' => 'aop', 'record_id' => $id, 'actual' => 'DELETED:'.$recid->operator
+        ]);
         return 'deleted';
     }
 

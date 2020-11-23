@@ -403,6 +403,10 @@ class pncfController extends Controller
     public function destroy(Request $request, $id) {
         $recid = pncf::findOrFail($id);
         $recid->DELETE();
+        updateHistory::CREATE([
+            'name' => Auth::user()->name, 'module' => 'pncf', 'record_id' => $id, 'actual' => 'DELETED:'.$recid->operator.' '.$recid->licence_no
+        ]);
+        
         return 'deleted';
     }
 }

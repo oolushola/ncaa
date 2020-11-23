@@ -522,6 +522,9 @@ class amoforeigncontroller extends Controller
         {
             $recid = foreignamo::findOrFail($id);
             $recid->DELETE();
+            updateHistory::CREATE([
+                'name' => Auth::user()->name, 'module' => 'amo-foreign', 'record_id' => $id, 'actual' => 'DELETED:'.$recid->moe_reference
+            ]);
             return 'deleted';
         }
         return redirect()->route('login');

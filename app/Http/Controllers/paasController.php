@@ -392,6 +392,9 @@ class paasController extends Controller
     public function destroy(Request $request, $id) {
         $recid = paas::findOrFail($id);
         $recid->DELETE();
+        updateHistory::CREATE([
+            'name' => Auth::user()->name, 'module' => 'paas', 'record_id' => $id, 'actual' => 'DELETED:'.$recid->operator.' '.$recid->licence_no
+        ]);
         return 'deleted';
     }
 }

@@ -14,7 +14,7 @@
                 <li class="breadcrumb-item"><a href="{{URL('economic-licence/ato')}}">Approved Training Organization</a></li>
                 <li class="breadcrumb-item active" aria-current="page">view all ATO's</li>
             </ol>
-            <button type="button" class="btn btn-gradient-danger btn-icon-text" id="sendToPrint">
+            <button type="button" class="btn btn-gradient-primary btn-icon-text" id="sendToPrint">
                 <i class="mdi mdi-printer" title="Print"></i>
                 PRINT
             </button>

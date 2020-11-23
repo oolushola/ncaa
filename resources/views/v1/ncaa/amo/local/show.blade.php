@@ -14,7 +14,7 @@
                 <li class="breadcrumb-item"><a href="{{URL('amo-view-selection')}}">Back</a></li>
                 <li class="breadcrumb-item active" aria-current="page">All Local AMO's</li>
             </ol>
-            <button type="button" class="btn btn-gradient-danger btn-icon-text" id="sendToPrint">
+            <button type="button" class="btn btn-gradient-primary btn-icon-text" id="sendToPrint">
                 <i class="mdi mdi-printer" title="Print"></i>
                 PRINT
             </button>

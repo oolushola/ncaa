@@ -23,12 +23,11 @@
   </div>
   <div class="row">
         
-    <div class="col-md-4 stretch-card grid-margin">
+    <div class="col-md-3 stretch-card grid-margin">
       <div class="card bg-gradient-danger card-img-holder text-white">
         <div class="card-body">
           <img src="{{URL::asset('images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image"/>
-          <h4 class="font-weight-normal mb-3">AOC
-              
+          <h4 class="font-weight-normal mb-3" data-toggle="modal" href=".aocModalInformation" id="forAoc" style="z-index:1000; position:relative; cursor:pointer;">AOC
             <i class="mdi mdi-chart-line mdi-24px float-right" style="color:#fff"></i>
           </h4>
           <h2>
@@ -49,12 +48,12 @@
         </div>
       </div>
     </div>
-
-    <div class="col-md-4  grid-margin">
+    
+    <div class="col-md-3 stretch-card grid-margin">
       <div class="card bg-gradient-info card-img-holder text-white">
         <div class="card-body">
           <img src="{{URL::asset('images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image"/>                  
-          <h4 class="font-weight-normal mb-3">FOCC & MCC
+          <h4 class="font-weight-normal mb-3" data-toggle="modal" href=".aocModalInformation" id="forFoccAndMcc" style="z-index:1000; position:relative; cursor:pointer;">FOCC & MCC 
             <i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
           </h4>
           <h2>
@@ -79,16 +78,15 @@
     </div>
 
 
-    <div class="col-md-4 stretch-card grid-margin">
+    <div class="col-md-3 stretch-card grid-margin">
       <div class="card bg-gradient-danger card-img-holder text-white">
         <div class="card-body">
           <img src="{{URL::asset('images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image"/>
           <h4 class="font-weight-normal mb-3">T.A.C
-              
             <i class="mdi mdi-chart-line mdi-24px float-right" style="color:#fff"></i>
           </h4>
           <h2>
-            @if(count($tacList))
+            @if($tacList > 0)
               {{ $tacList }}
             @else
                 No Record Yet.
@@ -105,98 +103,41 @@
         </div>
       </div>
     </div>
-
     
-    <div class="col-md-4 stretch-card grid-margin">
+    <div class="col-md-3 stretch-card grid-margin">
       <div class="card bg-gradient-info card-img-holder text-white">
         <div class="card-body">
-          <img src="{{URL::asset('images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image"/>                  
-          <h2 class="font-weight-normal mb-3">A/C Status
-              
-            <i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
-          </h2>
-          <h2 style="padding-top:70px;">
+          <img src="{{URL::asset('images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image"/>
+          <h4 class="font-weight-normal mb-3" data-toggle="modal" href=".aocModalInformation" id="forAcStatus" style="z-index:1000; position:relative; cursor:pointer;">A/C Status
+            <i class="mdi mdi-chart-line mdi-24px float-right" style="color:#fff"></i>
+          </h4>
+          <h2>
             @if(count($aircraftslistings))
               {{count($aircraftslistings)}}
             @else
                 No Record Yet.
             @endif
           </h2>
-          <h6 class="card-text mb-5">
-              @if(count($aircraftslistings)) Record founds @endif
-          </h6>
+          <h6 class="card-text mb-5">@if(count($aircraftslistings)) Record founds @endif</h6>
           @if(Auth::user()->role==1)
-            <a href="{{URL('activity-log/ac-status')}}" style="text-decoration:none; color:yellow; font-weight:bold; font-size:13px; position:relative; z-index:1"> 
-              Activity Log of Aircraft Status
+            <a href="{{URL('activity-log/ac-status')}}" style="text-decoration:none; color:#333; font-weight:bold; font-size:13px; position:relative; z-index:1"> 
+            Activity Log
             </a>
           @else
-            Aircrafts
+            Air Operator Certificate
           @endif
         </div>
       </div>
     </div>
 
-    @if(count($aircraftslistings))
-      <?php
-        $active = 0;
-        $expiring_soon = 0;
-        $expired = 0;
-      ?>
-      @foreach($aircraftslistings as $aircraftstatus)
-      <?php
-        $now = time();
-        $due_date = strtotime($aircraftstatus->c_of_a_status);;
-        $datediff = $due_date - $now;
-        $numberofdays = round($datediff / (60 * 60 * 24));
-        
-        if($numberofdays > 90 ){
-          $active++;
-        }
-        else if(($numberofdays >= 0) && ($numberofdays <=90)){
-            $expiring_soon++;
-        }
-        else{
-            $expired++;
-        }
-      ?>
-      @endforeach
-      <?php 
-        $total = count($aircraftslistings);
-        $active_aircraft = round(($active / $total)*100);
-        $expiring_soon_aircraft = round(($expiring_soon / $total)*100);
-        $expired_aircraft = round(($expired / $total)*100);
-        
-      ?>
-    @else
-      <?php
-        $active_aircraft = 33.3;
-        $expiring_soon_aircraft = 33.3;
-        $expired_aircraft = 33.3;
-      ?>
-    @endif
-
-    <div class="col-lg-8 grid-margin">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title center">A/C Status <sub>arcs in %</sub></h4>
-          <input type="hidden" id="expiringSoon" value="{{$expiring_soon_aircraft}}">
-          <input type="hidden" id="expired" value="{{$expired_aircraft}}">
-          <input type="hidden" id="active" value="{{$active_aircraft}}">
-
-          <canvas id="pieChart"></canvas>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="col-md-4 stretch-card grid-margin">
+    <div class="col-md-3 stretch-card grid-margin">
       <div class="card bg-gradient-success card-img-holder text-white">
         <div class="card-body">
           <img src="{{URL::asset('images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image"/>                                    
-          <h2 class="font-weight-normal mb-3"> Foeign AMO
+          <h4 class="font-weight-normal mb-3" data-toggle="modal" href=".aocModalInformation" id="forForeignAmo"> Foreign AMO
             <i class="mdi mdi-diamond mdi-24px float-right"></i>
-          </h2>
-          <h2 style="padding-top:70px;">
+          </h4>
+          <h2>
             <?php
                 $foreignamo = count($foreignamolist);
                 if($foreignamo > 0){
@@ -211,28 +152,24 @@
             <?php if($foreignamo > 0){ ?> Records Found for foreign  <?php } ?>
           </h6>
           @if(Auth::user()->role==1)
-            <a href="{{URL('activity-log/amo-foreign')}}" style="text-decoration:none; color:blue; font-weight:bold; font-size:13px; position:relative; z-index:1"> 
-              Activity Log of Foreign Aircraft Maintenance Organization
+            <a href="{{URL('activity-log/amo-foreign')}}" style="text-decoration:none; color:black; font-weight:bold; font-size:13px; position:relative; z-index:1"> 
+              Activity Log 
             </a>
           @else
-                Approved Maintenance Organizations
+            Approved Maintenance Organizations
           @endif
         </div>
       </div>
     </div>
 
-    <div class="col-lg-8 stretch-card grid-margin">
-      @include('v1.ncaa._foreignamopiechart')
-    </div>
-
-    <div class="col-md-4 stretch-card grid-margin">
+    <div class="col-md-3 stretch-card grid-margin">
       <div class="card bg-gradient-success card-img-holder text-white">
         <div class="card-body">
           <img src="{{URL::asset('images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image"/>                                    
-          <h2 class="font-weight-normal mb-3">Local AMO
+          <h4 class="font-weight-normal mb-3" data-toggle="modal" href=".aocModalInformation" id="forLocalAmo">Local AMO
             <i class="mdi mdi-diamond mdi-24px float-right"></i>
-          </h2>
-          <h1 style="padding-top:70px;">
+          </h4>
+          <h2>
             <?php
                 $localamo = count($localamolist);
                 if($localamo > 0){
@@ -242,23 +179,105 @@
                   echo 'No Record Yet';
                 }
             ?>
-          </h1>
+          </h2>
           <h6 class="card-text mb-5">
             <?php if($localamo > 0){ ?> Records Found for Local AMO <?php } ?>
           </h6>
           @if(Auth::user()->role==1)
-            <a href="{{URL('activity-log/amo-local')}}" style="text-decoration:none; color:blue; font-weight:bold; font-size:13px; position:relative; z-index:1"> 
-              Activity Log of Local Aircraft Maintenance Organization
+            <a href="{{URL('activity-log/amo-local')}}" style="text-decoration:none; color:black; font-weight:bold; font-size:13px; position:relative; z-index:1"> 
+              Activity Log 
             </a>
           @else
-                Approved Maintenance Organizations
+            Approved Maintenance Organizations
           @endif
         </div>
       </div>
     </div>
 
-    <div class="col-lg-8 stretch-card grid-margin">
-      @include('v1.ncaa._localamopiechart')
+    <div class="col-md-6 stretch-card grid-margin">
+      <div class="card bg-gradient-info card-img-holder text-white">
+        <div class="card-body">
+          <img src="{{URL::asset('images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image"/>                                    
+          <h6>Economic Licences</h6>
+
+          <div class="row">
+            <div class="col-md-4 col-sm-6 mb-2 mt-2">
+            <div class="dashboard__economic">
+                <p style="margin-bottom:10px; font-size:13px; font-weight:bold" data-toggle="modal" href=".aocModalInformation" id="forAop">AOP ({{ $aopCount }})</p>
+                @if(Auth::user()->role==1)
+                  <a href="{{URL('activity-log/aop')}}" style="text-decoration:none; color:black; font-weight:bold; font-size:11px; position:relative; z-index:1"> 
+                    Activity Log of AOP
+                  </a>
+                @else
+                  Airline Operating Permit
+                @endif
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-2 mt-2">
+            <div class="dashboard__economic">
+                <p style="margin-bottom:10px; font-size:13px; font-weight:bold" data-toggle="modal" href=".aocModalInformation" id="forAtl">ATL ({{ $atlCount }})</p>
+                @if(Auth::user()->role==1)
+                  <a href="{{URL('activity-log/atl')}}" style="text-decoration:none; color:black; font-weight:bold; font-size:11px; position:relative; z-index:1"> 
+                    Activity Log of AOP
+                  </a>
+                @else
+                  Air Transport Licence
+                @endif
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-2 mt-2">
+            <div class="dashboard__economic">
+                <p  style="margin-bottom:10px; font-size:13px; font-weight:bold" data-toggle="modal" href=".aocModalInformation" id="forPncf">PNCF ({{ $pncfCount }})</p>
+                @if(Auth::user()->role==1)
+                  <a href="{{URL('activity-log/pncf')}}" style="text-decoration:none; color:black; font-weight:bold; font-size:10px; position:relative; z-index:1"> 
+                    Activity Log of PNCF
+                  </a>
+                @else
+                  Non Commercial FLight
+                @endif
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-2 mt-2">
+            <div class="dashboard__economic">
+                <p style="margin-bottom:10px; font-size:13px; font-weight:bold" data-toggle="modal" href=".aocModalInformation" id="forAtol">ATOL ({{ $atolCount }})</p>
+                @if(Auth::user()->role==1)
+                  <a href="{{URL('activity-log/atol')}}" style="text-decoration:none; color:black; font-weight:bold; font-size:11px; position:relative; z-index:1"> 
+                    Activity Log of ATOL
+                  </a>
+                @else
+                  Air Travel Organization Licence
+                @endif
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-2 mt-2">
+            <div class="dashboard__economic">
+                <p style="margin-bottom:10px; font-size:13px; font-weight:bold" data-toggle="modal" href=".aocModalInformation" id="forPaas">PAAS ({{ $paasCount }})</p>
+                @if(Auth::user()->role==1)
+                  <a href="{{URL('activity-log/paas')}}"style="text-decoration:none; color:#000; font-weight:bold; font-size:11px; position:relative; z-index:1"> 
+                    Activity Log of PAAS
+                  </a>
+                @else
+                  Permit for Aerial Aviation Service
+                @endif
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-2 mt-2">
+            <div class="dashboard__economic">
+                <p style="margin-bottom:10px; font-size:13px; font-weight:bold" data-toggle="modal" href=".aocModalInformation" id="forAto">ATO ({{ $atoCount }})</p>
+                @if(Auth::user()->role==1)
+                  <a href="{{URL('activity-log/ato')}}" style="text-decoration:none; color:#000; font-weight:bold; font-size:11px; position:relative; z-index:1"> 
+                    Activity Log of ATO
+                  </a>
+                @else
+                  Approved Training Organizations
+                @endif
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
     </div>
 
 
@@ -266,4 +285,103 @@
     
 
   </div>
+
+
+  @include('v1.ncaa._notifier')
+
+@stop
+
+@section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+<script>
+  /* Chart for Daily Gate out */
+      
+      var ctx = document.getElementById('notifier')
+      var ctxChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: ['Active', 'Expiring Soon', 'Expired'],
+              datasets: [{
+                  label: [''],
+                  data: [0, 0, 0],
+                  backgroundColor: [
+                      'green',
+                      '#FFBF00',
+                      'red',
+                      
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              },
+              "hover": {
+                  "animationDuration": 0
+              },
+              "animation": {
+                  "duration": 1,
+                  "onComplete": function() {
+                      var chartInstance = this.chart,
+                      ctx = chartInstance.ctx
+
+                      ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                      ctx.textAlign = 'center'
+                      ctx.textBaseline = 'bottom'
+
+                      this.data.datasets.forEach(function(dataset, i) {
+                          var meta = chartInstance.controller.getDatasetMeta(i)
+                          meta.data.forEach(function (bar, index) {
+                              var data = dataset.data[index]
+                              if(data !== 0) {
+                                  ctx.fillText(data, bar._model.x, bar._model.y, )
+                              }
+                          })
+                      })
+                  }
+              },
+              
+          }
+      });
+    
+
+    function modulePopupRequest(moduleId, url, namedModule, chartModuleName) {
+      $(`#${moduleId}`).click(function() {
+        $('#namedModule').text(namedModule)
+        $('#loader').html('<img src=\'/images/ajax.gif\'>please wait...').addClass('error');
+        $('#resultPlaceholder').html('')
+        $.get(url, function(data) {
+          ctxChart.data.datasets[0].label = chartModuleName;
+          ctxChart.data.datasets[0].data  = data.determinant;
+          $('#resultPlaceholder').html(data.expiredData)
+          $('#loader').html('')
+          ctxChart.update()
+        })
+      })
+    }
+
+    modulePopupRequest('forAoc', '/aoc-chart-result', 'Aircraft Operation Certificate', 'AOC CHART')
+    modulePopupRequest('forFoccAndMcc', '/focc-and-mcc-chart-result', 'FOCC & MCC', 'FOCC CHART')
+    modulePopupRequest('forAcStatus', '/ac-status-chart-result', 'Aircraft Status', 'AIRCRAFT STATUS')
+    modulePopupRequest('forForeignAmo', '/foreign-amo-chart-result', 'Foreign Amo', 'FOREIGN AMO')
+    modulePopupRequest('forLocalAmo', '/local-amo-chart-result', 'Local Amo', 'LOCAL AMO')
+    
+    // Economic Licences
+    modulePopupRequest('forAop', '/aop-chart-result', 'Aop', 'AOP')
+    modulePopupRequest('forAtl', '/atl-chart-result', 'Atl', 'ATL')
+    modulePopupRequest('forPncf', '/pncf-chart-result', 'Pncf', 'PNCF')
+    modulePopupRequest('forAtol', '/atol-chart-result', 'Atol', 'ATOL')
+    modulePopupRequest('forPaas', '/paas-chart-result', 'Paas', 'PAAS')
+    modulePopupRequest('forAto', '/ato-chart-result', 'Ato', 'ATO')
+    
+</script>
 @stop

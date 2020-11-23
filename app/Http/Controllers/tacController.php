@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\HttpResponse;
 use App\Tac;
 use App\TacAircraftMaker;
+use App\updateHistory;
+use Auth;
 
 class tacController extends Controller
 {
@@ -129,6 +131,9 @@ class tacController extends Controller
                 'DELETE FROM tbl_ncaa_tac_aircraft_makers WHERE tac_id = "'.$id.'" '
             )
         );
+        updateHistory::CREATE([
+            'name' => Auth::user()->name, 'module' => 'tac', 'record_id' => $id, 'actual' => 'DELETED:'.$recid->tc_acceptance_approval
+        ]);
 
         return 'deleted';
     }

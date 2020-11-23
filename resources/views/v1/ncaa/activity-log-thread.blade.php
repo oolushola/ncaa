@@ -7,8 +7,8 @@
     <div class="col-md-5 grid-margin">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title" style="color:#ff0000">Update history thread of, <br>{{strtoupper($module)}} : {{$actual}}</h4>
-                <h6 style="color:blue">{{count($threadlists)}} Updates found for this record</h6>
+                <h4 class="card-title" style="color:#ff0000">Update history thread of, <br>{{strtoupper($module)}} : {{$actual}} </h4>
+                <h6 style="color:blue">{{count($threadlists)}} action found for this record</h6>
                 @if(count($threadlists))
                     @foreach($threadlists as $thread)
                     <ul style="margin:0; padding:0">
@@ -21,8 +21,17 @@
                                 @endif     
                             </div>
                         </li>
+                        <?php
+                            if(substr($thread->actual, 0, 7) == 'DELETED') {
+                                $status = '<span style="color:#ff0000">Deleted</span>';
+                            }
+                            else{
+                                $status = 'Updated';
+                            }
+                        ?>
+                        
                         <li style="border-left:2px dashed #ccc; padding:4px; list-style-type:none; margin-left:25px;">
-                            <span style="color:#333; font-size:11px; font-weight:bold;">Updated by:</span> {{$thread->name}}
+                            <span style="color:#333; font-size:11px; font-weight:bold;">{!! $status !!} by:</span> {{$thread->name}}
                         </li>
                         <?php 
                             $convertodate = strtotime($thread->updated_at);
