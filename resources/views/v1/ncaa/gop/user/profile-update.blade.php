@@ -63,5 +63,5 @@
 @section('scripts')
 <script src="{{URL::asset('js/jquery.form.js')}}"></script>
 <script src="{{URL::asset('js/mediavalidate.js')}}"></script>
-<script src="{{URL::asset('js/gop/profile-update.js')}}"></script>
+<script src="{{URL::asset('js/gop/profile-update.js?v='.time())}}"></script>
 @stop

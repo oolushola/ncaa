@@ -11,26 +11,25 @@ $(function(){
 	}
 
     $("#updateUserProfile").click(function(e){
+        alert('Ok')
         e.preventDefault();
         $file = $("#file").val();
-            if($file != ''){
-                var ftype = $("#ftype").val();
-                validateFile(ftype);
-                var filecheck = $("#filecheck").val();
-                if(filecheck == "0"){return;}
-            }
+        if($file != ''){
+            var ftype = $("#ftype").val();
+            validateFile(ftype);
+        }
         $phone = $("#phone").val();
         $email = $("#email").val();
-            if($email == ''){
-                $("#loader").html('Email is required').addClass('error');
-                return;
+        if($email == ''){
+            $("#loader").html('Email is required').addClass('error');
+            return;
+        }
+        else{
+            if(validateEmail($email)==false){
+                $("#loader").html('Only valid email is allowed.').addClass('error');
+                return
             }
-            else{
-                if(validateEmail($email)==false){
-                    $("#loader").html('Only valid email is allowed.').addClass('error');
-                    return
-                }
-            }
+        }
         $("#loader").html("<img src='/images/ajax.gif'>Please Wait...").addClass('error');
         $("#frmProfileUpdate").submit();
     });
