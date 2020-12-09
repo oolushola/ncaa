@@ -150,7 +150,22 @@
                                         </label>
                                     </div>
                                 @endif
-
+                                <?php
+                                    $departments = array('daws', 'dolt', 'datr');
+                                ?>
+                                <div class="form-group">
+                                    <label style="font-size:12px; font-weight:bold; color:green; display:block">Department</label>
+                                    <select name="department" id="department" class="form-control">
+                                        <option>Choose a department</option>
+                                        @foreach($departments as $department)
+                                            @if(isset($recid) && $recid->department == $department)
+                                            <option value="{{ $department }}" selected>{{ strtoupper($department) }}</option>
+                                            @else
+                                            <option value="{{ $department }}">{{ strtoupper($department) }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div id="loader"></div>
                                 
                         </div>

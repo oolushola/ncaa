@@ -48,6 +48,7 @@
 
 </head>
 <body>
+    <?php $auth = Auth::user()->role ?>
   <div class="container-scroller">
     <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
@@ -111,12 +112,12 @@
               <div class="nav-profile-text d-flex flex-column">
                 <span class="font-weight-bold mb-2">{{ucwords(Auth::user()->name)}}</span>
                 <span class="text-secondary text-small">
-                  @if(Auth::user()->role==1)
-                    NCAA - SUPER USER
-                  @elseif(Auth::user()->role==2)
-                    NCAA - TOP-TIER
-                  @elseif(Auth::user()->role==3)
-                    NCAA - READ & VIEW
+                  @if($auth == 1)
+                    {{ strtoupper(Auth::user()->department) }} - SUPER USER
+                  @elseif($auth == 2)
+                  {{ strtoupper(Auth::user()->department) }} - TOP-TIER
+                  @elseif($auth == 3)
+                  {{ strtoupper(Auth::user()->department) }} - READ & VIEW
                   @endif
                 </span>
               </div>
@@ -131,7 +132,6 @@
           </li>
           
           @if(Auth::user()->role==1)
-
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#gop" aria-expanded="false" aria-controls="gop">
               <span class="menu-title">Global Operations</span>
@@ -157,6 +157,7 @@
 
           @endif
 
+          @if(!isset(Auth::user()->department) || Auth::user()->department == 'dolt' ||  Auth::user()->department == 'daws' )
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#aoc" aria-expanded="false" aria-controls="aoc">
               <span class="menu-title">AOC</span>
@@ -166,16 +167,19 @@
             <div class="collapse" id="aoc">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="{{URL('view-all-aoc')}}">View All AOC's</a></li>
-                  @if(Auth::user()->role == 1  || Auth::user()->role == 2)
+                  @if($auth == 1  || $auth == 2)
                     <li class="nav-item"> <a class="nav-link" href="{{URL('new-aoc')}}">Add New AOC</a></li>
                   @endif
-                  @if(Auth::user()->role == 1)
+                  @if($auth == 1)
                     <li class="nav-item"> <a class="nav-link" href="{{URL('assign-operation-type-to-aoc')}}">Assign Opr Spec to AOC</a></li>
                   @endif
                   
               </ul>
             </div>
           </li>
+          @endif
+
+          @if(!isset(Auth::user()->department) || Auth::user()->department == 'daws' )
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#ac-status" aria-expanded="false" aria-controls="ac-status">
               <span class="menu-title">A/C Status</span>
@@ -185,7 +189,7 @@
             <div class="collapse" id="ac-status">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="{{URL('view-all-air-craft-status')}}">View All Aircraft status</a></li>
-                  @if(Auth::user()->role == 1  || Auth::user()->role == 2)
+                  @if($auth == 1  || $auth == 2)
                     <li class="nav-item"> <a class="nav-link" href="{{URL('add-new-aircraft')}}">Add New Aircraft</a></li>
                   @endif
               </ul>
@@ -200,13 +204,16 @@
             <div class="collapse" id="amo">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="{{URL('amo-view-selection')}}">View AMO's</a></li>
-                  @if(Auth::user()->role == 1  || Auth::user()->role == 2)
+                  @if($auth == 1  || $auth == 2)
                     <li class="nav-item"> <a class="nav-link" href="{{URL('amo-local')}}">Local</a></li>
                     <li class="nav-item"> <a class="nav-link" href="{{URL('amo-foreign')}}">Foreign </a></li>
                   @endif
               </ul>
             </div>
           </li>
+          @endif
+
+          @if(!isset(Auth::user()->department) || Auth::user()->department == 'dolt'  ||  Auth::user()->department == 'daws' )
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#focc" aria-expanded="false" aria-controls="focc">
               <span class="menu-title">FOCC & MCC</span>
@@ -216,7 +223,7 @@
             <div class="collapse" id="focc">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="{{URL('focc-lists')}}">View</a></li>
-                  @if(Auth::user()->role == 1  || Auth::user()->role == 2)
+                  @if($auth == 1  || $auth == 2)
                     <li class="nav-item"> <a class="nav-link" href="{{URL('focc-and-mcc')}}">Add</a></li>
                   @endif
               </ul>
@@ -231,15 +238,15 @@
             <div class="collapse" id="typeacceptance">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="{{URL('all-type-acceptance-certificate')}}">View</a></li>
-                  @if(Auth::user()->role == 1  || Auth::user()->role == 2)
+                  @if($auth == 1  || $auth == 2)
                     <li class="nav-item"> <a class="nav-link" href="{{URL('type-acceptance-certificate')}}">Add</a></li>
                   @endif
               </ul>
             </div>
           </li>
+          @endif
           
-          
-
+          @if(!isset(Auth::user()->department) || (Auth::user()->department == 'datr' ))
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#economicLicence" aria-expanded="false" aria-controls="gop">
               <span class="menu-title">Economic Licence</span>
@@ -257,11 +264,7 @@
               </ul>
             </div>
           </li>
-
-          
-
-          
-          
+          @endif
         </ul>
       </nav>
 
