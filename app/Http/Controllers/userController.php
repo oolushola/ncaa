@@ -111,6 +111,7 @@ class userController extends Controller
                 'role' => $request->role,
                 'status' => "1",
                 'phone' => $request->phone,
+                'department' => $request->department
             ]);
             $user->save();
             return 'saved';
@@ -129,6 +130,7 @@ class userController extends Controller
                 $user->name = $request->name;
                 $user->phone = $request->phone;
                 $user->role = $request->role;
+                $user->department = $request->department;
                 $user->save();
                 return 'updated';
             }
