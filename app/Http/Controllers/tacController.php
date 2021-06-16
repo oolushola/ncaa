@@ -44,7 +44,7 @@ class tacController extends Controller
     }
 
     public function store(Request $request) {
-        $check = Tac::WHERE('aircraft_maker_id', $request->aircraft_maker_id)->exists();
+        $check = Tac::WHERE('tc_acceptance_approval', $request->tc_acceptance_approval)->exists();
         if($check){
             return 'exists';
         }
@@ -94,7 +94,7 @@ class tacController extends Controller
 
     public function update(Request $request, $id) {
         
-        $check = Tac::WHERE('aircraft_maker_id', $request->aircraft_maker_id)->WHERE('id', '!=', $id)->exists();
+        $check = Tac::WHERE('tc_acceptance_approval', $request->tc_acceptance_approval)->WHERE('id', '!=', $id)->exists();
         if($check){
             return 'exists';
         }
@@ -118,6 +118,9 @@ class tacController extends Controller
                 $recid->certificate_no = $name;
                 $recid->save();
             }
+            $update = updateHistory::CREATE([
+                'name' => Auth::user()->name, 'module' => 'tac', 'record_id' => $id, 'actual' => $recid->tc_acceptance_approval
+            ]);
             return 'saved';
         }
     }
@@ -151,7 +154,8 @@ class tacController extends Controller
                 'SELECT * from tbl_ncaa_tac_aircraft_makers a JOIN tbl_ncaa_aircraft_types b ON a.aircraft_type_id = b.id'
             )
         );
+        $checkforaocupdates = updateHistory::WHERE('module', 'tac')->ORDERBY('updated_at', 'DESC')->LIMIT(1)->GET();
 
-        return view('v1.ncaa.tac.show', compact('allTacs', 'aircraftMakers', 'aircraftModels'));
+        return view('v1.ncaa.tac.show', compact('allTacs', 'aircraftMakers', 'aircraftModels', 'checkforaocupdates'));
     }
 }

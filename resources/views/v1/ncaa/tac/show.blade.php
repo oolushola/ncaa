@@ -27,6 +27,15 @@
                 <div class="card-body" style="padding-left:3px; padding-right:3px;">
                     <div class="table-responsive" id="contentDropper">
                     <h4 class="card-title" style="padding-left:10px; display:inline-block">All TAC Listings</h4>
+                        @if(Auth::user()->role==3 || 1)
+                            @if(count($checkforaocupdates))
+                                @foreach($checkforaocupdates as $lastupdatedby)
+                                <span style="float:right; font-size:11px; font-weight:bold; margin-right:30px; color:blue">
+                                    Last updated by: {!! $lastupdatedby->name !!}
+                                </span>
+                                @endforeach                            
+                            @endif
+                        @endif
                         <table class="table table-bordered" id="exportTableData">
                             <thead>
                                 <tr class="">

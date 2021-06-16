@@ -24,7 +24,15 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body" style="padding-left:3px; padding-right:3px;">
-                    
+                    @if(Auth::user()->role==3 || 1)
+                        @if(count($checkforaocupdates))
+                            @foreach($checkforaocupdates as $lastupdatedby)
+                            <span style="float:right; font-size:11px; font-weight:bold; margin-right:30px; color:blue">
+                                Last updated by: {!! $lastupdatedby->name !!}
+                            </span>
+                            @endforeach                            
+                        @endif
+                    @endif
                     
                     <form name="" id="">
                         {!! csrf_field() !!}

@@ -177,6 +177,21 @@
               </ul>
             </div>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#ato" aria-expanded="false" aria-controls="ato">
+              <span class="menu-title">ATO</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+            </a>
+            <div class="collapse" id="ato">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{{URL('ato/view')}}">View All ATO's</a></li>
+                  @if($auth == 1  || $auth == 2)
+                    <li class="nav-item"> <a class="nav-link" href="{{URL('ato')}}">Add New ATO</a></li>
+                  @endif 
+              </ul>
+            </div>
+          </li>
           @endif
 
           @if(!isset(Auth::user()->department) || Auth::user()->department == 'daws' )

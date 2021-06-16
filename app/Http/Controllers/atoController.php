@@ -88,7 +88,10 @@ class atoController extends Controller
                 $approvalNumberCerficate->move($destination_path, $name);
                 $recid->ato_certificate = $name;
                 $recid->save();
-        }
+            }
+            updateHistory::CREATE([
+                'name' => Auth::user()->name, 'module' => 'ato', 'record_id' => $id, 'actual' => $recid->approval_no
+            ]);
             return 'updated';
         }
     }
@@ -100,7 +103,9 @@ class atoController extends Controller
                 'SELECT a.*, b.training_organization FROM tbl_ncaa_atos a JOIN `tbl_ncaa_training_organizations` b ON a.training_organization_id = b.id'
             )
         );
-        return view('v1.ncaa.economics-licence.ato.show', compact('atoListings'));
+        $checkforaocupdates = updateHistory::WHERE('module', 'tac')->ORDERBY('updated_at', 'DESC')->LIMIT(1)->GET();
+
+        return view('v1.ncaa.economics-licence.ato.show', compact('atoListings', 'checkforaocupdates'));
     }
 
     public function showByOperator(Request $request) {

@@ -126,13 +126,13 @@ Route::get('/view-clear', function() {
 	Route::resource('economic-licence/pncf', 'pncfController');
 	Route::resource('economic-licence/atol', 'atolController');
 	Route::resource('economic-licence/paas', 'paasController');
-	Route::resource('economic-licence/ato', 'atoController');
+	Route::resource('ato', 'atoController');
 
 	Route::get('economice-licence/aop/view', 'aopController@show');
 	Route::get('economice-licence/atl/view', 'atlController@show');
 	Route::get('economice-licence/pncf/view', 'pncfController@show');
 	Route::get('economice-licence/paas/view', 'paasController@show');
-	Route::get('economice-licence/ato/view', 'atoController@show');
+	Route::get('ato/view', 'atoController@show');
 	Route::resource('economic-licence/atol/view', 'atolController@show');
 	Route::post('filter-atol-training-organization', 'atolController@filterByTrainingOrg');
 	Route::post('atol-active', 'atolController@filterActive');

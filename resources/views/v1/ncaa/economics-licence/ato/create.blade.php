@@ -9,7 +9,7 @@
         </h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{URL('economice-licence/ato/view')}}">View All</a></li>
+            <li class="breadcrumb-item"><a href="{{URL('ato/view')}}">View All</a></li>
             <li class="breadcrumb-item active" aria-current="page">Add ATO</li>
             </ol>
         </nav>
@@ -19,10 +19,10 @@
             <div class="card">
             <div class="card-body">
                 @if(isset($recid)) 
-                <form name="frmAto" id="frmAto" method="POST" action="{{URL('economic-licence/ato',$recid->id)}}">
+                <form name="frmAto" id="frmAto" method="POST" action="{{URL('ato',$recid->id)}}">
                     {{ method_field('PATCH') }}
                 @else
-                <form name="frmAto" id="frmAto" method="POST" action="{{URL('/economic-licence/ato')}}">
+                <form name="frmAto" id="frmAto" method="POST" action="{{URL('ato')}}">
                 @endif
                     {!! csrf_field() !!}
                     <div class="form-group">

@@ -82,7 +82,7 @@
       <div class="card bg-gradient-danger card-img-holder text-white">
         <div class="card-body">
           <img src="{{URL::asset('images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image"/>
-          <h4 class="font-weight-normal mb-3">T.A.C
+          <h4 class="font-weight-normal mb-3">Type Acceptance Certificate
             <i class="mdi mdi-chart-line mdi-24px float-right" style="color:#fff"></i>
           </h4>
           <h2>
@@ -94,11 +94,11 @@
           </h2>
           <h6 class="card-text mb-5">@if($tacList) Record founds @endif</h6>
           @if(Auth::user()->role==1)
-            <a href="{{URL('activity-log/aoc')}}" style="text-decoration:none; color:#333; font-weight:bold; font-size:13px; position:relative; z-index:1"> 
+            <a href="{{URL('activity-log/tac')}}" style="text-decoration:none; color:#333; font-weight:bold; font-size:13px; position:relative; z-index:1"> 
             Activity Log
             </a>
           @else
-            MCC
+            Type Acceptance Certificate
           @endif
         </div>
       </div>

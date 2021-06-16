@@ -78,7 +78,7 @@ $(function($){
         else {
             if(data == 'saved' || data == "updated") {
                 $("#loader").html("Record Succesfully "+data).addClass('error');
-                window.location = '/economic-licence/ato';
+                window.location = '/ato';
             }
         }
     })
@@ -105,9 +105,9 @@ $(function($){
             )
             .addClass('error')
             .css({float:'right'});
-            $.post("/economic-licence/ato/"+$id, $("#frmDeleteAto").serialize(), function(data){
+            $.post("/ato/"+$id, $("#frmDeleteAto").serialize(), function(data){
                if(data=='deleted'){
-                   $url = '/economic-licence/ato';
+                   $url = '/ato';
                    window.location = $url;
                }
             })
