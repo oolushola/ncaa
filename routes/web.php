@@ -127,11 +127,14 @@ Route::get('/view-clear', function() {
 	Route::resource('economic-licence/atol', 'atolController');
 	Route::resource('economic-licence/paas', 'paasController');
 	Route::resource('ato', 'atoController');
+	Route::resource('economic-licence/fcop', 'FcopController');
 
 	Route::get('economice-licence/aop/view', 'aopController@show');
 	Route::get('economice-licence/atl/view', 'atlController@show');
 	Route::get('economice-licence/pncf/view', 'pncfController@show');
 	Route::get('economice-licence/paas/view', 'paasController@show');
+	Route::get('economic-licence/fcop/view', 'FcopController@show');
+
 	Route::get('ato/view', 'atoController@show');
 	Route::resource('economic-licence/atol/view', 'atolController@show');
 	Route::post('filter-atol-training-organization', 'atolController@filterByTrainingOrg');
@@ -184,6 +187,12 @@ Route::get('/view-clear', function() {
 	Route::get('atol-chart-result', 'dashboardController@atolResult');
 	Route::get('paas-chart-result', 'dashboardController@paasResult');
 	Route::get('ato-chart-result', 'dashboardController@atoResult');
+
+	Route::resource('foreign-airline', 'foreignAirlineController');
+	Route::resource('foreign-airline-dacl', 'ForeignAirlineDaclController');
+	Route::resource('certification-tracker', 'CertificationTrackerController');
+	Route::resource('team-members', 'teamMembersController');
+	Route::resource('cpm', 'CpmController');
 
 	
 //

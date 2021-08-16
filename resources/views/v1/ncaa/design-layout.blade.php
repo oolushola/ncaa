@@ -149,6 +149,9 @@
                 <li class="nav-item"> <a class="nav-link" href="{{URL('state-of-registry')}}">State of Registry</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL('training-organization')}}">Training Organization</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL('travel-agency')}}">Travel Agency</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('foreign-airline')}}">Foreign Airline</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('cpm')}}">CPM</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('team-members')}}">Team Members</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL('user-role')}}">User Role</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL('users')}}">Users</a></li>
               </ul>
@@ -178,6 +181,21 @@
             </div>
           </li>
           <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#certTracker" aria-expanded="false" aria-controls="certTracker">
+              <span class="menu-title">Certification Tracker</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+            </a>
+            <div class="collapse" id="certTracker">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{{URL('certification-tracker/view')}}">Certification Tracker</a></li>
+                  @if($auth == 1  || $auth == 2)
+                    <li class="nav-item"> <a class="nav-link" href="{{URL('certification-tracker')}}">New Certificate Tracker</a></li>
+                  @endif
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#ato" aria-expanded="false" aria-controls="ato">
               <span class="menu-title">ATO</span>
               <i class="menu-arrow"></i>
@@ -188,6 +206,21 @@
                 <li class="nav-item"> <a class="nav-link" href="{{URL('ato/view')}}">View All ATO's</a></li>
                   @if($auth == 1  || $auth == 2)
                     <li class="nav-item"> <a class="nav-link" href="{{URL('ato')}}">Add New ATO</a></li>
+                  @endif 
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#fadacl" aria-expanded="false" aria-controls="fadacl">
+              <span class="menu-title">Foreign Airline DACL</span>
+              <i class="menu-arrow"></i>
+              <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+            </a>
+            <div class="collapse" id="fadacl">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{{URL('foreign-airline-dacl/view')}}">View All Foriegn Airline DACL</a></li>
+                  @if($auth == 1  || $auth == 2)
+                    <li class="nav-item"> <a class="nav-link" href="{{URL('foreign-airline-dacl')}}">Add New Foreign Airline DACL</a></li>
                   @endif 
               </ul>
             </div>
@@ -276,6 +309,7 @@
                 <li class="nav-item"> <a class="nav-link" href="{{URL('economic-licence/atol')}}">ATOL</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL('economic-licence/paas')}}">PAAS</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL('economic-licence/ato')}}">ATO</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('economic-licence/fcop')}}">FCOP</a></li>
               </ul>
             </div>
           </li>
