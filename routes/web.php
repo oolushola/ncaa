@@ -193,6 +193,8 @@ Route::get('/view-clear', function() {
 	Route::resource('certification-tracker', 'CertificationTrackerController');
 	Route::resource('team-members', 'teamMembersController');
 	Route::resource('cpm', 'CpmController');
+	Route::resource('applicant-name', 'ApplicantNameController');
+	Route::resource('certification-type', 'CertificationTypeController');
 
 	
 //

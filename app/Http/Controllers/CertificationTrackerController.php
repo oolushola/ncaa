@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use App\Cpm;
 use App\TeamMembers;
 use App\aircrafttype;
+use App\ApplicantName;
+use App\CertificationType;
 
 class CertificationTrackerController extends Controller
 {
@@ -20,7 +22,9 @@ class CertificationTrackerController extends Controller
             $teamMembers = TeamMembers::GET();
             $aircraftTypes = aircrafttype::GET();
             $certificationTrackers = CertificationTracker::PAGINATE(15);
-            return view('v1.ncaa.certification-tracker.create', compact('cpms', 'teamMembers', 'aircraftTypes', 'certificationTrackers'));
+            $applicantNames = ApplicantName::ORDERBY('applicant_name', 'ASC')->GET();
+            $certificationTypes = CertificationType::ORDERBY('certification_type', 'ASC')->GET();
+            return view('v1.ncaa.certification-tracker.create', compact('cpms', 'teamMembers', 'aircraftTypes', 'certificationTrackers', 'applicantNames', 'certificationTypes'));
         }
         else {
             return redirect()->route('login');
@@ -78,7 +82,9 @@ class CertificationTrackerController extends Controller
             $teamMembers = TeamMembers::GET();
             $aircraftTypes = aircrafttype::GET();
             $certificationTrackers = CertificationTracker::PAGINATE(15);
-            return view('v1.ncaa.certification-tracker.create', compact('cpms', 'teamMembers', 'aircraftTypes', 'certificationTrackers', 'recid'));
+            $applicantNames = ApplicantName::ORDERBY('applicant_name', 'ASC')->GET();
+            $certificationTypes = CertificationType::ORDERBY('certification_type', 'ASC')->GET();
+            return view('v1.ncaa.certification-tracker.create', compact('cpms', 'teamMembers', 'aircraftTypes', 'certificationTrackers', 'recid', 'applicantNames', 'certificationTypes'));
         }
         else {
             return redirect()->route('login');

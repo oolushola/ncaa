@@ -152,6 +152,8 @@
                 <li class="nav-item"> <a class="nav-link" href="{{URL('foreign-airline')}}">Foreign Airline</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL('cpm')}}">CPM</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL('team-members')}}">Team Members</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('applicant-name')}}">Applicant Name</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL('certification-type')}}">Certification Type</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL('user-role')}}">User Role</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL('users')}}">Users</a></li>
               </ul>

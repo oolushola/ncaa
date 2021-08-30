@@ -18,13 +18,12 @@
         <div class="col-md-5 grid-margin ">
             <div class="card">
             <div class="card-body">
-                @if(isset($recid)) 
-                <form id="frmCertificationTracker" method="POST" action="{{URL('certification-tracker',$recid->id)}}" enctype="multipart/form-data">
-                    {{ method_field('PATCH') }}
-                @else
-                <form id="frmCertificationTracker" method="POST" action="{{URL('certification-tracker')}}" enctype="multipart/form-data">
+                <form id="frmCertificationTracker" method="POST">
+                {!! csrf_field() !!}
+                @if(isset($recid))
+                    <input type="hidden" name="id" id="id" value="{{$recid->id}}">
+                    {{ method_field('PATCH') }}               
                 @endif
-                    {!! csrf_field() !!}
                     <div class="form-group">
                         <label class="labelholder">Certification Number *</label>
                         <input type="text" class="form-control" id="certificationNo" name="certification_no" value="@if(isset($recid)){{$recid->certification_no}}@else{{old('certification_no')}}@endif" />
@@ -36,17 +35,39 @@
 
                     <div class="form-group">
                         <label class="labelholder">Applicant's Name *</label>
-                        <input type="text" name="applicant_name" id="applicantsName" class="form-control" value="@if(isset($recid)){{$recid->applicant_name}}@else{{old('applicant_name')}}@endif"> 
+                        <select name="applicant_name" id="applicantName" class="form-control">
+                            <option value="">Choose Applicant Name</option>
+                            @foreach($applicantNames as $applicantName)
+                                @if(isset($recid) && $recid->applicant_name == $applicantName->applicant_name)
+                                <option value="{{$applicantName->applicant_name}}" selected>
+                                    {{$applicantName->applicant_name}}</option>
+                                @else
+                                <option value="{{$applicantName->applicant_name}}">
+                                    {{$applicantName->applicant_name}}</option>
+                                @endif
+                            @endforeach
+                        </select>
                     </div>
                     
                     <div class="form-group">
                         <label class="labelholder">Certification Type *</label>
-                        <input type="text" name="certification_type" id="certificationType" class="form-control" value="@if(isset($recid)){{$recid->certification_type}}@else{{old('certification_type')}}@endif">
+                        <select name="certification_type" id="certificationType" class="form-control">
+                            <option value="">Choose Certification Type</option>
+                            @foreach($certificationTypes as $certificationType)
+                                @if(isset($recid) && $recid->certification_type == $certificationType->certification_type)
+                                <option value="{{$certificationType->certification_type}}" selected>
+                                    {{$certificationType->certification_type}}</option>
+                                @else
+                                <option value="{{$certificationType->certification_type}}">
+                                    {{$certificationType->certification_type}}</option>
+                                @endif
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
                         <label class="labelholder">CPM *</label>
                         <select type="date" name="cpm" id="cpm" class="form-control">
-                            <option>Choose CPM</option>
+                            <option value="">Choose CPM</option>
                             @foreach($cpms as $cpm) 
                             @if(isset($recid) && $recid->cpm == $cpm->full_name)
                             <option selected value="{{$cpm->full_name}}">{{ $cpm->full_name }}</option>
@@ -58,8 +79,8 @@
                     </div>
                     <div class="form-group">
                         <label class="labelholder">Team Members *</label>
-                        <select type="date" name="team_member" id="team_member" class="form-control">
-                            <option value="0">Choose Team Members</option>
+                        <select type="date" name="team_member" id="teamMember" class="form-control">
+                            <option value="">Choose Team Members</option>
                             @foreach($teamMembers as $teamMember) 
                             @if(isset($recid) && $recid->team_member == $teamMember->full_name)
                             <option selected value="{{$teamMember->full_name}}">{{ $teamMember->full_name }}</option>
@@ -113,9 +134,9 @@
                     
                     @if(Auth::user()->role == 1 || Auth::user()->role == 2)
                     @if(isset($recid))        
-                    <button type="submit" class="btn btn-gradient-primary mr-2" id="updateForeingAirlineDacl">UPDATE</button>
+                    <button type="submit" class="btn btn-gradient-primary mr-2" id="updateCertificationTracker">UPDATE</button>
                     @else
-                    <button type="submit" class="btn btn-gradient-primary mr-2" id="addForeingAirlineDacl">SAVE</button>
+                    <button type="submit" class="btn btn-gradient-primary mr-2" id="addCertificationTracker">SAVE</button>
                     @endif
                     <button class="btn btn-light">Cancel</button>
                     @endif
@@ -205,5 +226,5 @@
 @section('scripts')
 <script type="text/javascript" src="{{URL::asset('js/jquery.form.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/mediavalidate.js')}}"></script>
-<script type="text/javascript" src="{{URL::asset('js/certification-tracker.js?v=').time()}}"></script>
+<script type="text/javascript" src="{{URL::asset('js/certification-tracker/certification-tracker.js?v=').time()}}"></script>
 @stop
