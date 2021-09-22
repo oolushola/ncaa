@@ -73,6 +73,20 @@ $(function() {
             filename:`Type-Acceptance-Certificate-${name}.xls`
         });
     });
+    
+    $("#sortTac").change(function() {
+        $("#contentDropper").html('<img src=\'/images/ajax.gif\'>please wait...').addClass('error');
+        $.get('/sort-type-acceptance', { sort: $(this).val()}, function(data) {
+            $("#contentDropper").html(data).removeClass("error")
+        })
+    })
+
+    $("#changeStatus").change(function() {
+        $("#contentDropper").html('<img src=\'/images/ajax.gif\'>please wait...').addClass('error');
+        $.get('/filter-tac-status', { sort: $("#sortTac").val(), status: $(this).val()}, function(data) {
+            $("#contentDropper").html(data).removeClass("error")
+        })
+    })
 
     $('#frmTac').ajaxForm(function(data) {
         if(data == "exists") {
@@ -84,6 +98,8 @@ $(function() {
             window.location="";
         }
     });
+
+   
 
     
 

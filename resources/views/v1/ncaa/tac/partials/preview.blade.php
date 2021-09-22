@@ -7,10 +7,10 @@
                     <thead class="table-info">
                         <tr class="table-warning">
                             <th colspan="8" style="font-size:11px; font-weight:bold">TAC Lists</th>
-                            
                         </tr>
                         <tr>
                             <th width="5%" style="font-size:11px; font-weight:bold">#</th>
+                            <th style="font-size:11px; font-weight:bold" align="center">Aircraft Maker</th>
                             <th style="font-size:11px; font-weight:bold" align="center">TC Acceptance Approval Certificate No.</th>
                             <th style="font-size:11px; font-weight:bold" align="center">Issue Date</th>
                             @if(Auth::user()->role==1)
@@ -32,6 +32,7 @@
                             ?>
                                 <tr class="{{$css}}">
                                     <td>{{$count}}</td>
+                                    <td>{{strtoupper($tac->aircraft_maker)}}</td>
                                     <td>{{strtoupper($tac->tc_acceptance_approval)}}</td>
                                     <td>{{$date_of_issue}}</td>
 

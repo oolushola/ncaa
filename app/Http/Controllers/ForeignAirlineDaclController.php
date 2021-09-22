@@ -54,7 +54,7 @@ class ForeignAirlineDaclController extends Controller
                     $this->uploader($request, $request->dacl_no, 'dacl_certificate', 'dacl/', 'confidentials/foreign-airline/dacl',  $recid, 'dacl_certificate');
                 }
                 if($request->hasFile('aoc_opspec')){
-                    $this->uploader($request, $request->dacl_no, 'aoc_opspec', 'aoc-ops-spec/', 'confidentials/foreign-airline/ops-spec',  $recid, 'aoc_opspec');
+                    $this->uploader($request, $request->dacl_no, 'aoc_opspec', 'ops-spec/', 'confidentials/foreign-airline/ops-spec',  $recid, 'aoc_opspec');
                 }
                 $recid->save();
                 return 'saved';
@@ -138,41 +138,45 @@ class ForeignAirlineDaclController extends Controller
 
     public function show() 
     {
+        if(Auth::check()) {
         $dacllistings = ForeignAirlineDacl::GET();
         $checkfordaclupdates = updateHistory::WHERE('module', 'foreign-airline-dacl')->ORDERBY('updated_at', 'DESC')->LIMIT(1)->GET();
-
-        return view('v1.ncaa.dacl.show', compact('dacllistings', 'checkfordaclupdates'));
-    }
-
-    public function showByOperator(Request $request) {
-        $orderby = $request->direction;
-        $atoListings = DB::SELECT(
+        $countries = DB::SELECT(
             DB::RAW(
-                'SELECT a.*, b.training_organization FROM tbl_ncaa_atos a JOIN `tbl_ncaa_training_organizations` b ON a.training_organization_id = b.id ORDER BY training_organization '.$orderby.' '  
+                'SELECT * FROM tbl_regional_country ORDER BY country ASC'
             )
         );
 
-        $answer = '<table class="table table-bordered" id="exportTableData">
+        return view('v1.ncaa.dacl.show', compact('dacllistings', 'checkfordaclupdates', 'countries'));
+        }
+        return redirect()->route('login');
+    }
+
+    public function sortByCountry(Request $request) {
+        $dacllistings = ForeignAirlineDacl::WHERE('country', $request->country)->GET();
+        $record = '
+        <table class="table table-bordered" id="exportTableData">
         <thead>
             <tr class="table-warning">
                 <th width="5%">#</th>
-                <th><b>Training Organization</b></th>
-                <th><b>Approval No.</b></th>
-                <th class="text-center"><b>Date of Initial Issue</b></th>
-                <th class="center"><b>Date of Last Renewal</b></th>
-                <th class="center"><b>Date of Expiry</b></th>
+                <th><b>Foreign Airline Name</b></th>
+                <th><b>Dacl No.</b></th>
+                <th class="text-center"><b>DACL Issue Date</b></th>
+                <th class="center"><b>Foreign AOC & Ops Spec</b></th>
+                <th class="center"><b>AOC Expiry Date</b></th>
+                <th class="center"><b>Country</b></th>
                 <th class="center"><b>Status</b></th>
+                <th><b>Comment</b></th>
             </tr>
         </thead>
         <tbody>';
-            if(count($atoListings)) {
+            if(count($dacllistings)) {
             $counter = 0;
-                foreach($atoListings as $ato){
+                foreach($dacllistings as $dacl) {
                     $counter++; 
-                     $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
-                     
+                    $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
                     $now = time();
-                    $due_date = strtotime($ato->date_of_expiry);;
+                    $due_date = strtotime($dacl->aoc_expiry_date);;
                     $datediff = $due_date - $now;
                     $numberofdays = round($datediff / (60 * 60 * 24));
 
@@ -191,279 +195,287 @@ class ForeignAirlineDaclController extends Controller
                         $color = "#000";
                         $remarks = "Expired";
                     }
-                    $issuedDate = strtotime($ato->date_of_first_issue); 
+                    $issuedDate = strtotime($dacl->dacl_issue_date); 
                     $dateIssued = date('d/m/Y', $issuedDate);
                     
-                    $renewalDate = strtotime($ato->date_of_renewal); 
-                    $renewed = date('d/m/Y', $renewalDate);
-
-                    $dateExpired = strtotime($ato->date_of_expiry); 
+                    $dateExpired = strtotime($dacl->aoc_expiry_date); 
                     $expired = date('d/m/Y', $dateExpired);
                     
-                $answer.='<tr class="'.$css_style.'">
+                $record.='
+                <tr class="'.$css_style.'">
                     <td>'.$counter.'</td>
-                    <td>'.strtoupper($ato->training_organization).'</td>
+                    <td>'.strtoupper($dacl->airline_name).'</td>
                     <td>
-                        <a href="confidentials/economic-licence/'.$ato->ato_certificate.'" target="_blank">
-                            '.$ato->approval_no.'
+                        <a href="/confidentials/foreign-airline/'.$dacl->dacl_certificate.'" target="_blank">
+                            '.$dacl->dacl_no.'
                         </a>
                     </td>
                     <td class="text-center">'.$dateIssued.'</td>
-                    <td class="text-center">'.$renewed.'</td>
+                    <td>
+                        <a href="/confidentials/foreign-airline/'.$dacl->aoc_opspec.'" target="_blank">
+                        <i class="mdi mdi-file-pdf" style="color:black; font-size:20px;" title="click to view '.$dacl->airline_name.'"></i>
+                        </a>
+                    </td>
                     <td class="center">'.$expired.'</td>
+                    <td>'.$dacl->country.'</td>
                     <td style="text-align:center; background:'.$bgcolor.'; color:'.$color.';">
                         '.$remarks.'
                     </td>
+                    <td>'.$dacl->remarks.'</td>
                 </tr>';
                 }
-            } else {
-                $answer.='<tr>
+            }   
+            else {
+                $record.='
+                <tr>
                     <td style="font-size:11px; font-weight:bold; color:red; text-align:center" colspan="15" class="table-danger">No records available</td>
                 </tr>';
             }
-           
-        $answer.='</tbody>
+        $record.='</tbody>
         </table>';
-
-
-        return $answer;
-
+        return $record;
     }
 
-    public function activeAto(Request $request) {
-        $atoListings = DB::SELECT(
-            DB::RAW(
-                'SELECT a.*, b.training_organization FROM tbl_ncaa_atos a JOIN `tbl_ncaa_training_organizations` b ON a.training_organization_id = b.id ORDER BY training_organization ASC '  
-            )
-        );
+    public function sortByStatus(Request $request) {
+        if($request->status == 'active') {
+            return $this->displayActiveRecords();
+        }
+        if($request->status == 'expiringSoon') {
+            return $this->displayExpiringSoonRecords();
+        }
+        if($request->status == 'expired') {
+            return $this->displayExpiredRecords();
+        }
+    }
 
-        $answer = '<table class="table table-bordered" id="exportTableData">
+    public function displayActiveRecords() {
+        $dacllistings = ForeignAirlineDacl::GET();
+        $record = '
+        <table class="table table-bordered" id="exportTableData">
         <thead>
             <tr class="table-warning">
                 <th width="5%">#</th>
-                <th><b>Training Organization</b></th>
-                <th><b>Approval No.</b></th>
-                <th class="text-center"><b>Date of Initial Issue</b></th>
-                <th class="center"><b>Date of Last Renewal</b></th>
-                <th class="center"><b>Date of Expiry</b></th>
+                <th><b>Foreign Airline Name</b></th>
+                <th><b>Dacl No.</b></th>
+                <th class="text-center"><b>DACL Issue Date</b></th>
+                <th class="center"><b>Foreign AOC & Ops Spec</b></th>
+                <th class="center"><b>AOC Expiry Date</b></th>
+                <th class="center"><b>Country</b></th>
                 <th class="center"><b>Status</b></th>
+                <th><b>Comment</b></th>
             </tr>
         </thead>
         <tbody>';
-            if(count($atoListings)) {
+            if(count($dacllistings)) {
             $counter = 0;
-                foreach($atoListings as $ato){
-                     
+                foreach($dacllistings as $dacl) {
+                    $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
                     $now = time();
-                    $due_date = strtotime($ato->date_of_expiry);;
+                    $due_date = strtotime($dacl->aoc_expiry_date);;
                     $datediff = $due_date - $now;
                     $numberofdays = round($datediff / (60 * 60 * 24));
+
                     if($numberofdays > 90 ){
+                        $counter++;
                         $bgcolor = "green";
                         $color = "#fff";
                         $remarks = "Active";
-
-                        $counter++; 
-                        $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
                    
-                    $issuedDate = strtotime($ato->date_of_first_issue); 
+                    $issuedDate = strtotime($dacl->dacl_issue_date); 
                     $dateIssued = date('d/m/Y', $issuedDate);
                     
-                    $renewalDate = strtotime($ato->date_of_renewal); 
-                    $renewed = date('d/m/Y', $renewalDate);
-
-                    $dateExpired = strtotime($ato->date_of_expiry); 
+                    $dateExpired = strtotime($dacl->aoc_expiry_date); 
                     $expired = date('d/m/Y', $dateExpired);
                     
-                $answer.='<tr class="'.$css_style.'">
-                    <td>'.$counter.'</td>
-                    <td>'.strtoupper($ato->training_organization).'</td>
-                    <td>
-                        <a href="confidentials/economic-licence/'.$ato->ato_certificate.'" target="_blank">
-                            '.$ato->approval_no.'
-                        </a>
-                    </td>
-                    <td class="text-center">'.$dateIssued.'</td>
-                    <td class="text-center">'.$renewed.'</td>
-                    <td class="center">'.$expired.'</td>
-                    <td style="text-align:center; background:'.$bgcolor.'; color:'.$color.';">
-                        '.$remarks.'
-                    </td>
-                </tr>';
+                    $record.='
+                    <tr class="'.$css_style.'">
+                        <td>'.$counter.'</td>
+                        <td>'.strtoupper($dacl->airline_name).'</td>
+                        <td>
+                            <a href="/confidentials/foreign-airline/'.$dacl->dacl_certificate.'" target="_blank">
+                                '.$dacl->dacl_no.'
+                            </a>
+                        </td>
+                        <td class="text-center">'.$dateIssued.'</td>
+                        <td>
+                            <a href="/confidentials/foreign-airline/'.$dacl->aoc_opspec.'" target="_blank">
+                            <i class="mdi mdi-file-pdf" style="color:black; font-size:20px;" title="click to view '.$dacl->airline_name.'"></i>
+                            </a>
+                        </td>
+                        <td class="center">'.$expired.'</td>
+                        <td>'.$dacl->country.'</td>
+                        <td style="text-align:center; background:'.$bgcolor.'; color:'.$color.';">
+                            '.$remarks.'
+                        </td>
+                        <td>'.$dacl->remarks.'</td>
+                    </tr>';
                     }
                 }
-            } else {
-                $answer.='<tr>
+            }   
+            else {
+                $record.='
+                <tr>
                     <td style="font-size:11px; font-weight:bold; color:red; text-align:center" colspan="15" class="table-danger">No records available</td>
                 </tr>';
             }
-           
-        $answer.='</tbody>
+        $record.='</tbody>
         </table>';
-
-
-        return $answer;
+        return $record;
     }
 
-    public function expiredAto(Request $request) {
-        $atoListings = DB::SELECT(
-            DB::RAW(
-                'SELECT a.*, b.training_organization FROM tbl_ncaa_atos a JOIN `tbl_ncaa_training_organizations` b ON a.training_organization_id = b.id ORDER BY training_organization ASC '  
-            )
-        );
-
-        $answer = '<table class="table table-bordered" id="exportTableData">
+    public function displayExpiringSoonRecords() {
+        $dacllistings = ForeignAirlineDacl::GET();
+        $record = '
+        <table class="table table-bordered" id="exportTableData">
         <thead>
             <tr class="table-warning">
                 <th width="5%">#</th>
-                <th><b>Training Organization</b></th>
-                <th><b>Approval No.</b></th>
-                <th class="text-center"><b>Date of Initial Issue</b></th>
-                <th class="center"><b>Date of Last Renewal</b></th>
-                <th class="center"><b>Date of Expiry</b></th>
+                <th><b>Foreign Airline Name</b></th>
+                <th><b>Dacl No.</b></th>
+                <th class="text-center"><b>DACL Issue Date</b></th>
+                <th class="center"><b>Foreign AOC & Ops Spec</b></th>
+                <th class="center"><b>AOC Expiry Date</b></th>
+                <th class="center"><b>Country</b></th>
                 <th class="center"><b>Status</b></th>
+                <th><b>Comment</b></th>
             </tr>
         </thead>
         <tbody>';
-            if(count($atoListings)) {
+            if(count($dacllistings)) {
             $counter = 0;
-                foreach($atoListings as $ato){
-                     
+                foreach($dacllistings as $dacl) {
+                    $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
                     $now = time();
-                    $due_date = strtotime($ato->date_of_expiry);;
+                    $due_date = strtotime($dacl->aoc_expiry_date);;
+                    $datediff = $due_date - $now;
+                    $numberofdays = round($datediff / (60 * 60 * 24));
+
+                    if(($numberofdays >= 0) && ($numberofdays <=90)){
+                       $counter++; 
+                       $bgcolor = "#ffbf00";
+                       $color = "#000";
+                       $remarks = "Expiring soon";
+                        $issuedDate = strtotime($dacl->dacl_issue_date); 
+                        $dateIssued = date('d/m/Y', $issuedDate);
+                        
+                        $dateExpired = strtotime($dacl->aoc_expiry_date); 
+                        $expired = date('d/m/Y', $dateExpired);
+                        
+                        $record.='
+                        <tr class="'.$css_style.'">
+                            <td>'.$counter.'</td>
+                            <td>'.strtoupper($dacl->airline_name).'</td>
+                            <td>
+                                <a href="/confidentials/foreign-airline/'.$dacl->dacl_certificate.'" target="_blank">
+                                    '.$dacl->dacl_no.'
+                                </a>
+                            </td>
+                            <td class="text-center">'.$dateIssued.'</td>
+                            <td>
+                                <a href="/confidentials/foreign-airline/'.$dacl->aoc_opspec.'" target="_blank">
+                                <i class="mdi mdi-file-pdf" style="color:black; font-size:20px;" title="click to view '.$dacl->airline_name.'"></i>
+                                </a>
+                            </td>
+                            <td class="center">'.$expired.'</td>
+                            <td>'.$dacl->country.'</td>
+                            <td style="text-align:center; background:'.$bgcolor.'; color:'.$color.';">
+                                '.$remarks.'
+                            </td>
+                            <td>'.$dacl->remarks.'</td>
+                        </tr>';
+                    }
+                }
+            }   
+            else {
+                $record.='
+                <tr>
+                    <td style="font-size:11px; font-weight:bold; color:red; text-align:center" colspan="15" class="table-danger">No records available</td>
+                </tr>';
+            }
+        $record.='</tbody>
+        </table>';
+        return $record;
+    }
+
+    public function displayExpiredRecords() {
+        $dacllistings = ForeignAirlineDacl::GET();
+        $record = '
+        <table class="table table-bordered" id="exportTableData">
+        <thead>
+            <tr class="table-warning">
+                <th width="5%">#</th>
+                <th><b>Foreign Airline Name</b></th>
+                <th><b>Dacl No.</b></th>
+                <th class="text-center"><b>DACL Issue Date</b></th>
+                <th class="center"><b>Foreign AOC & Ops Spec</b></th>
+                <th class="center"><b>AOC Expiry Date</b></th>
+                <th class="center"><b>Country</b></th>
+                <th class="center"><b>Status</b></th>
+                <th><b>Comment</b></th>
+            </tr>
+        </thead>
+        <tbody>';
+            if(count($dacllistings)) {
+            $counter = 0;
+                foreach($dacllistings as $dacl) {
+                    $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
+                    $now = time();
+                    $due_date = strtotime($dacl->aoc_expiry_date);;
                     $datediff = $due_date - $now;
                     $numberofdays = round($datediff / (60 * 60 * 24));
 
                     if($numberofdays <= 0 ){
+                        $counter++;
                         $bgcolor = "red";
-                        $color = "#fff";
-                        $remarks = "Expired";
-
-                        $counter++; 
-                        $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
-                   
-                    $issuedDate = strtotime($ato->date_of_first_issue); 
-                    $dateIssued = date('d/m/Y', $issuedDate);
-                    
-                    $renewalDate = strtotime($ato->date_of_renewal); 
-                    $renewed = date('d/m/Y', $renewalDate);
-
-                    $dateExpired = strtotime($ato->date_of_expiry); 
-                    $expired = date('d/m/Y', $dateExpired);
-                    
-                $answer.='<tr class="'.$css_style.'">
-                    <td>'.$counter.'</td>
-                    <td>'.strtoupper($ato->training_organization).'</td>
-                    <td>
-                        <a href="confidentials/economic-licence/'.$ato->ato_certificate.'" target="_blank">
-                            '.$ato->approval_no.'
-                        </a>
-                    </td>
-                    <td class="text-center">'.$dateIssued.'</td>
-                    <td class="text-center">'.$renewed.'</td>
-                    <td class="center">'.$expired.'</td>
-                    <td style="text-align:center; background:'.$bgcolor.'; color:'.$color.';">
-                        '.$remarks.'
-                    </td>
-                </tr>';
-                    }
-                }
-            } else {
-                $answer.='<tr>
-                    <td style="font-size:11px; font-weight:bold; color:red; text-align:center" colspan="15" class="table-danger">No records available</td>
-                </tr>';
-            }
-           
-        $answer.='</tbody>
-        </table>';
-
-
-        return $answer;
-
-    }
-
-    public function expiringSoonAto(Request $request) {
-        $atoListings = DB::SELECT(
-            DB::RAW(
-                'SELECT a.*, b.training_organization FROM tbl_ncaa_atos a JOIN `tbl_ncaa_training_organizations` b ON a.training_organization_id = b.id ORDER BY training_organization ASC '  
-            )
-        );
-
-        $answer = '<table class="table table-bordered" id="exportTableData">
-        <thead>
-            <tr class="table-warning">
-                <th width="5%">#</th>
-                <th><b>Training Organization</b></th>
-                <th><b>Approval No.</b></th>
-                <th class="text-center"><b>Date of Initial Issue</b></th>
-                <th class="center"><b>Date of Last Renewal</b></th>
-                <th class="center"><b>Date of Expiry</b></th>
-                <th class="center"><b>Status</b></th>
-            </tr>
-        </thead>
-        <tbody>';
-            if(count($atoListings)) {
-            $counter = 0;
-                foreach($atoListings as $ato){
-                     
-                    $now = time();
-                    $due_date = strtotime($ato->date_of_expiry);;
-                    $datediff = $due_date - $now;
-                    $numberofdays = round($datediff / (60 * 60 * 24));
-
-                    if(($numberofdays >= 0) && ($numberofdays <= 90) ){
-                        $bgcolor = "#ffbf00";
                         $color = "#000";
-                        $remarks = "Expiring Soon";
-
-                        $counter++; 
-                        $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
-                   
-                    $issuedDate = strtotime($ato->date_of_first_issue); 
-                    $dateIssued = date('d/m/Y', $issuedDate);
-                    
-                    $renewalDate = strtotime($ato->date_of_renewal); 
-                    $renewed = date('d/m/Y', $renewalDate);
-
-                    $dateExpired = strtotime($ato->date_of_expiry); 
-                    $expired = date('d/m/Y', $dateExpired);
-                    
-                $answer.='<tr class="'.$css_style.'">
-                    <td>'.$counter.'</td>
-                    <td>'.strtoupper($ato->training_organization).'</td>
-                    <td>
-                        <a href="confidentials/economic-licence/'.$ato->ato_certificate.'" target="_blank">
-                            '.$ato->approval_no.'
-                        </a>
-                    </td>
-                    <td class="text-center">'.$dateIssued.'</td>
-                    <td class="text-center">'.$renewed.'</td>
-                    <td class="center">'.$expired.'</td>
-                    <td style="text-align:center; background:'.$bgcolor.'; color:'.$color.';">
-                        '.$remarks.'
-                    </td>
-                </tr>';
+                        $remarks = "Expired";
+                        $issuedDate = strtotime($dacl->dacl_issue_date); 
+                        $dateIssued = date('d/m/Y', $issuedDate);
+                        
+                        $dateExpired = strtotime($dacl->aoc_expiry_date); 
+                        $expired = date('d/m/Y', $dateExpired);
+                        
+                        $record.='
+                        <tr class="'.$css_style.'">
+                            <td>'.$counter.'</td>
+                            <td>'.strtoupper($dacl->airline_name).'</td>
+                            <td>
+                                <a href="/confidentials/foreign-airline/'.$dacl->dacl_certificate.'" target="_blank">
+                                    '.$dacl->dacl_no.'
+                                </a>
+                            </td>
+                            <td class="text-center">'.$dateIssued.'</td>
+                            <td>
+                                <a href="/confidentials/foreign-airline/'.$dacl->aoc_opspec.'" target="_blank">
+                                <i class="mdi mdi-file-pdf" style="color:black; font-size:20px;" title="click to view '.$dacl->airline_name.'"></i>
+                                </a>
+                            </td>
+                            <td class="center">'.$expired.'</td>
+                            <td>'.$dacl->country.'</td>
+                            <td style="text-align:center; background:'.$bgcolor.'; color:'.$color.';">
+                                '.$remarks.'
+                            </td>
+                            <td>'.$dacl->remarks.'</td>
+                        </tr>';
                     }
                 }
-            } else {
-                $answer.='<tr>
+            }   
+            else {
+                $record.='
+                <tr>
                     <td style="font-size:11px; font-weight:bold; color:red; text-align:center" colspan="15" class="table-danger">No records available</td>
                 </tr>';
             }
-           
-        $answer.='</tbody>
+        $record.='</tbody>
         </table>';
-
-
-        return $answer;
-
+        return $record;
     }
-
+   
     public function destroy(Request $request, $id) {
-        $recid = ato::findOrFail($id);
+        $recid = ForeignAirlineDacl::findOrFail($id);
         $recid->DELETE();
         updateHistory::CREATE([
-            'name' => Auth::user()->name, 'module' => 'ato', 'record_id' => $id, 'actual' => 'DELETED:'.$recid->approval_no
+            'name' => Auth::user()->name, 'module' => 'foreign-airline-dacl', 'record_id' => $id, 'actual' => 'DELETED:'.$recid->dacl_no
         ]);
         return 'deleted';
     }

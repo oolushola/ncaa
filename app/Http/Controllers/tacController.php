@@ -16,7 +16,11 @@ class tacController extends Controller
 {
     public function index() {
         $aircrafts = aircraftMaker::ALL();
-        $tacs = Tac::GET();
+        $tacs = DB::SELECT(
+            DB::RAW(
+                'SELECT b.`aircraft_maker`, a.* FROM tbl_ncaa_tacs a JOIN tbl_ncaa_aircraft_makers b ON a.aircraft_maker_id = b.id ORDER BY b.aircraft_maker ASC'
+            )
+        );
         return view('v1.ncaa.tac.create', array(
             'aircraftMaker' => $aircrafts,
             'tacs' => $tacs
@@ -80,9 +84,11 @@ class tacController extends Controller
         $aircraftTypes = aircrafttype::WHERE('aircraft_maker_id', $recid->aircraft_maker_id)->GET();
 
         $selectedAircraftMaker = TacAircraftMaker::WHERE('aircraft_maker_id', $recid->aircraft_maker_id)->GET();
-
-
-        $tacs = Tac::GET();
+        $tacs = DB::SELECT(
+            DB::RAW(
+                'SELECT b.`aircraft_maker`, a.* FROM tbl_ncaa_tacs a JOIN tbl_ncaa_aircraft_makers b ON a.aircraft_maker_id = b.id ORDER BY b.aircraft_maker ASC'
+            )
+        );
         return view('v1.ncaa.tac.create', array(
             'aircraftMaker' => $aircrafts,
             'recid' => $recid,
@@ -145,7 +151,7 @@ class tacController extends Controller
         $aircraftMakers = aircraftMaker::ORDERBY('aircraft_maker', 'ASC')->GET();
         $allTacs = DB::SELECT(
             DB::RAW(
-                'SELECT b.aircraft_maker, a.* FROM tbl_ncaa_tacs a JOIN `tbl_ncaa_aircraft_makers` b ON a.aircraft_maker_id = b.id '
+                'SELECT b.aircraft_maker, a.* FROM tbl_ncaa_tacs a JOIN `tbl_ncaa_aircraft_makers` b ON a.aircraft_maker_id = b.id ORDER BY b.aircraft_maker ASC '
             )
         );
 
@@ -157,5 +163,397 @@ class tacController extends Controller
         $checkforaocupdates = updateHistory::WHERE('module', 'tac')->ORDERBY('updated_at', 'DESC')->LIMIT(1)->GET();
 
         return view('v1.ncaa.tac.show', compact('allTacs', 'aircraftMakers', 'aircraftModels', 'checkforaocupdates'));
+    }
+
+
+    public function sortBy(Request $request) {
+        $sort = $request->sort;
+        return $this->displayRecords($sort);
+    }
+
+    public function filterTacStatus(Request $request) {
+        if($request->status == "active") {
+           return $this->displayActiveRecords($request->sort);
+        }
+        if($request->status == 'expiring-soon') {
+            return $this->displayExpiringSoonRecords($request->sort);
+        }
+        if($request->status == 'expired') {
+            return $this->displayExpiredRecords($request->sort);
+        }
+    }
+
+    public function displayRecords($sort) {
+        $aircraftMakers = aircraftMaker::ORDERBY('aircraft_maker', 'ASC')->GET();
+        $allTacs = DB::SELECT(
+            DB::RAW(
+                'SELECT b.aircraft_maker, a.* FROM tbl_ncaa_tacs a JOIN `tbl_ncaa_aircraft_makers` b ON a.aircraft_maker_id = b.id ORDER BY b.aircraft_maker '.$sort.' '
+            )
+        );
+
+        $aircraftModels = DB::SELECT(
+            DB::RAW(
+                'SELECT * from tbl_ncaa_tac_aircraft_makers a JOIN tbl_ncaa_aircraft_types b ON a.aircraft_type_id = b.id'
+            )
+        );
+
+        $records = '
+        <table class="table table-bordered" id="exportTableData">
+            <thead>
+                <tr class="">
+                    <th><b>#</b></th>
+                    <th><b>Aircraft Maker</b></th>
+                    <th><b>Aircraft Model</b></th>
+                    <th><b>TAC Acceptance Cert. No.</b></th>
+                    <th><b>Date Issued</b></th>
+                    <th><b>TC Holder</b></th>
+                    <th><b>Orginal Issued by</b></th>
+                    <th><b>TC NO.</b></th>
+                    <th><b>Remark</b></th>
+                    <th><b>Status</b></th>
+                </tr>
+            </thead>
+            <tbody>';
+            if(count($allTacs)) {
+                $count = 0;
+                foreach($allTacs as $tac) {
+                    $count++;
+                    $now = time();
+                    $due_date = strtotime($tac->date_issued);;
+                    $datediff = $due_date - $now;
+                    $numberofdays = round($datediff / (60 * 60 * 24));
+
+                    if($numberofdays > 90 ){
+                        $status = "Active";
+                        $bgcolor = "green";
+                        $color = "#fff";
+                    }
+                    else if(($numberofdays >= 1) && ($numberofdays <=90)){
+                        $status = "Expiring soon";
+                        $bgcolor = "#ffbf00";
+                        $color = "#000";
+                    }
+                    else{
+                        $status = "Expired";
+                        $bgcolor = "red";
+                        $color = "#000";
+                    }
+
+                    date_default_timezone_set("Africa/Lagos");
+                    $count % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
+                    
+                    $dateIssued = strtotime($tac->date_issued);
+                    $date_issued = date('j/m/Y', $dateIssued);
+                
+                $records.='<tr style="font-family:tahoma;" class="'.$css_style.'">
+                    <td style="font-size:11px;">'.$count.'</td>
+                    <td>'.strtoupper($tac->aircraft_maker).'</td>
+                    <td>';
+                        foreach($aircraftModels as $aircraft_type) {
+                            if($tac->id == $aircraft_type->tac_id) {
+                                $records.= $aircraft_type->aircraft_type.'<br />';
+                            }
+                        }
+                    $records.='</td>
+                    <td>'.$tac->tc_acceptance_approval.'</td>
+                    <td>'.$date_issued.'</td>
+                    <td>';
+                        foreach($aircraftMakers as $maker) {
+                            if($maker->id == $tac->tc_holder) {
+                                $records.= $maker->aircraft_maker;
+                            }
+                        }
+                    $records.='</td>
+                    <td>'.$tac->original_tc_issued_by.'</td>
+                    <td class="center">'.$tac->tc_no.'</td>
+                    <td class="center">'.$tac->remarks.'</td>
+                    
+                    <td style="background:'.$bgcolor.'; color:'.$color.'">'.$status.'</td>
+                </tr>';
+                }
+            }
+            else {
+                $records.='
+                <tr>
+                    <td style="color:red" class="center" colspan="15" class="table-danger">No records available</td>
+                </tr>';
+            }
+            $records.='
+            </tbody>
+        </table>';
+        return $records;
+    }
+
+    public function displayActiveRecords($sort) {
+        $aircraftMakers = aircraftMaker::ORDERBY('aircraft_maker', 'ASC')->GET();
+        $allTacs = DB::SELECT(
+            DB::RAW(
+                'SELECT b.aircraft_maker, a.* FROM tbl_ncaa_tacs a JOIN `tbl_ncaa_aircraft_makers` b ON a.aircraft_maker_id = b.id ORDER BY b.aircraft_maker '.$sort.' '
+            )
+        );
+
+        $aircraftModels = DB::SELECT(
+            DB::RAW(
+                'SELECT * from tbl_ncaa_tac_aircraft_makers a JOIN tbl_ncaa_aircraft_types b ON a.aircraft_type_id = b.id'
+            )
+        );
+
+        $records = '
+        <table class="table table-bordered" id="exportTableData">
+            <thead>
+                <tr class="">
+                    <th><b>#</b></th>
+                    <th><b>Aircraft Maker</b></th>
+                    <th><b>Aircraft Model</b></th>
+                    <th><b>TAC Acceptance Cert. No.</b></th>
+                    <th><b>Date Issued</b></th>
+                    <th><b>TC Holder</b></th>
+                    <th><b>Orginal Issued by</b></th>
+                    <th><b>TC NO.</b></th>
+                    <th><b>Remark</b></th>
+                    <th><b>Status</b></th>
+                </tr>
+            </thead>
+            <tbody>';
+            if(count($allTacs)) {
+                $count = 0;
+                foreach($allTacs as $tac) {
+                    $count++;
+                    $now = time();
+                    $due_date = strtotime($tac->date_issued);;
+                    $datediff = $due_date - $now;
+                    $numberofdays = round($datediff / (60 * 60 * 24));
+
+                    if($numberofdays > 90 ){
+                        $status = "Active";
+                        $bgcolor = "green";
+                        $color = "#fff";
+                        date_default_timezone_set("Africa/Lagos");
+                        $count % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
+                        
+                        $dateIssued = strtotime($tac->date_issued);
+                        $date_issued = date('j/m/Y', $dateIssued);
+                    
+                        $records.='
+                        <tr style="font-family:tahoma;" class="'.$css_style.'">
+                            <td style="font-size:11px;">'.$count.'</td>
+                            <td>'.strtoupper($tac->aircraft_maker).'</td>
+                            <td>';
+                                foreach($aircraftModels as $aircraft_type) {
+                                    if($tac->id == $aircraft_type->tac_id) {
+                                        $records.= $aircraft_type->aircraft_type.'<br />';
+                                    }
+                                }
+                            $records.='</td>
+                            <td>'.$tac->tc_acceptance_approval.'</td>
+                            <td>'.$date_issued.'</td>
+                            <td>';
+                                foreach($aircraftMakers as $maker) {
+                                    if($maker->id == $tac->tc_holder) {
+                                        $records.= $maker->aircraft_maker;
+                                    }
+                                }
+                            $records.='</td>
+                            <td>'.$tac->original_tc_issued_by.'</td>
+                            <td class="center">'.$tac->tc_no.'</td>
+                            <td class="center">'.$tac->remarks.'</td>
+                            
+                            <td style="background:'.$bgcolor.'; color:'.$color.'">'.$status.'</td>
+                        </tr>';
+                    }
+                }
+            }
+            else {
+                $records.='
+                <tr>
+                    <td style="color:red" class="center" colspan="15" class="table-danger">No records available</td>
+                </tr>';
+            }
+            $records.='
+            </tbody>
+        </table>';
+        return $records;
+    }
+
+    public function displayExpiringSoonRecords($sort) {
+        $aircraftMakers = aircraftMaker::ORDERBY('aircraft_maker', 'ASC')->GET();
+        $allTacs = DB::SELECT(
+            DB::RAW(
+                'SELECT b.aircraft_maker, a.* FROM tbl_ncaa_tacs a JOIN `tbl_ncaa_aircraft_makers` b ON a.aircraft_maker_id = b.id ORDER BY b.aircraft_maker '.$sort.' '
+            )
+        );
+
+        $aircraftModels = DB::SELECT(
+            DB::RAW(
+                'SELECT * from tbl_ncaa_tac_aircraft_makers a JOIN tbl_ncaa_aircraft_types b ON a.aircraft_type_id = b.id'
+            )
+        );
+
+        $records = '
+        <table class="table table-bordered" id="exportTableData">
+            <thead>
+                <tr class="">
+                    <th><b>#</b></th>
+                    <th><b>Aircraft Maker</b></th>
+                    <th><b>Aircraft Model</b></th>
+                    <th><b>TAC Acceptance Cert. No.</b></th>
+                    <th><b>Date Issued</b></th>
+                    <th><b>TC Holder</b></th>
+                    <th><b>Orginal Issued by</b></th>
+                    <th><b>TC NO.</b></th>
+                    <th><b>Remark</b></th>
+                    <th><b>Status</b></th>
+                </tr>
+            </thead>
+            <tbody>';
+            if(count($allTacs)) {
+                $count = 0;
+                foreach($allTacs as $tac) {
+                    $now = time();
+                    $due_date = strtotime($tac->date_issued);;
+                    $datediff = $due_date - $now;
+                    $numberofdays = round($datediff / (60 * 60 * 24));
+
+                    if(($numberofdays >= 1) && ($numberofdays <90)){
+                        $count++;
+                        $status = "Expiring soon";
+                        $bgcolor = "#ffbf00";
+                        $color = "#000";
+                        date_default_timezone_set("Africa/Lagos");
+                        $count % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
+                        
+                        $dateIssued = strtotime($tac->date_issued);
+                        $date_issued = date('j/m/Y', $dateIssued);
+                    
+                        $records.='
+                        <tr style="font-family:tahoma;" class="'.$css_style.'">
+                            <td style="font-size:11px;">'.$count.'</td>
+                            <td>'.strtoupper($tac->aircraft_maker).'</td>
+                            <td>';
+                                foreach($aircraftModels as $aircraft_type) {
+                                    if($tac->id == $aircraft_type->tac_id) {
+                                        $records.= $aircraft_type->aircraft_type.'<br />';
+                                    }
+                                }
+                            $records.='</td>
+                            <td>'.$tac->tc_acceptance_approval.'</td>
+                            <td>'.$date_issued.'</td>
+                            <td>';
+                                foreach($aircraftMakers as $maker) {
+                                    if($maker->id == $tac->tc_holder) {
+                                        $records.= $maker->aircraft_maker;
+                                    }
+                                }
+                            $records.='</td>
+                            <td>'.$tac->original_tc_issued_by.'</td>
+                            <td class="center">'.$tac->tc_no.'</td>
+                            <td class="center">'.$tac->remarks.'</td>
+                            
+                            <td style="background:'.$bgcolor.'; color:'.$color.'">'.$status.'</td>
+                        </tr>';
+                    }
+                }
+            }
+            else {
+                $records.='
+                <tr>
+                    <td style="color:red" class="center" colspan="15" class="table-danger">No records available</td>
+                </tr>';
+            }
+            $records.='
+            </tbody>
+        </table>';
+        return $records;
+    }
+
+    public function displayExpiredRecords($sort) {
+        $aircraftMakers = aircraftMaker::ORDERBY('aircraft_maker', 'ASC')->GET();
+        $allTacs = DB::SELECT(
+            DB::RAW(
+                'SELECT b.aircraft_maker, a.* FROM tbl_ncaa_tacs a JOIN `tbl_ncaa_aircraft_makers` b ON a.aircraft_maker_id = b.id ORDER BY b.aircraft_maker '.$sort.' '
+            )
+        );
+
+        $aircraftModels = DB::SELECT(
+            DB::RAW(
+                'SELECT * from tbl_ncaa_tac_aircraft_makers a JOIN tbl_ncaa_aircraft_types b ON a.aircraft_type_id = b.id'
+            )
+        );
+
+        $records = '
+        <table class="table table-bordered" id="exportTableData">
+            <thead>
+                <tr class="">
+                    <th><b>#</b></th>
+                    <th><b>Aircraft Maker</b></th>
+                    <th><b>Aircraft Model</b></th>
+                    <th><b>TAC Acceptance Cert. No.</b></th>
+                    <th><b>Date Issued</b></th>
+                    <th><b>TC Holder</b></th>
+                    <th><b>Orginal Issued by</b></th>
+                    <th><b>TC NO.</b></th>
+                    <th><b>Remark</b></th>
+                    <th><b>Status</b></th>
+                </tr>
+            </thead>
+            <tbody>';
+            if(count($allTacs)) {
+                $count = 0;
+                foreach($allTacs as $tac) {
+                    $count++;
+                    $now = time();
+                    $due_date = strtotime($tac->date_issued);;
+                    $datediff = $due_date - $now;
+                    $numberofdays = round($datediff / (60 * 60 * 24));
+
+                    if($numberofdays < 1){
+                        $status = "Expired";
+                        $bgcolor = "red";
+                        $color = "#000";
+                        date_default_timezone_set("Africa/Lagos");
+                        $count % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
+                        
+                        $dateIssued = strtotime($tac->date_issued);
+                        $date_issued = date('j/m/Y', $dateIssued);
+                    
+                        $records.='
+                        <tr style="font-family:tahoma;" class="'.$css_style.'">
+                            <td style="font-size:11px;">'.$count.'</td>
+                            <td>'.strtoupper($tac->aircraft_maker).'</td>
+                            <td>';
+                                foreach($aircraftModels as $aircraft_type) {
+                                    if($tac->id == $aircraft_type->tac_id) {
+                                        $records.= $aircraft_type->aircraft_type.'<br />';
+                                    }
+                                }
+                            $records.='</td>
+                            <td>'.$tac->tc_acceptance_approval.'</td>
+                            <td>'.$date_issued.'</td>
+                            <td>';
+                                foreach($aircraftMakers as $maker) {
+                                    if($maker->id == $tac->tc_holder) {
+                                        $records.= $maker->aircraft_maker;
+                                    }
+                                }
+                            $records.='</td>
+                            <td>'.$tac->original_tc_issued_by.'</td>
+                            <td class="center">'.$tac->tc_no.'</td>
+                            <td class="center">'.$tac->remarks.'</td>
+                            
+                            <td style="background:'.$bgcolor.'; color:'.$color.'">'.$status.'</td>
+                        </tr>';
+                    }
+                }
+            }
+            else {
+                $records.='
+                <tr>
+                    <td style="color:red" class="center" colspan="15" class="table-danger">No records available</td>
+                </tr>';
+            }
+            $records.='
+            </tbody>
+        </table>';
+        return $records;
     }
 }

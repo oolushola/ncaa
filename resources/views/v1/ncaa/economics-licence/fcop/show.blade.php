@@ -33,12 +33,12 @@
                                 <option value="desc">Descending</option>
                             </select>
                         </span> -->
-                        <span style="font-size:12px; font-weight:bold; display:inline-block" > 
-                            <select name="chooseStatus" id="chooseStatus">
+                        <span style="font-size:12px; font-weight:bold; display:inline-block; margin-left:12px" > 
+                            Sort by:
+                            <select name="sortFcopStatus" id="sortFcopStatus">
                                 <option value="0">Status</option>
-                                <option value="active">Active</option>
-                                <option value="expiringSoon">Expiring Soon</option>
-                                <option value="expired">Expired</option>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
                             </select>
                         </span>
                     </form>
@@ -69,12 +69,40 @@
                                          
                                         $issuedDate = strtotime($fcop->date_fcop_issued); 
                                         $dateIssued = date('d/m/Y', $issuedDate);
-                                        $fcop->part_18 == 0 ? $part18 = 'No' : $part18 = 'Yes';
-                                        $fcop->part_10 == 0 ? $part10 = 'No' : $part10 = 'Yes';
-                                        $fcop->part_17 == 0 ? $part17 = 'No' : $part17 = 'Yes';
-                                        $fcop->fcop_status == 0 ? $status = 'Inactive' : $status = 'Active';
-                                            
-                                        ?>
+                                        if($fcop->part_18 == 0) {
+                                            $part18 = 'No';
+                                            $bgColorP18 = 'red';
+                                        }
+                                        else {
+                                            $part18 = 'Yes';
+                                            $bgColorP18 = 'green';
+                                        }
+                                        if($fcop->part_10 == 0) {
+                                            $part10 = 'No';
+                                            $bgColorP10 = 'red';
+                                        }
+                                        else {
+                                             $part10 = 'Yes';
+                                             $bgColorP10 = 'green';
+                                        }
+
+                                        if($fcop->part_17 == 0) {
+                                            $part17 = 'No';
+                                            $bgColorP17 = 'red';
+                                        }
+                                        else {
+                                             $part17 = 'Yes';
+                                             $bgColorP17 = 'green';
+                                        }
+                                        if($fcop->fcop_status == 0 ) {
+                                            $status = 'Inactive';
+                                            $bgColor = "red";
+                                        }
+                                        else {
+                                            $status = 'Active'; 
+                                            $bgColor = 'green';
+                                        }   
+                                    ?>
                                     <tr class="{{$css_style}}">
                                         <td>{{$counter}}</td>
                                         <td>{!! strtoupper($fcop->foreign_airline) !!}</td>
@@ -84,10 +112,10 @@
                                             </a>
                                         </td>
                                         <td class="text-center">{!! $dateIssued !!}</td>
-                                        <td class="text-center">{!! $part18 !!}</td>
-                                        <td class="center">{!! $part10 !!}</td>
-                                        <td class="center">{!! $part17 !!}</td>
-                                        <td class="center">{!! $status !!}</td>
+                                        <td class="text-center" style="background: {{$bgColorP18}}; color: #fff">{!! $part18 !!}</td>
+                                        <td class="center" style="background: {{$bgColorP10}}; color: #fff">{!! $part10 !!}</td>
+                                        <td class="center" style="background: {{$bgColorP17}}; color: #fff">{!! $part17 !!}</td>
+                                        <td class="center" style="background: {{$bgColor}}; color: #fff">{!! $status !!}</td>
                                         <td>{{ $fcop->comments }}</td>
                                     </tr>
                                     @endforeach
@@ -109,7 +137,7 @@
 @section('scripts')
 <script type="text/javascript" src="{{URL::asset('js/jquery.form.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/jquery.table2excel.min.js')}}"></script>
-<script type="text/javascript" src="{{URL::asset('js/economic-licence/fcop.js')}}"></script>
+<script type="text/javascript" src="{{URL::asset('js/economic-licence/fcop.js?v=').time()}}"></script>
 <script type="text/javascript">
     $('#sendToPrint').click(function() {
         $.print('#contentDropper')

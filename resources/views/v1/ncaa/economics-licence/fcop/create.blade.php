@@ -46,29 +46,33 @@
                     <div class="form-group">
                         <label class="labelholder">Part 18 *</label>
                         <div class="form-group-inline">
-                            <input type="radio" value="1" name="part_18" @if(isset($recid) && $recid->part_18 == "1") checked @endif /> Yes
-                            <input type="radio" value="0" name="part_18" @if(isset($recid) && $recid->part_18 == "0") checked @endif  /> No
+                            <input type="radio" value="1" class="part18" name="part18" @if(isset($recid) && $recid->part_18 == "1") checked @endif /> Yes
+                            <input type="radio" value="0" class="part18" name="part18" @if(isset($recid) && $recid->part_18 == "0") checked @endif  /> No
+                            <input type="text" name="part_18" id="part18" value="@if(isset($recid)){{$recid->part_18}}@endif" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="labelholder">Part 10 *</label>
                         <div class="form-group-inline">
-                            <input type="radio" value="1" name="part_10" @if(isset($recid) && $recid->part_10 == "1") checked @endif /> Yes
-                            <input type="radio" value="0" name="part_10" @if(isset($recid) && $recid->part_10 == "0") checked @endif /> No
+                            <input type="radio"  class="part10" value="1" name="part10" @if(isset($recid) && $recid->part_10 == "1") checked @endif /> Yes
+                            <input type="radio"  class="part10" value="0" name="part10" @if(isset($recid) && $recid->part_10 == "0") checked @endif /> No
+                            <input type="text" name="part_10" id="part10" value="@if(isset($recid)){{$recid->part_10}}@endif" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="labelholder">Part 17 *</label>
                         <div class="form-group-inline">
-                            <input type="radio" value="1" name="part_17" @if(isset($recid) && $recid->part_17 == "1") checked @endif /> Yes
-                            <input type="radio" value="0" name="part_17" @if(isset($recid) && $recid->part_17 == "0") checked @endif /> No
+                            <input type="radio" value="1" class="part17" name="part17" @if(isset($recid) && $recid->part_17 == "1") checked @endif /> Yes
+                            <input type="radio" value="0" class="part17" name="part17" @if(isset($recid) && $recid->part_17 == "0") checked @endif /> No
+                            <input type="text" name="part_17" id="part17" value="@if(isset($recid)){{$recid->part_17}}@endif" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="labelholder">Status *</label>
                         <div class="form-group-inline">
-                            <input type="radio" value="1" name="fcop_status" @if(isset($recid) && $recid->fcop_status == "1") checked @endif /> Active
-                            <input type="radio" value="0" name="fcop_status" @if(isset($recid) && $recid->fcop_status == "0") checked @endif /> Inactive
+                            <input type="radio" value="1" class="fcopStatus" name="fcopStatus" @if(isset($recid) && $recid->fcop_status == "1") checked @endif /> Active
+                            <input type="radio" value="0" class="fcopStatus" name="fcopStatus" @if(isset($recid) && $recid->fcop_status == "0") checked @endif /> Inactive
+                            <input type="text" name="fcop_status" id="fcopStatus" value="@if(isset($recid)){{$recid->fcop_status}}@endif" />
                         </div>
                     </div>
                     
@@ -155,9 +159,9 @@
                                                 </a>
                                             </td>                                            
                                             <td style="color:red" class="center">
-                                                <form method="POST" name="frmDeletefcop" id="frmDeletefcop">
+                                                <form method="POST" name="frmDeleteFcop" id="frmDeleteFcop">
                                                     {!! csrf_field() !!} {!! method_field('DELETE') !!}
-                                                    <i class="mdi mdi-delete-forever deletefcop" style="font-size:25px; cursor:pointer" value="{{$fcop->id}}" title="Delete {{$fcop->licence_no}}"></i>
+                                                    <i class="mdi mdi-delete-forever deleteFcop" style="font-size:25px; cursor:pointer" value="{{$fcop->id}}" title="Delete {{$fcop->licence_no}}"></i>
                                                 </form>
                                             </td>
                                             <td>{{$fcop->created_by}}</td>
@@ -182,5 +186,5 @@
 @section('scripts')
 <script type="text/javascript" src="{{URL::asset('js/jquery.form.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/mediavalidate.js')}}"></script>
-<script type="text/javascript" src="{{URL::asset('js/economic-licence/fcop.js')}}"></script>
+<script type="text/javascript" src="{{URL::asset('js/economic-licence/fcop.js?v=').time()}}"></script>
 @stop

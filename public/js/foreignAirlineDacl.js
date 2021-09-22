@@ -2,12 +2,14 @@ $(function($){
   $("#addForeingAirlineDacl").click(function(event){
       event.preventDefault();
       if(validatDaclRequest()==false) return;
+      $("#contentDropper").html('<img src=\'/images/ajax.gif\'>please wait...').addClass('error');
       $("#foreignAirlineDacl").submit();
   });
 
   $("#updateForeingAirlineDacl").click(function(event){  
       event.preventDefault();
       if(validatDaclRequest()==false) return;
+      $("#contentDropper").html('<img src=\'/images/ajax.gif\'>please wait...').addClass('error');
       $("#foreignAirlineDacl").submit();
   });
 
@@ -113,7 +115,7 @@ $(function($){
   });
 
   //Delete a DACL
-  $(".deleteAto").click(function(){
+  $(".deleteforeignAirlineDacl").click(function(){
       $id = $(this).attr("value");
       $name = $(this).attr("title");
       $ask = confirm("Are you sure you want to "+$name.toLowerCase()+"?");
@@ -124,9 +126,9 @@ $(function($){
           )
           .addClass('error')
           .css({float:'right'});
-          $.post("/ato/"+$id, $("#frmDeleteAto").serialize(), function(data){
+          $.post("/foreign-airline-dacl/"+$id, $("#frmDeleteforeignAirlineDacl").serialize(), function(data){
              if(data=='deleted'){
-                 $url = '/ato';
+                 $url = '/foreign-airline-dacl';
                  window.location = $url;
              }
           })
@@ -140,24 +142,28 @@ $(function($){
       if($status == '0'){
           return false;
       }
-      $("#contentDropper").html('<img src=\'/images/ajax.gif\'>please wait...').addClass('error');
-
-      if($status == 'active'){
-          $.get('/ato-active', {active:$status}, function(data){
-              $("#contentDropper").html(data).removeClass('error');
-          });    
-      }
-
-      if($status == 'expired'){
-          $.get('/ato-expired', {expired:$status}, function(data){
-              $("#contentDropper").html(data).removeClass('error');
-          });    
-      }
-
-      if($status == 'expiringSoon'){
-          $.get('/ato-expiring-soon', {expiringSoon:$status}, function(data){
-              $("#contentDropper").html(data).removeClass('error');
-          });    
-      }
+      
   });
+
+  $("#sortCountry").change(function() {
+    if($(this).val() == 0){
+        return false;
+    }
+    $("#contentDropper").html('<img src=\'/images/ajax.gif\'>please wait...').addClass('error');
+    $.get('/foreign-airline-dacl-country', { country: $(this).val() }, function(data) {
+        $("#contentDropper").html(data).removeClass("error");
+    });
+  })
+
+  $("#chooseStatus").change(function() {
+    if($(this).val() == 0){
+        return false;
+    }
+    $("#contentDropper").html('<img src=\'/images/ajax.gif\'>please wait...').addClass('error');
+    $.get('/foreign-airline-dacl-status', { status: $(this).val() }, function(data) {
+        $("#contentDropper").html(data).removeClass("error");
+    });
+  }) 
+
+
 });

@@ -25,8 +25,20 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body" style="padding-left:3px; padding-right:3px;">
-                    <div class="table-responsive" id="contentDropper">
                     <h4 class="card-title" style="padding-left:10px; display:inline-block">All TAC Listings</h4>
+                    <div style="margin-left: 10px">
+                        Sort By: 
+                        <select name="sort" id="sortTac" style="font-size: 11px; margin-left: 10px">
+                            <option value="asc">Asc</option>
+                            <option value="desc">Desc</option>
+                        </select>
+                        <select name="status" id="changeStatus" style="font-size: 11px; margin-left: 10px">
+                            <option value="">Choose</option>
+                            <option value="active">Active</option>
+                            <option value="expiring-soon">Expiring Soon</option>
+                            <option value="expired">Expired</option>
+                        </select>
+                    </div>
                         @if(Auth::user()->role==3 || 1)
                             @if(count($checkforaocupdates))
                                 @foreach($checkforaocupdates as $lastupdatedby)
@@ -36,6 +48,7 @@
                                 @endforeach                            
                             @endif
                         @endif
+                    <div class="table-responsive" id="contentDropper">
                         <table class="table table-bordered" id="exportTableData">
                             <thead>
                                 <tr class="">
@@ -128,7 +141,7 @@
 
 @section('scripts')
 <script type="text/javascript" src="{{URL::asset('js/jquery.table2excel.min.js')}}"></script>
-<script type="text/javascript" src="{{URL::asset('js/tac/tac.js')}}"></script>
+<script type="text/javascript" src="{{URL::asset('js/tac/tac.js?v=').time()}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/data-table.min.js')}}"></script>
 
 <script type="text/javascript">

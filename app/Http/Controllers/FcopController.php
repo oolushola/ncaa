@@ -105,76 +105,81 @@ class FcopController extends Controller
         return view('v1.ncaa.economics-licence.fcop.show', compact('fcopListings', 'checkforfcopupdates'));
     }
 
-    public function showByOperator(Request $request) {
-        $orderby = $request->direction;
-        $atoListings = DB::SELECT(
-            DB::RAW(
-                'SELECT a.*, b.training_organization FROM tbl_ncaa_atos a JOIN `tbl_ncaa_training_organizations` b ON a.training_organization_id = b.id ORDER BY training_organization '.$orderby.' '  
-            )
-        );
+    public function fcopByStatus(Request $request) {
+        $fcop_status = $request->fcopStatus;
+        $fcopListings = Fcop::WHERE('fcop_status', $fcop_status)->GET();
 
         $answer = '<table class="table table-bordered" id="exportTableData">
         <thead>
             <tr class="table-warning">
                 <th width="5%">#</th>
-                <th><b>Training Organization</b></th>
-                <th><b>Approval No.</b></th>
-                <th class="text-center"><b>Date of Initial Issue</b></th>
-                <th class="center"><b>Date of Last Renewal</b></th>
-                <th class="center"><b>Date of Expiry</b></th>
-                <th class="center"><b>Status</b></th>
+                <th><b>Foreign Airline</b></th>
+                <th><b>Licence No.</b></th>
+                <th class="text-center"><b>FCOP Issue Date</b></th>
+                <th class="center"><b>Part 18</b></th>
+                <th class="center"><b>Part 10</b></th>
+                <th class="center"><b>Part 17</b></th>
+                <th class="center"><b>FCOP Status</b></th>
+                <th class="font-weight-bold">Comments</th>
             </tr>
         </thead>
         <tbody>';
-            if(count($atoListings)) {
-            $counter = 0;
-                foreach($atoListings as $ato){
-                    $counter++; 
-                     $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
-                     
-                    $now = time();
-                    $due_date = strtotime($ato->date_of_expiry);;
-                    $datediff = $due_date - $now;
-                    $numberofdays = round($datediff / (60 * 60 * 24));
+        if(count($fcopListings)) {
+        $counter = 0;
+            foreach($fcopListings as $fcop) {
+                $counter++; 
+                $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary'; 
+                $issuedDate = strtotime($fcop->date_fcop_issued); 
+                $dateIssued = date('d/m/Y', $issuedDate);
+                if($fcop->part_18 == 0) {
+                    $part18 = 'No';
+                    $bgColorP18 = 'red';
+                }
+                else {
+                    $part18 = 'Yes';
+                    $bgColorP18 = 'green';
+                }
+                if($fcop->part_10 == 0) {
+                    $part10 = 'No';
+                    $bgColorP10 = 'red';
+                }
+                else {
+                     $part10 = 'Yes';
+                     $bgColorP10 = 'green';
+                }
 
-                    if($numberofdays > 90 ){
-                        $bgcolor = "green";
-                        $color = "#fff";
-                        $remarks = "Active";
-                    }
-                    else if(($numberofdays >= 0) && ($numberofdays <=90)){
-                       $bgcolor = "#ffbf00";
-                        $color = "#000";
-                        $remarks = "Expiring soon";
-                    }
-                    else{
-                        $bgcolor = "red";
-                        $color = "#000";
-                        $remarks = "Expired";
-                    }
-                    $issuedDate = strtotime($ato->date_of_first_issue); 
-                    $dateIssued = date('d/m/Y', $issuedDate);
+                if($fcop->part_17 == 0) {
+                    $part17 = 'No';
+                    $bgColorP17 = 'red';
+                }
+                else {
+                     $part17 = 'Yes';
+                     $bgColorP17 = 'green';
+                }
+                if($fcop->fcop_status == 0 ) {
+                    $status = 'Inactive';
+                    $bgColor = "red";
+                }
+                else {
+                    $status = 'Active'; 
+                    $bgColor = 'green';
+                }   
                     
-                    $renewalDate = strtotime($ato->date_of_renewal); 
-                    $renewed = date('d/m/Y', $renewalDate);
-
-                    $dateExpired = strtotime($ato->date_of_expiry); 
-                    $expired = date('d/m/Y', $dateExpired);
-                    
-                $answer.='<tr class="'.$css_style.'">
+                $answer.='
+                <tr class="'.$css_style.'">
                     <td>'.$counter.'</td>
-                    <td>'.strtoupper($ato->training_organization).'</td>
+                    <td>'.strtoupper($fcop->foreign_airline).'</td>
                     <td>
-                        <a href="confidentials/economic-licence/'.$ato->ato_certificate.'" target="_blank">
-                            '.$ato->approval_no.'
+                        <a href="/confidentials/economic-licence/'.$fcop->fcop_certificate.'" target="_blank">
+                            '.$fcop->licence_no.'
                         </a>
                     </td>
                     <td class="text-center">'.$dateIssued.'</td>
-                    <td class="text-center">'.$renewed.'</td>
-                    <td class="center">'.$expired.'</td>
-                    <td style="text-align:center; background:'.$bgcolor.'; color:'.$color.';">
-                        '.$remarks.'
-                    </td>
+                    <td class="text-center" style="background: '.$bgColorP18.'; color: #fff">'.$part18.'</td>
+                    <td class="center" style="background: '.$bgColorP10.'; color: #fff">'.$part10.'</td>
+                    <td class="center" style="background: '.$bgColorP17.'; color: #fff">'.$part17.'</td>
+                    <td class="center" style="background: '.$bgColor.'; color: #fff">'.$status.'</td>
+                    <td>'.$fcop->comments.'</td>
                 </tr>';
                 }
             } else {
@@ -186,238 +191,7 @@ class FcopController extends Controller
         $answer.='</tbody>
         </table>';
 
-
         return $answer;
-
-    }
-
-    public function activeAto(Request $request) {
-        $atoListings = DB::SELECT(
-            DB::RAW(
-                'SELECT a.*, b.training_organization FROM tbl_ncaa_atos a JOIN `tbl_ncaa_training_organizations` b ON a.training_organization_id = b.id ORDER BY training_organization ASC '  
-            )
-        );
-
-        $answer = '<table class="table table-bordered" id="exportTableData">
-        <thead>
-            <tr class="table-warning">
-                <th width="5%">#</th>
-                <th><b>Training Organization</b></th>
-                <th><b>Approval No.</b></th>
-                <th class="text-center"><b>Date of Initial Issue</b></th>
-                <th class="center"><b>Date of Last Renewal</b></th>
-                <th class="center"><b>Date of Expiry</b></th>
-                <th class="center"><b>Status</b></th>
-            </tr>
-        </thead>
-        <tbody>';
-            if(count($atoListings)) {
-            $counter = 0;
-                foreach($atoListings as $ato){
-                     
-                    $now = time();
-                    $due_date = strtotime($ato->date_of_expiry);;
-                    $datediff = $due_date - $now;
-                    $numberofdays = round($datediff / (60 * 60 * 24));
-                    if($numberofdays > 90 ){
-                        $bgcolor = "green";
-                        $color = "#fff";
-                        $remarks = "Active";
-
-                        $counter++; 
-                        $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
-                   
-                    $issuedDate = strtotime($ato->date_of_first_issue); 
-                    $dateIssued = date('d/m/Y', $issuedDate);
-                    
-                    $renewalDate = strtotime($ato->date_of_renewal); 
-                    $renewed = date('d/m/Y', $renewalDate);
-
-                    $dateExpired = strtotime($ato->date_of_expiry); 
-                    $expired = date('d/m/Y', $dateExpired);
-                    
-                $answer.='<tr class="'.$css_style.'">
-                    <td>'.$counter.'</td>
-                    <td>'.strtoupper($ato->training_organization).'</td>
-                    <td>
-                        <a href="confidentials/economic-licence/'.$ato->ato_certificate.'" target="_blank">
-                            '.$ato->approval_no.'
-                        </a>
-                    </td>
-                    <td class="text-center">'.$dateIssued.'</td>
-                    <td class="text-center">'.$renewed.'</td>
-                    <td class="center">'.$expired.'</td>
-                    <td style="text-align:center; background:'.$bgcolor.'; color:'.$color.';">
-                        '.$remarks.'
-                    </td>
-                </tr>';
-                    }
-                }
-            } else {
-                $answer.='<tr>
-                    <td style="font-size:11px; font-weight:bold; color:red; text-align:center" colspan="15" class="table-danger">No records available</td>
-                </tr>';
-            }
-           
-        $answer.='</tbody>
-        </table>';
-
-
-        return $answer;
-    }
-
-    public function expiredAto(Request $request) {
-        $atoListings = DB::SELECT(
-            DB::RAW(
-                'SELECT a.*, b.training_organization FROM tbl_ncaa_atos a JOIN `tbl_ncaa_training_organizations` b ON a.training_organization_id = b.id ORDER BY training_organization ASC '  
-            )
-        );
-
-        $answer = '<table class="table table-bordered" id="exportTableData">
-        <thead>
-            <tr class="table-warning">
-                <th width="5%">#</th>
-                <th><b>Training Organization</b></th>
-                <th><b>Approval No.</b></th>
-                <th class="text-center"><b>Date of Initial Issue</b></th>
-                <th class="center"><b>Date of Last Renewal</b></th>
-                <th class="center"><b>Date of Expiry</b></th>
-                <th class="center"><b>Status</b></th>
-            </tr>
-        </thead>
-        <tbody>';
-            if(count($atoListings)) {
-            $counter = 0;
-                foreach($atoListings as $ato){
-                     
-                    $now = time();
-                    $due_date = strtotime($ato->date_of_expiry);;
-                    $datediff = $due_date - $now;
-                    $numberofdays = round($datediff / (60 * 60 * 24));
-
-                    if($numberofdays <= 0 ){
-                        $bgcolor = "red";
-                        $color = "#fff";
-                        $remarks = "Expired";
-
-                        $counter++; 
-                        $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
-                   
-                    $issuedDate = strtotime($ato->date_of_first_issue); 
-                    $dateIssued = date('d/m/Y', $issuedDate);
-                    
-                    $renewalDate = strtotime($ato->date_of_renewal); 
-                    $renewed = date('d/m/Y', $renewalDate);
-
-                    $dateExpired = strtotime($ato->date_of_expiry); 
-                    $expired = date('d/m/Y', $dateExpired);
-                    
-                $answer.='<tr class="'.$css_style.'">
-                    <td>'.$counter.'</td>
-                    <td>'.strtoupper($ato->training_organization).'</td>
-                    <td>
-                        <a href="confidentials/economic-licence/'.$ato->ato_certificate.'" target="_blank">
-                            '.$ato->approval_no.'
-                        </a>
-                    </td>
-                    <td class="text-center">'.$dateIssued.'</td>
-                    <td class="text-center">'.$renewed.'</td>
-                    <td class="center">'.$expired.'</td>
-                    <td style="text-align:center; background:'.$bgcolor.'; color:'.$color.';">
-                        '.$remarks.'
-                    </td>
-                </tr>';
-                    }
-                }
-            } else {
-                $answer.='<tr>
-                    <td style="font-size:11px; font-weight:bold; color:red; text-align:center" colspan="15" class="table-danger">No records available</td>
-                </tr>';
-            }
-           
-        $answer.='</tbody>
-        </table>';
-
-
-        return $answer;
-
-    }
-
-    public function expiringSoonAto(Request $request) {
-        $atoListings = DB::SELECT(
-            DB::RAW(
-                'SELECT a.*, b.training_organization FROM tbl_ncaa_atos a JOIN `tbl_ncaa_training_organizations` b ON a.training_organization_id = b.id ORDER BY training_organization ASC '  
-            )
-        );
-
-        $answer = '<table class="table table-bordered" id="exportTableData">
-        <thead>
-            <tr class="table-warning">
-                <th width="5%">#</th>
-                <th><b>Training Organization</b></th>
-                <th><b>Approval No.</b></th>
-                <th class="text-center"><b>Date of Initial Issue</b></th>
-                <th class="center"><b>Date of Last Renewal</b></th>
-                <th class="center"><b>Date of Expiry</b></th>
-                <th class="center"><b>Status</b></th>
-            </tr>
-        </thead>
-        <tbody>';
-            if(count($atoListings)) {
-            $counter = 0;
-                foreach($atoListings as $ato){
-                     
-                    $now = time();
-                    $due_date = strtotime($ato->date_of_expiry);;
-                    $datediff = $due_date - $now;
-                    $numberofdays = round($datediff / (60 * 60 * 24));
-
-                    if(($numberofdays >= 0) && ($numberofdays <= 90) ){
-                        $bgcolor = "#ffbf00";
-                        $color = "#000";
-                        $remarks = "Expiring Soon";
-
-                        $counter++; 
-                        $counter % 2 == 0 ? $css_style = 'table-secondary' : $css_style = 'table-primary';
-                   
-                    $issuedDate = strtotime($ato->date_of_first_issue); 
-                    $dateIssued = date('d/m/Y', $issuedDate);
-                    
-                    $renewalDate = strtotime($ato->date_of_renewal); 
-                    $renewed = date('d/m/Y', $renewalDate);
-
-                    $dateExpired = strtotime($ato->date_of_expiry); 
-                    $expired = date('d/m/Y', $dateExpired);
-                    
-                $answer.='<tr class="'.$css_style.'">
-                    <td>'.$counter.'</td>
-                    <td>'.strtoupper($ato->training_organization).'</td>
-                    <td>
-                        <a href="confidentials/economic-licence/'.$ato->ato_certificate.'" target="_blank">
-                            '.$ato->approval_no.'
-                        </a>
-                    </td>
-                    <td class="text-center">'.$dateIssued.'</td>
-                    <td class="text-center">'.$renewed.'</td>
-                    <td class="center">'.$expired.'</td>
-                    <td style="text-align:center; background:'.$bgcolor.'; color:'.$color.';">
-                        '.$remarks.'
-                    </td>
-                </tr>';
-                    }
-                }
-            } else {
-                $answer.='<tr>
-                    <td style="font-size:11px; font-weight:bold; color:red; text-align:center" colspan="15" class="table-danger">No records available</td>
-                </tr>';
-            }
-           
-        $answer.='</tbody>
-        </table>';
-
-
-        return $answer;
-
     }
 
     public function destroy(Request $request, $id) {

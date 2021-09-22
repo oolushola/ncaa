@@ -194,7 +194,99 @@
       </div>
     </div>
 
-    <div class="col-md-6 stretch-card grid-margin">
+    <div class="col-md-3 stretch-card grid-margin">
+      <div class="card bg-gradient-info card-img-holder text-white">
+        <div class="card-body">
+          <img src="{{URL::asset('images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image"/>                                    
+          <h4 class="font-weight-normal mb-3" data-toggle="modal" href=".aocModalInformation" id="forCertificationTracker">Certification Tracker
+            <i class="mdi mdi-diamond mdi-24px float-right"></i>
+          </h4>
+          <h2>
+            <?php
+                if($certificationTrackerCount > 0){
+                  echo $certificationTrackerCount;
+                }
+                else{
+                  echo 'No Record Yet';
+                }
+            ?>
+          </h2>
+          <h6 class="card-text mb-5">
+            <?php if($certificationTrackerCount > 0){ ?> Records Found <?php } ?>
+          </h6>
+          @if(Auth::user()->role==1)
+            <a href="{{URL('activity-log/certification-tracker')}}" style="text-decoration:none; color:black; font-weight:bold; font-size:13px; position:relative; z-index:1"> 
+              Activity Log 
+            </a>
+          @else
+            &nbsp;
+          @endif
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 stretch-card grid-margin">
+      <div class="card bg-gradient-danger card-img-holder text-white">
+        <div class="card-body">
+          <img src="{{URL::asset('images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image"/>                                    
+          <h4 class="font-weight-normal mb-3" data-toggle="modal" href=".aocModalInformation" id="forForeignAirlineDacl">Foreign Airline DACL
+            <i class="mdi mdi-diamond mdi-24px float-right"></i>
+          </h4>
+          <h2>
+            <?php
+                if($foreignAirlineDaclCount > 0){
+                  echo $foreignAirlineDaclCount;
+                }
+                else{
+                  echo 'No Record Yet';
+                }
+            ?>
+          </h2>
+          <h6 class="card-text mb-5">
+            <?php if($foreignAirlineDaclCount > 0){ ?> Records Found <?php } ?>
+          </h6>
+          @if(Auth::user()->role==1)
+            <a href="{{URL('activity-log/foreign-airline-dacl')}}" style="text-decoration:none; color:black; font-weight:bold; font-size:13px; position:relative; z-index:1"> 
+              Activity Log 
+            </a>
+          @else
+            &nbsp;
+          @endif
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 stretch-card grid-margin">
+      <div class="card bg-gradient-primary card-img-holder text-white">
+        <div class="card-body">
+          <img src="{{URL::asset('images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image"/>                                    
+          <h4 class="font-weight-normal mb-3" data-toggle="modal" href=".aocModalInformation" id="forAto">ATO
+            <i class="mdi mdi-diamond mdi-24px float-right"></i>
+          </h4>
+          <h2>
+            <?php
+                if($atoCount > 0){
+                  echo $atoCount;
+                }
+                else{
+                  echo 'No Record Yet';
+                }
+            ?>
+          </h2>
+          <h6 class="card-text mb-5">
+            <?php if($atoCount > 0){ ?> Records Found <?php } ?>
+          </h6>
+          @if(Auth::user()->role==1)
+            <a href="{{URL('activity-log/ato')}}" style="text-decoration:none; color:black; font-weight:bold; font-size:13px; position:relative; z-index:1"> 
+              Activity Log 
+            </a>
+          @else
+            Air Travel Organization
+          @endif
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9 stretch-card grid-margin">
       <div class="card bg-gradient-info card-img-holder text-white">
         <div class="card-body">
           <img src="{{URL::asset('images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image"/>                                    
@@ -263,13 +355,13 @@
             </div>
             <div class="col-md-4 col-sm-6 mb-2 mt-2">
             <div class="dashboard__economic">
-                <p style="margin-bottom:10px; font-size:13px; font-weight:bold" data-toggle="modal" href=".aocModalInformation" id="forAto">ATO ({{ $atoCount }})</p>
+                <p style="margin-bottom:10px; font-size:13px; font-weight:bold" data-toggle="modal" href=".aocModalInformation" id="forFcop">FCOP ({{ $fcopCount }})</p>
                 @if(Auth::user()->role==1)
                   <a href="{{URL('activity-log/ato')}}" style="text-decoration:none; color:#000; font-weight:bold; font-size:11px; position:relative; z-index:1"> 
-                    Activity Log of ATO
+                    Activity Log of FCOP
                   </a>
                 @else
-                  Approved Training Organizations
+                  &nbsp;
                 @endif
               </div>
             </div>
@@ -374,14 +466,17 @@
     modulePopupRequest('forAcStatus', '/ac-status-chart-result', 'Aircraft Status', 'AIRCRAFT STATUS')
     modulePopupRequest('forForeignAmo', '/foreign-amo-chart-result', 'Foreign Amo', 'FOREIGN AMO')
     modulePopupRequest('forLocalAmo', '/local-amo-chart-result', 'Local Amo', 'LOCAL AMO')
-    
+    modulePopupRequest('forCertificationTracker', '/certification-tracker-chart-result', 'Certification Tracker', 'CERTIFICATION TRACKER')
+    modulePopupRequest('forForeignAirlineDacl', '/foreign-airline-dacl-chart-result', 'Foreign Airline Dacl', 'FOREIGN AIRLINE DACL')
+    modulePopupRequest('forAto', '/ato-chart-result', 'Ato', 'ATO')
+
     // Economic Licences
     modulePopupRequest('forAop', '/aop-chart-result', 'Aop', 'AOP')
     modulePopupRequest('forAtl', '/atl-chart-result', 'Atl', 'ATL')
     modulePopupRequest('forPncf', '/pncf-chart-result', 'Pncf', 'PNCF')
     modulePopupRequest('forAtol', '/atol-chart-result', 'Atol', 'ATOL')
     modulePopupRequest('forPaas', '/paas-chart-result', 'Paas', 'PAAS')
-    modulePopupRequest('forAto', '/ato-chart-result', 'Ato', 'ATO')
-    
+    modulePopupRequest('forFcop', '/fcop-chart-result', 'Fcop', 'FCOP')
+
 </script>
 @stop

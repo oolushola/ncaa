@@ -14,6 +14,9 @@ use App\pncf;
 use App\paas;
 use App\atol;
 use App\ato;
+use App\CertificationTracker;
+use App\ForeignAirlineDacl;
+use App\Fcop;
 
 class dashboardController extends Controller
 {
@@ -156,6 +159,60 @@ class dashboardController extends Controller
         return array(
             'determinant' => $status,
             'expiredData' => $expiredLocalAmos
+        );
+    }
+
+    public function certificationTrackerResult(Request $request)
+    {
+        $certificationTrackerResult = CertificationTracker::SELECT('id', 'certification_no', 'applicant_name', 'date_assigned')->GET();
+        $status = $this->determinant($certificationTrackerResult, 'date_assigned');
+        $expiredCertificationTrackers = $this->expiredRecords(
+            $certificationTrackerResult, 
+            'certification_no', 
+            'date_assigned', 
+            'applicant_name', 
+            'date_assigned', 
+            'CERTIFICATION TRACKER'
+        );
+        return array(
+            'determinant' => $status,
+            'expiredData' => $expiredCertificationTrackers
+        );
+    }
+
+    public function foreignAirlineDaclResult(Request $request) 
+    {
+        $foreignAirlineDaclResult = ForeignAirlineDacl::SELECT('id', 'dacl_no', 'airline_name', 'aoc_expiry_date')->GET();
+        $status = $this->determinant($foreignAirlineDaclResult, 'aoc_expiry_date');
+        $expiredForeignAirlineDacl = $this->expiredRecords(
+            $foreignAirlineDaclResult, 
+            'dacl_no', 
+            'aoc_expiry_date', 
+            'airline_name', 
+            'aoc_expiry_date', 
+            'FOREIGN AIRLINE DACL'
+        );
+        return array(
+            'determinant' => $status,
+            'expiredData' => $expiredForeignAirlineDacl
+        );
+    }
+
+    public function fcopResult(Request $request)
+    {
+        $fcopResult = Fcop::SELECT('id', 'licence_no', 'foreign_airline', 'date_fcop_issued')->GET();
+        $status = $this->determinant($fcopResult, 'date_fcop_issued');
+        $expiredFcop = $this->expiredRecords(
+            $fcopResult, 
+            'licence_no', 
+            'date_fcop_issued', 
+            'foreign_airline', 
+            'date_fcop_issued', 
+            'FCOP'
+        );
+        return array(
+            'determinant' => $status,
+            'expiredData' => $expiredFcop
         );
     }
 

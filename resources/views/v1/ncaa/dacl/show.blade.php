@@ -45,16 +45,18 @@
                             </select>
                         </span>
                         <span style="font-size:12px; font-weight:bold; display:inline-block" > 
-                            <select name="country" id="country">
+                            <select name="sortCountry" id="sortCountry">
                                 <option value="0">Choose Country</option>
+                                @foreach($countries as $country)
+                                <option value="{{$country->country}}">{{$country->country}}</option>
+                                @endforeach
                             </select>
                         </span>
                     </form>
                     <br>
+                    <h4 class="card-title" style="padding-left:10px; display:inline-block">Foreign Airline Dacl Listings</h4>
 
                     <div class="table-responsive" id="contentDropper">
-                    <h4 class="card-title" style="padding-left:10px; display:inline-block">Foreign Airline Dacl Listings</h4>
-           
                         <table class="table table-bordered" id="exportTableData">
                             <thead>
                                 <tr class="table-warning">
@@ -112,7 +114,7 @@
                                         </td>
                                         <td class="text-center">{!! $dateIssued !!}</td>
                                         <td>
-                                            <a href="{{URL::asset('/confidentials/foreign-airline/'.$dacl->aoc_opspec.'')}}" target="_blank">
+                                            <a href="{{URL::asset('confidentials/foreign-airline/'.$dacl->aoc_opspec.'')}}" target="_blank">
                                             <i class="mdi mdi-file-pdf" style="color:black; font-size:20px;" title="click to view {{$dacl->airline_name}} ops spec certificate"></i>
                                             </a>
                                         </td>
@@ -142,7 +144,7 @@
 @section('scripts')
 <script type="text/javascript" src="{{URL::asset('js/jquery.form.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/jquery.table2excel.min.js')}}"></script>
-<script type="text/javascript" src="{{URL::asset('js/foreignAirlineDacl.js')}}"></script>
+<script type="text/javascript" src="{{URL::asset('js/foreignAirlineDacl.js?v=').time()}}"></script>
 <script type="text/javascript">
     $('#sendToPrint').click(function() {
         $.print('#contentDropper')

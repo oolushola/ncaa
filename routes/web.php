@@ -134,6 +134,7 @@ Route::get('/view-clear', function() {
 	Route::get('economice-licence/pncf/view', 'pncfController@show');
 	Route::get('economice-licence/paas/view', 'paasController@show');
 	Route::get('economic-licence/fcop/view', 'FcopController@show');
+	Route::get('fcop-by-status', 'FcopController@fcopByStatus');
 
 	Route::get('ato/view', 'atoController@show');
 	Route::resource('economic-licence/atol/view', 'atolController@show');
@@ -172,6 +173,8 @@ Route::get('/view-clear', function() {
 	Route::resource('travel-agency', 'travelAgencyController');
 
 	Route::resource('type-acceptance-certificate', 'tacController');
+	Route::get('sort-type-acceptance', 'tacController@sortBy');
+	Route::get('filter-tac-status', 'tacController@filterTacStatus');
 	Route::get('all-type-acceptance-certificate', 'tacController@showAllTac');
 	Route::get('get-aircraft-models', 'tacController@aircraftModelsListing');
 
@@ -180,16 +183,21 @@ Route::get('/view-clear', function() {
 	Route::get('ac-status-chart-result', 'dashboardController@acstatusResult');
 	Route::get('foreign-amo-chart-result', 'dashboardController@foreignAmoResult');
 	Route::get('local-amo-chart-result', 'dashboardController@localAmoResult');
+	Route::get('certification-tracker-chart-result', 'dashboardController@certificationTrackerResult');
+	Route::get('foreign-airline-dacl-chart-result', 'dashboardController@foreignAirlineDaclResult');
+	Route::get('ato-chart-result', 'dashboardController@atoResult');
 
 	Route::get('aop-chart-result', 'dashboardController@aopResult');
 	Route::get('atl-chart-result', 'dashboardController@atlResult');
 	Route::get('pncf-chart-result', 'dashboardController@pncfResult');
 	Route::get('atol-chart-result', 'dashboardController@atolResult');
 	Route::get('paas-chart-result', 'dashboardController@paasResult');
-	Route::get('ato-chart-result', 'dashboardController@atoResult');
+	Route::get('fcop-chart-result', 'dashboardController@fcopResult');
 
 	Route::resource('foreign-airline', 'foreignAirlineController');
 	Route::resource('foreign-airline-dacl', 'ForeignAirlineDaclController');
+	Route::get('foreign-airline-dacl-country', 'ForeignAirlineDaclController@sortByCountry');
+	Route::get('foreign-airline-dacl-status', 'ForeignAirlineDaclController@sortByStatus');
 	Route::resource('certification-tracker', 'CertificationTrackerController');
 	Route::resource('team-members', 'teamMembersController');
 	Route::resource('cpm', 'CpmController');

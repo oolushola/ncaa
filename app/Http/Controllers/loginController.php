@@ -16,6 +16,9 @@ use App\pncf;
 use App\paas;
 use App\atol;
 use App\ato;
+use App\Fcop;
+use App\CertificationTracker;
+use App\ForeignAirlineDacl;
 
 class loginController extends Controller
 {
@@ -40,10 +43,14 @@ class loginController extends Controller
             $paasCount = paas::GET()->COUNT();
             $atolCount = atol::GET()->COUNT();
             $atoCount = ato::GET()->COUNT();
+            $fcopCount = Fcop::GET()->COUNT();
+            $certificationTrackerCount = CertificationTracker::GET()->COUNT();
+            $foreignAirlineDaclCount = ForeignAirlineDacl::GET()->COUNT();
 
             return view('v1.ncaa.dashboard', compact(
                 'aircraftslistings', 'aoclist', 'foreignamolist', 'localamolist', 'focclist', 'tacList',
-                'aopCount', 'atlCount', 'pncfCount', 'paasCount', 'atolCount', 'atoCount'
+                'aopCount', 'atlCount', 'pncfCount', 'paasCount', 'atolCount', 'atoCount', 'fcopCount', 'certificationTrackerCount',
+                'foreignAirlineDaclCount'
                 )
             );
         }
