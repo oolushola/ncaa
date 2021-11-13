@@ -122,6 +122,88 @@
                         <input type="text" class="form-control" name="aircraft_serviceability_status" id="aircraftServiceavilityStatus" value="{{$recid->aircraft_serviceability_status}}">
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="c-of-a status" style="font-size:12px; font-weight:bold; color:green">Upload C of R</label>
+                                <input type="file" name="cofr" style="font-size:12px; display:block">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="c-of-a status" style="font-size:12px; font-weight:bold; color:green">Upload Noise Cert</label>
+                                <input type="file" name="noise_cert" style="font-size:12px; display:block">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="c-of-a status" style="font-size:12px; font-weight:bold; color:green">Upload Mode S</label>
+                                <input type="file" name="mode_s" style="font-size:12px; display:block">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <span class="labelholder" style="display:inline-block; margin-right:10px;" >RVSM *</span>
+                        <div class="form-check" style="display:inline-block;">
+                            <label class="form-check-label" style="font-size:11px; font-weight:bold;">
+                                <input type="radio" class="form-check-input" name="rvsm" value="1" @if($recid->rvsm === 1) checked @endif>
+                                Yes &nbsp; &nbsp; 
+                            </label>
+                        </div>
+                        <div class="form-check" style="display:inline-block;">
+                            <label class="form-check-label" style="font-size:11px; font-weight:bold;">
+                                <input type="radio" class="form-check-input" name="rvsm" value="0" @if($recid->rvsm === 0) checked @endif>
+                                No
+                            </label>
+                        </div>   
+                    </div>
+                    <div class="form-group">
+                        <span class="labelholder" style="display:inline-block; margin-right:10px;" >PBN *</span>
+                        <div class="form-check" style="display:inline-block;">
+                            <label class="form-check-label" style="font-size:11px; font-weight:bold;">
+                                <input type="radio" class="form-check-input" name="pbn" value="1" @if($recid->pbn === 1) checked @endif>
+                                Yes &nbsp; &nbsp; 
+                            </label>
+                        </div>
+                        <div class="form-check" style="display:inline-block;">
+                            <label class="form-check-label" style="font-size:11px; font-weight:bold;">
+                                <input type="radio" class="form-check-input" name="pbn" value="0" @if($recid->pbn === 0) checked @endif>
+                                No
+                            </label>
+                        </div>   
+                    </div>
+                    <div class="form-group">
+                        <span class="labelholder" style="display:inline-block; margin-right:10px;" >LVO *</span>
+                        <div class="form-check" style="display:inline-block;">
+                            <label class="form-check-label" style="font-size:11px; font-weight:bold;">
+                                <input type="radio" class="form-check-input" name="lvo" value="1" @if($recid->lvo === 1) checked @endif>
+                                Yes &nbsp; &nbsp; 
+                            </label>
+                        </div>
+                        <div class="form-check" style="display:inline-block;">
+                            <label class="form-check-label" style="font-size:11px; font-weight:bold;">
+                                <input type="radio" class="form-check-input" name="lvo" value="0" @if($recid->lvo === 0) checked @endif>
+                                No
+                            </label>
+                        </div>   
+                    </div>
+                    <div class="form-group">
+                        <span class="labelholder" style="display:inline-block; margin-right:10px;" >ADS-B *</span>
+                        <div class="form-check" style="display:inline-block;">
+                            <label class="form-check-label" style="font-size:11px; font-weight:bold;">
+                                <input type="radio" class="form-check-input" name="ads_b" value="1" @if($recid->ads_b === 1) checked @endif>
+                                Yes &nbsp; &nbsp; 
+                            </label>
+                        </div>
+                        <div class="form-check" style="display:inline-block;">
+                            <label class="form-check-label" style="font-size:11px; font-weight:bold;">
+                                <input type="radio" class="form-check-input" name="ads_b" value="0" @if($recid->ads_b === 0) checked @endif>
+                                No
+                            </label>
+                        </div>   
+                    </div>
+
                     <div id="loader"></div>
                     <input type="hidden" name="name" value="{{Auth::user()->name}}">
                     <input type="hidden" name="module" value="ac-status">

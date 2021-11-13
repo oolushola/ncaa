@@ -87,6 +87,8 @@
                                     <th><b>Weight (Kg)</b></th>
                                     <th><b>Major Checks</b></th>
                                     <th><b>Serviceability Status</b></th>
+                                    <th><b>Attachments</b></th>
+                                    <th><b>Checks</b></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -154,6 +156,35 @@
                                         <td>{!! $aircraft->weight !!}</td>
                                         <td>{!! $aircraft->major_checks !!}</td>
                                         <td>{!! $aircraft->aircraft_serviceability_status !!}</td>
+                                        <td>
+                                            <span class="d-block mb-2">
+                                                <?php  
+                                                    if($aircraft->cofr) {
+                                                        echo '<a href="/confidentials/cofr/'.$aircraft->cofr.'" target="_blank">C of R</a>';
+                                                    }
+                                                ?>
+                                            </span>
+                                            <span class="d-block mb-2">
+                                                <?php  
+                                                    if($aircraft->cofr) {
+                                                        echo '<a href="/confidentials/mode_s/'.$aircraft->mode_s.'" target="_blank">Mode S</a>';
+                                                    }
+                                                ?>
+                                            </span>
+                                            <span class="d-block mb-2">
+                                                <?php  
+                                                    if($aircraft->cofr) {
+                                                        echo '<a href="/confidentials/noise_cert/'.$aircraft->noise_cert.'" target="_blank">Noise Cert</a>';
+                                                    }
+                                                ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="d-block mb-2">RVSM: <?php echo $aircraft->rvsm ? 'Yes': 'No'; ?></span>
+                                            <span class="d-block mb-2">PBN: <?php echo $aircraft->pbn ? 'Yes': 'No'; ?></span>
+                                            <span class="d-block mb-2">LVO: <?php echo $aircraft->lvo ? 'Yes': 'No'; ?></span>
+                                            <span class="d-block mb-2">ADS-B: <?php echo $aircraft->ads_b ? 'Yes': 'No'; ?></span>
+                                        </td>
                                     </tr>
                                     @endforeach
                                 @else

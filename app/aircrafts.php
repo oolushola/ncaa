@@ -21,6 +21,14 @@ class aircrafts extends Model
         'weight',
         'created_by',
         'major_checks',
-        'aircraft_serviceability_status'
+        'aircraft_serviceability_status',
+        'cofr',
+        'cofa',
+        'noise_cert',
+        'mode_s',
+        'rvsm',
+        'pbn',
+        'lvo',
+        'ads_b'
     ];
 }

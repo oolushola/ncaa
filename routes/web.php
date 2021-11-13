@@ -194,7 +194,7 @@ Route::get('/view-clear', function() {
 	Route::get('paas-chart-result', 'dashboardController@paasResult');
 	Route::get('fcop-chart-result', 'dashboardController@fcopResult');
 
-	Route::resource('foreign-airline', 'foreignAirlineController');
+	Route::resource('foreign-airline', 'ForeignAirlineController');
 	Route::resource('foreign-airline-dacl', 'ForeignAirlineDaclController');
 	Route::get('foreign-airline-dacl-country', 'ForeignAirlineDaclController@sortByCountry');
 	Route::get('foreign-airline-dacl-status', 'ForeignAirlineDaclController@sortByStatus');

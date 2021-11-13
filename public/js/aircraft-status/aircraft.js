@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $("#addAircraft").click(function(event){
+    $("#addAircraft").click(function(event){ 
         event.preventDefault();
         aircraftValidation();
     });
@@ -85,6 +85,7 @@ $(document).ready(function(){
     }
 
     $("#frmAircraft").ajaxForm(function(data){
+        console.log(data)
         if (data === 'exists'){
             $('#loader').html('<i class=\'mdi mdi-alert\'></i>Sorry, this record already exists.').addClass('error');
             return false;

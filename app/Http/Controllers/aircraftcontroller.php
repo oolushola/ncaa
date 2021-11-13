@@ -85,18 +85,31 @@ class aircraftcontroller extends Controller
                 $id = $aircraft->id;
                 $recid=aircrafts::findOrFail($id);
                 if($request->hasFile('file')){
-                    $c_of_a = $request->file('file');
-                    $name = str_slug($request->get('aircraft_type'))."-".str_slug($request->get('registration_marks')).'.'.$c_of_a->getClientOriginalExtension();
-                    $destination_path = public_path('confidentials/c-of-a/');
-                    $cofoaPath = $destination_path."/".$name;
-                    $c_of_a->move($destination_path, $name);
-                    $recid->c_of_a = $name;
-                    $recid->save();
+                    $this->imageUploader($request, 'file', 'confidentials/c-of-a', 'c_of_a', $recid, 'airline-cert');
                 }
+                if($request->hasFile('cofr')) {
+                    $this->imageUploader($request, 'cofr', 'confidentials/cofr', 'cofr', $recid, 'cofr');
+                }
+                if($request->hasFile('mode_s')) {
+                    $this->imageUploader($request, 'mode_s', 'confidentials/mode_s', 'mode_s', $recid, 'modes');
+                }
+                if($request->hasFile('noise_cert')) {
+                    $this->imageUploader($request, 'noise_cert', 'confidentials/noise_cert', 'noise_cert', $recid, 'noisecert');
+                }                
                 return 'saved';
             }
        }
         return redirect()-route('login');
+    }
+
+    public function imageUploader($request, $file, $destinationPath, $where, $recid, $fileType) {
+        $c_of_a = $request->file($file);
+        $name = str_slug($request->get('aircraft_type'))."-".str_slug($request->get('registration_marks'))."-".$fileType.'.'.$c_of_a->getClientOriginalExtension();
+        $destination_path = public_path($destinationPath);
+        $cofoaPath = $destination_path."/".$name;
+        $c_of_a->move($destination_path, $name);
+        $recid->$where = $name;
+        $recid->save();
     }
 
     public function edit($id){
@@ -126,15 +139,18 @@ class aircraftcontroller extends Controller
             else{
                 $recid = aircrafts::findOrFail($id);
                 $recid->UPDATE($request->all());
-                 if($request->hasFile('file')){
-                     $c_of_a = $request->file('file');
-                     $name = str_slug($request->get('aircraft_type'))."-".str_slug($request->get('registration_marks')).'.'.$c_of_a->getClientOriginalExtension();
-                     $destination_path = public_path('confidentials/c-of-a/');
-                     $cofoaPath = $destination_path."/".$name;
-                     $c_of_a->move($destination_path, $name);
-                     $recid->c_of_a = $name;
-                     $recid->save();
-                 }
+                if($request->hasFile('file')){
+                $this->imageUploader($request, 'file', 'confidentials/c-of-a', 'c_of_a', $recid, 'airline-cert');
+                }
+                if($request->hasFile('cofr')) {
+                $this->imageUploader($request, 'cofr', 'confidentials/cofr', 'cofr', $recid, 'cofr');
+                }
+                if($request->hasFile('mode_s')) {
+                $this->imageUploader($request, 'mode_s', 'confidentials/mode_s', 'mode_s', $recid, 'modes');
+                }
+                if($request->hasFile('noise_cert')) {
+                    $this->imageUploader($request, 'noise_cert', 'confidentials/noise_cert', 'noise_cert', $recid, 'noisecert');
+                }    
                  $update = updateHistory::CREATE($request->all());
                  return 'updated';
              }
